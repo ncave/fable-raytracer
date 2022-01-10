@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build-cli": "dotnet run -c Release --project ../Fable/src/Fable.Cli -- fable-raytracer.fsproj --outDir out",
+    "build-rust": "dotnet run -c Release --project ../Fable/src/Fable.Cli -- fable-raytracer.fsproj --outDir .  --fableLib ../../Fable/build/fable-library-rust --lang Rust",
+    "build-native": "dotnet publish -c Release -r linux-x64 --self-contained",
+    "build": "dotnet fable fable-raytracer.fsproj --outDir out",
+    "clean": "git clean -fdX",
+    "test": "node out/src/main.js",
+    "rust": "cargo run --release",
+    "start": "dotnet run -c Release",
+    "native": "bin/Release/net6.0/linux-x64/native/fable-raytracer",
+
+    "trace": "dotnet trace collect --format speedscope -- dotnet bin/Release/net6.0/fable-raytracer.dll",
+    "perf": "perf record -q -e cpu-clock -F 997 -g -- target/release/fable-raytracer",
+    "perf-report": "perf report -n --stdio -g srcline -s dso,sym,srcline --inline | rustfilt > perf-report.log",
+    "perf-flamegraph": "perf script | rustfilt | ../FlameGraph/stackcollapse-perf.pl | ../FlameGraph/flamegraph.pl > perf.svg",
+    "flamegraph": "cargo flamegraph -c \"record -e cpu-clock -F 997 -g\""
+  }
+}

@@ -1,0 +1,10 @@
+[package]
+name = "fable-raytracer"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+fable_library_rust = { path = "../Fable/build/fable-library-rust" }
+
+# [profile.release]
+# debug = true
