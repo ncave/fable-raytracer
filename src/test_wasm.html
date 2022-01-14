@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Fable RayTracer</title>
+</head>
+
+<body>
+  <canvas id="scene" width="512" height="512"></canvas>
+  <canvas id="animated" width="128" height="128"></canvas>
+  <script type="module">
+    import init from '../pkg/fable_raytracer.js';
+    const wasm = await init();
+
+    function measureTime(f) {
+      const t0 = performance.now();
+      let res = f();
+      const t1 = performance.now();
+      return [res, t1 - t0];
+    }
+
+    const [x, y, w, h] = [0, 0, 1024, 1024];
+    const [xa, ya, wa, ha] = [0, 0, 128, 128];
+    const len = w * h * 4;
+    const lenAni = wa * ha * 4;
+
+    const scene = document.getElementById("scene");
+    const animated = document.getElementById("animated");
+    const offscreen = document.createElement("canvas");
+    offscreen.width = w;
+    offscreen.height = h;
+
+    const ctx = scene.getContext("2d");
+    const ctxAni = animated.getContext("2d");
+    const ctxOff = offscreen.getContext("2d");
+
+    const offset = wasm.get_buffer_offset();
+    const maxLen = wasm.get_buffer_length();
+    const data = new Uint8ClampedArray(wasm.memory.buffer, offset, len);
+    const imageData = new ImageData(data, w, h);
+    const dataAni = new Uint8ClampedArray(wasm.memory.buffer, offset, lenAni);
+    const imageDataAni = new ImageData(dataAni, wa, ha);
+
+    function bench() {
+      // offscreen image is rendered at 2x for super-sampled anti-aliasing
+      console.log("Raytracer running...");
+      const [_, elapsed] = measureTime(() => wasm.render_scene(x, y, w, h));
+      console.log("Ray tracing done:");
+      console.log(` - rendered image size: (${w}x${h})\n - elapsed: ${elapsed} ms`);
+
+      ctxOff.putImageData(imageData, 0, 0);
+      ctx.drawImage(offscreen, 0, 0, 512, 512);
+    }
+
+    let count = 10;
+
+    function render() {
+      wasm.render_scene(xa, ya, wa, ha);
+      ctxAni.putImageData(imageDataAni, 0, 0);
+      if (count > 0) {
+        count = count - 1;
+        requestAnimationFrame(render);
+      }
+    }
+
+    bench();
+    requestAnimationFrame(render);
+  </script>
+</body>
+
+</html>

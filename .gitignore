@@ -16,10 +16,9 @@ jspm_packages
 bin
 obj
 target
+pkg
 
 # Output
 .ionide
 out
 .fake
-
-*.rs

@@ -255,14 +255,7 @@ module Scenes =
 //     let elapsed = window?performance?now() - dtStart
 //     res, elapsed
 
-open type System.Console
-
-let renderScene() =
-    let x, y, w, h = (0, 0, 2048, 2048)
-    let len = w * h * 4
-    let data = Array.create len 0uy
+let renderScene (data, x, y, w, h) =
     let scene = Scenes.TwoSpheresOnACheckerboard
-
-    let _, elapsed = Platform.measureTime (fun () -> RayTracer.Render scene data (x, y, w, h))
-    WriteLine("Ray tracing:\n - rendered image size: ({0}x{1})\n - elapsed: {2} ms", w, h, elapsed)
+    RayTracer.Render scene data (x, y, w, h)
 
