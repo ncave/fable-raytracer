@@ -7,11 +7,11 @@
 #![allow(unused_variables)]
 #![allow(unused_attributes)]
 #[path = "./RayTracer.rs"]
-pub(crate) mod import_ffa1f878;
-pub use import_ffa1f878::*;
+pub(crate) mod import_feb40243;
+pub use import_feb40243::*;
 #[path = "./Platform.rs"]
-pub(crate) mod import_4e5e6556;
-pub use import_4e5e6556::*;
+pub(crate) mod import_163ef225;
+pub use import_163ef225::*;
 use std::rc::Rc;
 use fable_library_rust::*;
 pub mod TestApp {
