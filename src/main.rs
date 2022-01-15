@@ -7,18 +7,18 @@
 #![allow(unused_variables)]
 #![allow(unused_attributes)]
 #[path = "./RayTracer.rs"]
-pub(crate) mod import_d5a75629;
-pub use import_d5a75629::*;
+pub(crate) mod import_ffa1f878;
+pub use import_ffa1f878::*;
 #[path = "./Platform.rs"]
-pub(crate) mod import_2d3236e3;
-pub use import_2d3236e3::*;
+pub(crate) mod import_4e5e6556;
+pub use import_4e5e6556::*;
 use std::rc::Rc;
 use fable_library_rust::*;
 pub mod TestApp {
     use super::*;
     pub fn main(_args: &Rc<MutCell<Vec<Rc<str>>>>) -> i32 {
         let patternInput: Rc<(i32, i32, i32, i32)> =
-            Rc::from((0i32, 0i32, 2048i32, 2048i32));
+            Rc::from((0i32, 0i32, 1024i32, 1024i32));
         let w: i32 = patternInput.2.clone();
         let h: i32 = patternInput.3.clone();
         let data: Rc<MutCell<Vec<u8>>> =
@@ -35,7 +35,8 @@ pub mod TestApp {
                                                                                    &patternInput.0.clone(),
                                                                                    &patternInput.1.clone(),
                                                                                    &w,
-                                                                                   &h)
+                                                                                   &h,
+                                                                                   &0.0f64)
                                                 }));
             println!("Ray tracing:
  - rendered image size: ({0}x{1})

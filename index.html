@@ -10,8 +10,10 @@
 <body>
   <canvas id="scene" width="512" height="512"></canvas>
   <canvas id="animated" width="128" height="128"></canvas>
+  <pre id="results"></pre>
+
   <script type="module">
-    import init from '../pkg/fable_raytracer.js';
+    import init from "./pkg/fable_raytracer.js";
     const wasm = await init();
 
     function measureTime(f) {
@@ -21,6 +23,10 @@
       return [res, t1 - t0];
     }
 
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     const [x, y, w, h] = [0, 0, 1024, 1024];
     const [xa, ya, wa, ha] = [0, 0, 128, 128];
     const len = w * h * 4;
@@ -28,6 +34,8 @@
 
     const scene = document.getElementById("scene");
     const animated = document.getElementById("animated");
+    const results = document.getElementById("results");
+
     const offscreen = document.createElement("canvas");
     offscreen.width = w;
     offscreen.height = h;
@@ -43,29 +51,31 @@
     const dataAni = new Uint8ClampedArray(wasm.memory.buffer, offset, lenAni);
     const imageDataAni = new ImageData(dataAni, wa, ha);
 
-    function bench() {
-      // offscreen image is rendered at 2x for super-sampled anti-aliasing
-      console.log("Raytracer running...");
-      const [_, elapsed] = measureTime(() => wasm.render_scene(x, y, w, h));
-      console.log("Ray tracing done:");
-      console.log(` - rendered image size: (${w}x${h})\n - elapsed: ${elapsed} ms`);
+    async function bench() {
+      results.innerText = "Raytracer running...";
+      await sleep(10);
+      const [_, elapsed] = measureTime(() => wasm.render_scene(x, y, w, h, 0.0));
+      results.innerText = "Ray tracing done:\n" +
+      ` - image rendered at 2x for super-sampled anti-aliasing\n` +
+      ` - rendered image size: (${w}x${h})\n - elapsed: ${elapsed} ms`;
 
       ctxOff.putImageData(imageData, 0, 0);
       ctx.drawImage(offscreen, 0, 0, 512, 512);
     }
 
-    let count = 10;
+    let degrees = 720;
 
     function render() {
-      wasm.render_scene(xa, ya, wa, ha);
+      let angle = degrees * Math.PI / 180;
+      wasm.render_scene(xa, ya, wa, ha, angle);
       ctxAni.putImageData(imageDataAni, 0, 0);
-      if (count > 0) {
-        count = count - 1;
+      if (degrees > 0) {
+        degrees = degrees - 1;
         requestAnimationFrame(render);
       }
     }
 
-    bench();
+    await bench();
     requestAnimationFrame(render);
   </script>
 </body>

@@ -28,6 +28,6 @@ pub fn get_buffer_length() -> i32 {
 }
 
 #[wasm_bindgen]
-pub fn render_scene(x: i32, y: i32, w: i32, h: i32) {
-    RayTracerDemo::renderScene(&get_buffer(), &x, &y, &w, &h);
+pub fn render_scene(x: i32, y: i32, w: i32, h: i32, angle: f64) {
+    RayTracerDemo::renderScene(&get_buffer(), &x, &y, &w, &h, &angle);
 }

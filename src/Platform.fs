@@ -26,7 +26,8 @@ let measureTime (f: unit -> 'T): 'T * float =
 
 #endif
 
-#if FABLE_COMPILER_JAVASCRIPT
+// #if FABLE_COMPILER_JAVASCRIPT
+#if FABLE_COMPILER && !FABLE_COMPILER_RUST
 
 open Fable.Core.JsInterop
 

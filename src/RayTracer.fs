@@ -19,11 +19,16 @@ type Vector =
         { X = v1.Y * v2.Z - v1.Z * v2.Y
         ; Y = v1.Z * v2.X - v1.X * v2.Z
         ; Z = v1.X * v2.Y - v1.Y * v2.X }
+    static member Rotate(v: Vector, e: Vector, angle: float) =
+        // rotate 'v' around 'e' by 'angle' radians
+        let cosa = cos angle
+        let sina = sin angle
+        cosa * v + sina * Vector.Cross(e, v) + (1.0 - cosa) * Vector.Dot(e, v) * e
 
 [<Struct>]
 type Color =
     { R: float; G: float; B: float }
-    static member Scale (k, v: Color) = { R = k * v.R; G = k * v.G; B = k * v.B }
+    static member Scale (k: float, v: Color) = { R = k * v.R; G = k * v.G; B = k * v.B }
     static member (+) (v1: Color, v2: Color) = { R = v1.R + v2.R; G = v1.G + v2.G; B = v1.B + v2.B }
     static member (*) (v1: Color, v2: Color) = { R = v1.R * v2.R; G = v1.G * v2.G; B = v1.B * v2.B }
     static member White = { R = 1.0; G = 1.0; B = 1.0 }
@@ -32,7 +37,7 @@ type Color =
     static member Background = Color.Black
     static member DefaultColor = Color.Black
 
-[<AutoOpen>]
+// [<AutoOpen>]
 module RayTracer =
 
     type Camera (pos: Vector, lookAt: Vector) =
@@ -40,10 +45,15 @@ module RayTracer =
         let down = { X = 0.0; Y = -1.0; Z = 0.0 }
         let right = 1.5 * Vector.Norm (Vector.Cross (forward, down))
         let up = 1.5 * Vector.Norm (Vector.Cross (forward, right))
-        member c.Pos     = pos
-        member c.Forward = forward
-        member c.Up      = up
-        member c.Right   = right
+        member _.Pos     = pos
+        member _.Forward = forward
+        member _.Up      = up
+        member _.Right   = right
+        member _.Rotate(angle: float) =
+            let v = pos - lookAt
+            let e = { X = 0.0; Y = 1.0; Z = 0.0 }
+            let newPos = Vector.Rotate(v, e, angle)
+            Camera (newPos, lookAt)
 
     [<Struct>]
     type Ray = {
@@ -168,10 +178,12 @@ module RayTracer =
                 data.[index+2] <- clamp color.B
                 data.[index+3] <- 255uy
 
+    let Rotate (camera: Camera) angle = camera.Rotate(angle)
+
 module SceneObjects =
 
     type Sphere (center, radius, surface) =
-        interface SceneObject with
+        interface RayTracer.SceneObject with
             member this.Surface = surface
             member this.Normal pos = Vector.Norm (pos - center)
             member this.Intersect ray =
@@ -187,7 +199,7 @@ module SceneObjects =
                 dist
 
     type Plane (normal, offset, surface) =
-        interface SceneObject with
+        interface RayTracer.SceneObject with
             member this.Surface = surface
             member this.Normal pos = normal
             member this.Intersect ray =
@@ -201,14 +213,14 @@ module SceneObjects =
 module Surfaces =
 
     type Shiny() =
-        interface Surface with
+        interface RayTracer.Surface with
             member s.Diffuse pos = Color.White
             member s.Specular pos = Color.Grey
             member s.Reflect pos = 0.7
             member s.Roughness = 250.0
 
     type Checkerboard() =
-        interface Surface with
+        interface RayTracer.Surface with
             member s.Diffuse pos =
                 if (int (floor (pos.Z) + floor (pos.X))) % 2 <> 0
                 then Color.White
@@ -222,7 +234,7 @@ module Surfaces =
 
 module Scenes =
 
-    let TwoSpheresOnACheckerboard = {
+    let TwoSpheresOnACheckerboard: RayTracer.Scene = {
         Things = [|
             SceneObjects.Plane ({ X = 0.0; Y = 1.0; Z = 0.0 }, 0.0, Surfaces.Checkerboard())
             SceneObjects.Sphere ({ X = 0.0; Y = 1.0; Z = -0.25 }, 1.0, Surfaces.Shiny())
@@ -235,27 +247,10 @@ module Scenes =
             { Pos = { X = 0.0; Y = 3.5; Z = 0.0 }; Color = { R = 0.21; G = 0.21; B = 0.35 } }
         |];
         Camera =
-            Camera ({ X = 3.0; Y = 2.0; Z = 4.0 }, { X = -1.0; Y = 0.5; Z = 0.0 })
+            RayTracer.Camera ({ X = 3.0; Y = 2.0; Z = 4.0 }, { X = -1.0; Y = 0.5; Z = 0.0 })
     }
 
-// open Fable.Core.JsInterop
-// open Browser.Types
-// open Browser
-
-// let renderScene scene (x, y, width, height) =
-//     let canvas = document.getElementsByTagName("canvas").[0] :?> HTMLCanvasElement
-//     let ctx = canvas.getContext_2d()
-//     let img = ctx.createImageData(float width, float height)
-//     RayTracer.Render scene img.data (x, y, width, height)
-//     ctx.putImageData(img, float -x, float -y)
-
-// let measureTime f x y =
-//     let dtStart = window?performance?now()
-//     let res = f x y
-//     let elapsed = window?performance?now() - dtStart
-//     res, elapsed
-
-let renderScene (data, x, y, w, h) =
+let renderScene (data, x, y, w, h, angle) =
     let scene = Scenes.TwoSpheresOnACheckerboard
+    let scene = { scene with Camera = RayTracer.Rotate scene.Camera angle }
     RayTracer.Render scene data (x, y, w, h)
-

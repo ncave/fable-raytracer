@@ -32,6 +32,9 @@ pub mod RayTracerDemo {
         -> RayTracerDemo::Vector;
         fn Cross(v1: &RayTracerDemo::Vector, v2: &RayTracerDemo::Vector)
         -> RayTracerDemo::Vector;
+        fn Rotate(v: &RayTracerDemo::Vector, e: &RayTracerDemo::Vector,
+                  angle: &f64)
+        -> RayTracerDemo::Vector;
     }
     impl VectorMethods for Vector {
         fn op_Multiply(k: &f64, v: &RayTracerDemo::Vector)
@@ -74,6 +77,25 @@ pub mod RayTracerDemo {
             RayTracerDemo::Vector{X: v1.Y * v2.Z - v1.Z * v2.Y,
                                   Y: v1.Z * v2.X - v1.X * v2.Z,
                                   Z: v1.X * v2.Y - v1.Y * v2.X,}
+        }
+        fn Rotate(v: &RayTracerDemo::Vector, e: &RayTracerDemo::Vector,
+                  angle: &f64) -> RayTracerDemo::Vector {
+            {
+                let cosa: f64 = angle.clone().cos();
+                let sina: f64 = angle.clone().sin();
+                RayTracerDemo::Vector::op_Addition(&RayTracerDemo::Vector::op_Addition(&RayTracerDemo::Vector::op_Multiply(&cosa,
+                                                                                                                           v),
+                                                                                       &RayTracerDemo::Vector::op_Multiply(&sina,
+                                                                                                                           &RayTracerDemo::Vector::Cross(e,
+                                                                                                                                                         v))),
+                                                   &RayTracerDemo::Vector::op_Multiply(&((1.0f64
+                                                                                              -
+                                                                                              cosa)
+                                                                                             *
+                                                                                             RayTracerDemo::Vector::Dot(e,
+                                                                                                                        v)),
+                                                                                       e))
+            }.clone()
         }
     }
     #[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
@@ -139,6 +161,7 @@ pub mod RayTracerDemo {
         #[derive(Clone, Debug)]
         pub struct Camera {
             pos: RayTracerDemo::Vector,
+            lookAt: RayTracerDemo::Vector,
             forward: RayTracerDemo::Vector,
             right: RayTracerDemo::Vector,
             up: RayTracerDemo::Vector,
@@ -149,13 +172,15 @@ pub mod RayTracerDemo {
              -> Rc<RayTracerDemo::RayTracer::Camera> {
                 {
                     let pos_1: RayTracerDemo::Vector;
+                    let lookAt_1: RayTracerDemo::Vector;
                     let forward: RayTracerDemo::Vector;
                     let right: RayTracerDemo::Vector;
                     let up: RayTracerDemo::Vector;
                     ();
                     pos_1 = pos.clone();
+                    lookAt_1 = lookAt.clone();
                     forward =
-                        RayTracerDemo::Vector::Norm(&RayTracerDemo::Vector::op_Subtraction(lookAt,
+                        RayTracerDemo::Vector::Norm(&RayTracerDemo::Vector::op_Subtraction(&lookAt_1,
                                                                                            &pos_1));
                     {
                         let down: RayTracerDemo::Vector =
@@ -174,6 +199,8 @@ pub mod RayTracerDemo {
                     }
                     Rc::from(RayTracerDemo::RayTracer::Camera{pos:
                                                                   pos_1.clone(),
+                                                              lookAt:
+                                                                  lookAt_1.clone(),
                                                               forward:
                                                                   forward.clone(),
                                                               right:
@@ -192,6 +219,8 @@ pub mod RayTracerDemo {
             -> RayTracerDemo::Vector;
             fn Right(&self)
             -> RayTracerDemo::Vector;
+            fn Rotate(&self, angle: &f64)
+            -> Rc<RayTracerDemo::RayTracer::Camera>;
         }
         impl CameraMethods for Camera {
             fn Pos(&self) -> RayTracerDemo::Vector { self.pos.clone() }
@@ -200,6 +229,19 @@ pub mod RayTracerDemo {
             }
             fn Up(&self) -> RayTracerDemo::Vector { self.up.clone() }
             fn Right(&self) -> RayTracerDemo::Vector { self.right.clone() }
+            fn Rotate(&self, angle: &f64)
+             -> Rc<RayTracerDemo::RayTracer::Camera> {
+                RayTracerDemo::RayTracer::Camera::new(&RayTracerDemo::Vector::Rotate(&RayTracerDemo::Vector::op_Subtraction(&self.pos,
+                                                                                                                            &self.lookAt),
+                                                                                     &RayTracerDemo::Vector{X:
+                                                                                                                0.0f64,
+                                                                                                            Y:
+                                                                                                                1.0f64,
+                                                                                                            Z:
+                                                                                                                0.0f64,},
+                                                                                     angle),
+                                                      &self.lookAt)
+            }
         }
         #[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
         pub struct Ray {
@@ -521,6 +563,10 @@ pub mod RayTracerDemo {
                 }
             }
         }
+        pub fn Rotate(camera: &Rc<RayTracerDemo::RayTracer::Camera>,
+                      angle: &f64) -> Rc<RayTracerDemo::RayTracer::Camera> {
+            camera.Rotate(angle)
+        }
     }
     pub mod SceneObjects {
         use super::*;
@@ -793,8 +839,16 @@ pub mod RayTracerDemo {
         }
     }
     pub fn renderScene(data: &Rc<MutCell<Vec<u8>>>, x: &i32, y: &i32, w: &i32,
-                       h: &i32) {
-        RayTracerDemo::RayTracer::Render(&RayTracerDemo::Scenes::TwoSpheresOnACheckerboard(),
-                                         data, x, y, w, h);
+                       h: &i32, angle: &f64) {
+        let scene: Rc<RayTracerDemo::RayTracer::Scene> =
+            RayTracerDemo::Scenes::TwoSpheresOnACheckerboard();
+        RayTracerDemo::RayTracer::Render(&Rc::from(RayTracerDemo::RayTracer::Scene{Things:
+                                                                                       scene.Things.clone(),
+                                                                                   Lights:
+                                                                                       scene.Lights.clone(),
+                                                                                   Camera:
+                                                                                       RayTracerDemo::RayTracer::Rotate(&scene.Camera,
+                                                                                                                        angle),}),
+                                         data, x, y, w, h)
     }
 }
