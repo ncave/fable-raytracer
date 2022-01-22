@@ -1,6 +1,9 @@
 # fable-raytracer
 Small ray tracer demo of the F# to Rust language transpiler in Fable 4.x
 
+# Preview (`npm run test-web`)
+![gif](https://github.com/delneg/fable-raytracer/blob/feat/readme-img/assets/raytracer_wasm.gif?raw=true)
+
 ### Build and run:
 - install Rust
 - install `wasm-pack`
