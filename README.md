@@ -13,6 +13,3 @@ https://ncave.github.io/fable-raytracer/
   - `npm run test-wasm` (F# to Rust to webasm, Node.js)
   - `npm run test-rust` (F# to Rust, running native)
   - `npm run test-dotnet` (F# running on .NET 6.0)
-
-#### Note:
-##### Please note this is just a F# to Rust transpiler demo, there were no efforts to optimize it to perform well or show best practices, that's not the point.
