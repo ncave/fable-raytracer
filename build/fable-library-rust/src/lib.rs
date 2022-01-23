@@ -6,10 +6,11 @@
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 #![allow(unused_attributes)]
+use crate::import_3bd9ae6a::*;
 #[path = "./Func.rs"]
 pub(crate) mod import_346734d5;
 pub use import_346734d5::*;
-use crate::import_3bd9ae6a::*;
+use crate::import_971078fd::*;
 use crate::import_8d7d6be8::*;
 use crate::import_c6216f2::*;
 use crate::import_ec6ee4e9::*;
@@ -30,10 +31,10 @@ pub use import_52aff809::*;
 #[path = "./Map.rs"]
 pub(crate) mod import_3b6ba757;
 pub use import_3b6ba757::*;
-use std::rc::Rc;
 pub mod Fable_Library_Rust {
     use super::*;
     pub fn imports() -> Rc<MutCell<Vec<()>>> {
-        Native::arrayFrom(&[(), (), (), (), (), (), (), (), (), (), (), ()])
+        Native::arrayFrom(&[(), (), (), (), (), (), (), (), (), (), (), (),
+                            ()])
     }
 }

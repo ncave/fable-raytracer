@@ -9,10 +9,9 @@
 use crate::import_3bd9ae6a::*;
 use crate::import_f222008f::*;
 use crate::import_c6216f2::*;
-use std::rc::Rc;
 pub mod List {
     use super::*;
-    #[derive(Clone, Debug, PartialEq, PartialOrd)]
+    #[derive(Clone, Debug, Default, PartialEq, PartialOrd, Hash, Eq, Ord)]
     pub struct Node_1<T: Clone + 'static> {
         pub head: T,
         pub tail: MutCell<Option<Rc<List::Node_1<T>>>>,
@@ -178,7 +177,7 @@ pub mod List {
                 res.get_mut().push(List::head(&xs_1.get()));
                 xs_1.set(List::tail(&xs_1.get()))
             }
-            Native::arrayCopy(&res)
+            res.clone()
         }.clone()
     }
     pub fn fold<State: Clone + 'static, T: Clone +
@@ -268,8 +267,7 @@ pub mod List {
                                 &Rc<impl Fn(&T1, &T2) -> (bool) + 'static>,
                             xs: &Option<Rc<List::Node_1<T1>>>,
                             ys: &Option<Rc<List::Node_1<T2>>>) -> bool {
-        let matchValue: Rc<(bool, bool)> =
-            Rc::from((List::isEmpty(xs), List::isEmpty(ys)));
+        let matchValue: (bool, bool) = (List::isEmpty(xs), List::isEmpty(ys));
         if matchValue.0.clone() {
             if matchValue.1.clone() {
                 true
@@ -294,20 +292,19 @@ pub mod List {
     }
     pub fn unfold<State: Clone + 'static, T: Clone +
                   'static>(gen:
-                               &Rc<impl Fn(&State)
-                                   -> (Option<Rc<(T, State)>>) + 'static>,
-                           state: &State) -> Option<Rc<List::Node_1<T>>> {
+                               &Rc<impl Fn(&State) -> (Option<(T, State)>) +
+                                   'static>, state: &State)
+     -> Option<Rc<List::Node_1<T>>> {
         {
             fn inner_loop<a_: Clone + 'static, T: Clone +
                           'static>(gen_1:
-                                       &Rc<impl Fn(&a_)
-                                           -> (Option<Rc<(T, a_)>>) +
+                                       &Rc<impl Fn(&a_) -> (Option<(T, a_)>) +
                                            'static>, acc: &a_,
                                    root: &Option<Rc<List::Node_1<T>>>,
                                    xs: &Option<Rc<List::Node_1<T>>>)
              -> Option<Rc<List::Node_1<T>>> {
                 {
-                    let matchValue: Option<Rc<(T, a_)>> = gen_1(acc);
+                    let matchValue: Option<(T, a_)> = gen_1(acc);
                     match &matchValue {
                         Some(matchValue_0_0) =>
                         {
@@ -466,8 +463,7 @@ pub mod List {
                                     &Rc<impl Fn(&T, &T) -> (i32) + 'static>,
                                 xs: &Option<Rc<List::Node_1<T>>>,
                                 ys: &Option<Rc<List::Node_1<T>>>) -> i32 {
-        let matchValue: Rc<(bool, bool)> =
-            Rc::from((List::isEmpty(xs), List::isEmpty(ys)));
+        let matchValue: (bool, bool) = (List::isEmpty(xs), List::isEmpty(ys));
         if matchValue.0.clone() {
             if matchValue.1.clone() { 0i32 } else { -1i32 }
         } else {
@@ -481,6 +477,16 @@ pub mod List {
                 } else { c }
             }
         }
+    }
+    pub fn compareTo<T: PartialOrd + Clone +
+                     'static>(xs: &Option<Rc<List::Node_1<T>>>,
+                              ys: &Option<Rc<List::Node_1<T>>>) -> i32 {
+        Util::compare(xs, ys)
+    }
+    pub fn equalsTo<T: Eq + core::hash::Hash + Clone +
+                    'static>(xs: &Option<Rc<List::Node_1<T>>>,
+                             ys: &Option<Rc<List::Node_1<T>>>) -> bool {
+        xs.clone() == ys.clone()
     }
     pub fn exists<T: Clone +
                   'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
@@ -498,8 +504,7 @@ pub mod List {
                                 &Rc<impl Fn(&T1, &T2) -> (bool) + 'static>,
                             xs: &Option<Rc<List::Node_1<T1>>>,
                             ys: &Option<Rc<List::Node_1<T2>>>) -> bool {
-        let matchValue: Rc<(bool, bool)> =
-            Rc::from((List::isEmpty(xs), List::isEmpty(ys)));
+        let matchValue: (bool, bool) = (List::isEmpty(xs), List::isEmpty(ys));
         if matchValue.0.clone() {
             if matchValue.1.clone() {
                 false
@@ -524,7 +529,7 @@ pub mod List {
             }
         }
     }
-    pub fn contains<T: PartialEq + Clone +
+    pub fn contains<T: Eq + core::hash::Hash + Clone +
                     'static>(value: &T, xs: &Option<Rc<List::Node_1<T>>>)
      -> bool {
         List::exists(&Rc::from({
@@ -552,11 +557,11 @@ pub mod List {
                                    let mapping = mapping.clone();
                                    move |xs_1: &Option<Rc<List::Node_1<T>>>|
                                        if List::isEmpty(xs_1) {
-                                           None::<Rc<(U,
-                                                      Option<Rc<List::Node_1<T>>>)>>
+                                           None::<(U,
+                                                   Option<Rc<List::Node_1<T>>>)>
                                        } else {
-                                           Some(Rc::from((mapping(&List::head(xs_1)),
-                                                          List::tail(xs_1))))
+                                           Some((mapping(&List::head(xs_1)),
+                                                 List::tail(xs_1)))
                                        }
                                }), xs)
     }
@@ -569,26 +574,25 @@ pub mod List {
                                    let mapping = mapping.clone();
                                    move
                                        |tupledArg:
-                                            &Rc<(i32,
-                                                 Option<Rc<List::Node_1<T>>>)>|
+                                            &(i32,
+                                              Option<Rc<List::Node_1<T>>>)|
                                        {
                                            let i: i32 = tupledArg.0.clone();
                                            let xs_1:
                                                    Option<Rc<List::Node_1<T>>> =
                                                tupledArg.1.clone();
                                            if List::isEmpty(&xs_1) {
-                                               None::<Rc<(U,
-                                                          Rc<(i32,
-                                                              Option<Rc<List::Node_1<T>>>)>)>>
+                                               None::<(U,
+                                                       (i32,
+                                                        Option<Rc<List::Node_1<T>>>))>
                                            } else {
-                                               Some(Rc::from((mapping(&i,
-                                                                      &List::head(&xs_1)),
-                                                              Rc::from((i +
-                                                                            1i32,
-                                                                        List::tail(&xs_1))))))
+                                               Some((mapping(&i,
+                                                             &List::head(&xs_1)),
+                                                     (i + 1i32,
+                                                      List::tail(&xs_1))))
                                            }
                                        }.clone()
-                               }), &Rc::from((0i32, xs.clone())))
+                               }), &(0i32, xs.clone()))
     }
     pub fn collect<T: Clone + 'static, U: Clone +
                    'static>(mapping:
@@ -600,9 +604,9 @@ pub mod List {
         List::concat(&List::map(mapping, xs))
     }
     pub fn indexed<a_: Clone + 'static>(xs: &Option<Rc<List::Node_1<a_>>>)
-     -> Option<Rc<List::Node_1<Rc<(i32, a_)>>>> {
+     -> Option<Rc<List::Node_1<(i32, a_)>>> {
         List::mapIndexed(&Rc::from(move |i: &i32, x: &a_|
-                                       Rc::from((i.clone(), x.clone()))), xs)
+                                       (i.clone(), x.clone())), xs)
     }
     pub fn map2<T1: Clone + 'static, T2: Clone + 'static, U: Clone +
                 'static>(mapping: &Rc<impl Fn(&T1, &T2) -> (U) + 'static>,
@@ -613,8 +617,8 @@ pub mod List {
                                    let mapping = mapping.clone();
                                    move
                                        |tupledArg:
-                                            &Rc<(Option<Rc<List::Node_1<T1>>>,
-                                                 Option<Rc<List::Node_1<T2>>>)>|
+                                            &(Option<Rc<List::Node_1<T1>>>,
+                                              Option<Rc<List::Node_1<T2>>>)|
                                        {
                                            let xs_1:
                                                    Option<Rc<List::Node_1<T1>>> =
@@ -626,17 +630,17 @@ pub mod List {
                                                   true
                                               } else { List::isEmpty(&ys_1) }
                                               {
-                                               None::<Rc<(U,
-                                                          Rc<(Option<Rc<List::Node_1<T1>>>,
-                                                              Option<Rc<List::Node_1<T2>>>)>)>>
+                                               None::<(U,
+                                                       (Option<Rc<List::Node_1<T1>>>,
+                                                        Option<Rc<List::Node_1<T2>>>))>
                                            } else {
-                                               Some(Rc::from((mapping(&List::head(&xs_1),
-                                                                      &List::head(&ys_1)),
-                                                              Rc::from((List::tail(&xs_1),
-                                                                        List::tail(&ys_1))))))
+                                               Some((mapping(&List::head(&xs_1),
+                                                             &List::head(&ys_1)),
+                                                     (List::tail(&xs_1),
+                                                      List::tail(&ys_1))))
                                            }
                                        }.clone()
-                               }), &Rc::from((xs.clone(), ys.clone())))
+                               }), &(xs.clone(), ys.clone()))
     }
     pub fn mapIndexed2<T1: Clone + 'static, T2: Clone + 'static, U: Clone +
                        'static>(mapping:
@@ -649,9 +653,9 @@ pub mod List {
                                    let mapping = mapping.clone();
                                    move
                                        |tupledArg:
-                                            &Rc<(i32,
-                                                 Option<Rc<List::Node_1<T1>>>,
-                                                 Option<Rc<List::Node_1<T2>>>)>|
+                                            &(i32,
+                                              Option<Rc<List::Node_1<T1>>>,
+                                              Option<Rc<List::Node_1<T2>>>)|
                                        {
                                            let i: i32 = tupledArg.0.clone();
                                            let xs_1:
@@ -664,21 +668,20 @@ pub mod List {
                                                   true
                                               } else { List::isEmpty(&ys_1) }
                                               {
-                                               None::<Rc<(U,
-                                                          Rc<(i32,
-                                                              Option<Rc<List::Node_1<T1>>>,
-                                                              Option<Rc<List::Node_1<T2>>>)>)>>
+                                               None::<(U,
+                                                       (i32,
+                                                        Option<Rc<List::Node_1<T1>>>,
+                                                        Option<Rc<List::Node_1<T2>>>))>
                                            } else {
-                                               Some(Rc::from((mapping(&i,
-                                                                      &List::head(&xs_1),
-                                                                      &List::head(&ys_1)),
-                                                              Rc::from((i +
-                                                                            1i32,
-                                                                        List::tail(&xs_1),
-                                                                        List::tail(&ys_1))))))
+                                               Some((mapping(&i,
+                                                             &List::head(&xs_1),
+                                                             &List::head(&ys_1)),
+                                                     (i + 1i32,
+                                                      List::tail(&xs_1),
+                                                      List::tail(&ys_1))))
                                            }
                                        }.clone()
-                               }), &Rc::from((0i32, xs.clone(), ys.clone())))
+                               }), &(0i32, xs.clone(), ys.clone()))
     }
     pub fn map3<T1: Clone + 'static, T2: Clone + 'static, T3: Clone + 'static,
                 U: Clone +
@@ -692,9 +695,9 @@ pub mod List {
                                    let mapping = mapping.clone();
                                    move
                                        |tupledArg:
-                                            &Rc<(Option<Rc<List::Node_1<T1>>>,
-                                                 Option<Rc<List::Node_1<T2>>>,
-                                                 Option<Rc<List::Node_1<T3>>>)>|
+                                            &(Option<Rc<List::Node_1<T1>>>,
+                                              Option<Rc<List::Node_1<T2>>>,
+                                              Option<Rc<List::Node_1<T3>>>)|
                                        {
                                            let xs_1:
                                                    Option<Rc<List::Node_1<T1>>> =
@@ -713,81 +716,70 @@ pub mod List {
                                                   true
                                               } else { List::isEmpty(&zs_1) }
                                               {
-                                               None::<Rc<(U,
-                                                          Rc<(Option<Rc<List::Node_1<T1>>>,
-                                                              Option<Rc<List::Node_1<T2>>>,
-                                                              Option<Rc<List::Node_1<T3>>>)>)>>
+                                               None::<(U,
+                                                       (Option<Rc<List::Node_1<T1>>>,
+                                                        Option<Rc<List::Node_1<T2>>>,
+                                                        Option<Rc<List::Node_1<T3>>>))>
                                            } else {
-                                               Some(Rc::from((mapping(&List::head(&xs_1),
-                                                                      &List::head(&ys_1),
-                                                                      &List::head(&zs_1)),
-                                                              Rc::from((List::tail(&xs_1),
-                                                                        List::tail(&ys_1),
-                                                                        List::tail(&zs_1))))))
+                                               Some((mapping(&List::head(&xs_1),
+                                                             &List::head(&ys_1),
+                                                             &List::head(&zs_1)),
+                                                     (List::tail(&xs_1),
+                                                      List::tail(&ys_1),
+                                                      List::tail(&zs_1))))
                                            }
                                        }.clone()
-                               }),
-                     &Rc::from((xs.clone(), ys.clone(), zs.clone())))
+                               }), &(xs.clone(), ys.clone(), zs.clone()))
     }
     pub fn mapFold<State: Clone + 'static, T: Clone + 'static, U: Clone +
                    'static>(mapping:
-                                &Rc<impl Fn(&State, &T) -> (Rc<(U, State)>) +
+                                &Rc<impl Fn(&State, &T) -> ((U, State)) +
                                     'static>, state: &State,
                             xs: &Option<Rc<List::Node_1<T>>>)
-     -> Rc<(Option<Rc<List::Node_1<U>>>, State)> {
-        {
-            let acc: Rc<MutCell<State>> =
-                Rc::from(MutCell::from(state.clone()));
-            Rc::from((List::unfold(&Rc::from({
-                                                 let acc = acc.clone();
-                                                 let mapping =
-                                                     mapping.clone();
-                                                 move
-                                                     |xs_1:
-                                                          &Option<Rc<List::Node_1<T>>>|
-                                                     if List::isEmpty(xs_1) {
-                                                         None::<Rc<(U,
-                                                                    Option<Rc<List::Node_1<T>>>)>>
-                                                     } else {
-                                                         {
-                                                             let m:
-                                                                     Rc<(U,
-                                                                         State)> =
-                                                                 mapping(&acc.get(),
-                                                                         &List::head(xs_1));
-                                                             acc.set(m.1.clone());
-                                                             Some(Rc::from((m.0.clone(),
-                                                                            List::tail(xs_1))))
-                                                         }.clone()
-                                                     }
-                                             }), xs), acc.get().clone()))
-        }.clone()
+     -> (Option<Rc<List::Node_1<U>>>, State) {
+        let acc: Rc<MutCell<State>> = Rc::from(MutCell::from(state.clone()));
+        (List::unfold(&Rc::from({
+                                    let acc = acc.clone();
+                                    let mapping = mapping.clone();
+                                    move |xs_1: &Option<Rc<List::Node_1<T>>>|
+                                        if List::isEmpty(xs_1) {
+                                            None::<(U,
+                                                    Option<Rc<List::Node_1<T>>>)>
+                                        } else {
+                                            {
+                                                let m: (U, State) =
+                                                    mapping(&acc.get(),
+                                                            &List::head(xs_1));
+                                                acc.set(m.1.clone());
+                                                Some((m.0.clone(),
+                                                      List::tail(xs_1)))
+                                            }.clone()
+                                        }
+                                }), xs), acc.get().clone())
     }
     pub fn mapFoldBack<T: Clone + 'static, State: Clone + 'static, U: Clone +
                        'static>(mapping:
-                                    &Rc<impl Fn(&T, &State)
-                                        -> (Rc<(U, State)>) + 'static>,
+                                    &Rc<impl Fn(&T, &State) -> ((U, State)) +
+                                        'static>,
                                 xs: &Option<Rc<List::Node_1<T>>>,
                                 state: &State)
-     -> Rc<(Option<Rc<List::Node_1<U>>>, State)> {
-        {
-            let ys: Rc<MutCell<Option<Rc<List::Node_1<U>>>>> =
-                Rc::from(MutCell::from(List::empty()));
-            let st: State =
-                List::fold(&Rc::from({
-                                         let mapping = mapping.clone();
-                                         let ys = ys.clone();
-                                         move |acc: &State, x: &T|
-                                             {
-                                                 let m: Rc<(U, State)> =
-                                                     mapping(x, acc);
-                                                 ys.set(List::cons(&m.0.clone(),
-                                                                   &ys.get()));
-                                                 m.1.clone()
-                                             }.clone()
-                                     }), state, &List::reverse(xs));
-            Rc::from((ys.get().clone(), st))
-        }.clone()
+     -> (Option<Rc<List::Node_1<U>>>, State) {
+        let ys: Rc<MutCell<Option<Rc<List::Node_1<U>>>>> =
+            Rc::from(MutCell::from(List::empty()));
+        let st: State =
+            List::fold(&Rc::from({
+                                     let mapping = mapping.clone();
+                                     let ys = ys.clone();
+                                     move |acc: &State, x: &T|
+                                         {
+                                             let m: (U, State) =
+                                                 mapping(x, acc);
+                                             ys.set(List::cons(&m.0.clone(),
+                                                               &ys.get()));
+                                             m.1.clone()
+                                         }.clone()
+                                 }), state, &List::reverse(xs));
+        (ys.get().clone(), st)
     }
     pub fn tryPick<T: Clone + 'static, U: Clone +
                    'static>(chooser:
@@ -968,47 +960,45 @@ pub mod List {
                                    let initializer = initializer.clone();
                                    move |i: &i32|
                                        if i.clone() < count {
-                                           Some(Rc::from((initializer(i),
-                                                          i.clone() + 1i32)))
-                                       } else { None::<Rc<(T, i32)>> }
+                                           Some((initializer(i),
+                                                 i.clone() + 1i32))
+                                       } else { None::<(T, i32)> }
                                }), &0i32)
     }
     pub fn pairwise<T: Clone + 'static>(xs: &Option<Rc<List::Node_1<T>>>)
-     -> Option<Rc<List::Node_1<Rc<(T, T)>>>> {
+     -> Option<Rc<List::Node_1<(T, T)>>> {
         List::ofArray(&Array::pairwise(&List::toArray(xs)))
     }
     pub fn partition<T: Clone +
                      'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
                               xs: &Option<Rc<List::Node_1<T>>>)
-     -> Rc<(Option<Rc<List::Node_1<T>>>, Option<Rc<List::Node_1<T>>>)> {
-        {
-            let root1: Rc<MutCell<Option<Rc<List::Node_1<T>>>>> =
-                Rc::from(MutCell::from(List::empty()));
-            let root2: Rc<MutCell<Option<Rc<List::Node_1<T>>>>> =
-                Rc::from(MutCell::from(List::empty()));
-            let node1: Rc<MutCell<Option<Rc<List::Node_1<T>>>>> =
-                Rc::from(MutCell::from(root1.get().clone()));
-            let node2: Rc<MutCell<Option<Rc<List::Node_1<T>>>>> =
-                Rc::from(MutCell::from(root2.get().clone()));
-            let xs_1: Rc<MutCell<Option<Rc<List::Node_1<T>>>>> =
-                Rc::from(MutCell::from(xs.clone()));
-            while !List::isEmpty(&xs_1.get()) {
-                let x: T = List::head(&xs_1.get());
-                if predicate(&x) {
-                    node1.set(List::appendConsNoTail(&x, &node1.get()));
-                    if List::isEmpty(&root1.get()) {
-                        root1.set(node1.get().clone());
-                    }
-                } else {
-                    node2.set(List::appendConsNoTail(&x, &node2.get()));
-                    if List::isEmpty(&root2.get()) {
-                        root2.set(node2.get().clone());
-                    }
+     -> (Option<Rc<List::Node_1<T>>>, Option<Rc<List::Node_1<T>>>) {
+        let root1: Rc<MutCell<Option<Rc<List::Node_1<T>>>>> =
+            Rc::from(MutCell::from(List::empty()));
+        let root2: Rc<MutCell<Option<Rc<List::Node_1<T>>>>> =
+            Rc::from(MutCell::from(List::empty()));
+        let node1: Rc<MutCell<Option<Rc<List::Node_1<T>>>>> =
+            Rc::from(MutCell::from(root1.get().clone()));
+        let node2: Rc<MutCell<Option<Rc<List::Node_1<T>>>>> =
+            Rc::from(MutCell::from(root2.get().clone()));
+        let xs_1: Rc<MutCell<Option<Rc<List::Node_1<T>>>>> =
+            Rc::from(MutCell::from(xs.clone()));
+        while !List::isEmpty(&xs_1.get()) {
+            let x: T = List::head(&xs_1.get());
+            if predicate(&x) {
+                node1.set(List::appendConsNoTail(&x, &node1.get()));
+                if List::isEmpty(&root1.get()) {
+                    root1.set(node1.get().clone());
                 }
-                xs_1.set(List::tail(&xs_1.get()))
+            } else {
+                node2.set(List::appendConsNoTail(&x, &node2.get()));
+                if List::isEmpty(&root2.get()) {
+                    root2.set(node2.get().clone());
+                }
             }
-            Rc::from((root1.get().clone(), root2.get().clone()))
-        }.clone()
+            xs_1.set(List::tail(&xs_1.get()))
+        }
+        (root1.get().clone(), root2.get().clone())
     }
     pub fn reduce<T: Clone +
                   'static>(reduction: &Rc<impl Fn(&T, &T) -> (T) + 'static>,
@@ -1040,55 +1030,53 @@ pub mod List {
                                    }))
     }
     pub fn unzip<a_: Clone + 'static, b_: Clone +
-                 'static>(xs: &Option<Rc<List::Node_1<Rc<(a_, b_)>>>>)
-     -> Rc<(Option<Rc<List::Node_1<a_>>>, Option<Rc<List::Node_1<b_>>>)> {
+                 'static>(xs: &Option<Rc<List::Node_1<(a_, b_)>>>)
+     -> (Option<Rc<List::Node_1<a_>>>, Option<Rc<List::Node_1<b_>>>) {
         List::foldBack(&Rc::from(move
-                                     |tupledArg: &Rc<(a_, b_)>,
+                                     |tupledArg: &(a_, b_),
                                       tupledArg_1:
-                                          &Rc<(Option<Rc<List::Node_1<a_>>>,
-                                               Option<Rc<List::Node_1<b_>>>)>|
-                                     Rc::from((List::cons(&tupledArg.0.clone(),
-                                                          &tupledArg_1.0.clone()),
-                                               List::cons(&tupledArg.1.clone(),
-                                                          &tupledArg_1.1.clone())))),
-                       xs, &Rc::from((List::empty(), List::empty())))
+                                          &(Option<Rc<List::Node_1<a_>>>,
+                                            Option<Rc<List::Node_1<b_>>>)|
+                                     (List::cons(&tupledArg.0.clone(),
+                                                 &tupledArg_1.0.clone()),
+                                      List::cons(&tupledArg.1.clone(),
+                                                 &tupledArg_1.1.clone()))),
+                       xs, &(List::empty(), List::empty()))
     }
     pub fn unzip3<a_: Clone + 'static, b_: Clone + 'static, c_: Clone +
-                  'static>(xs: &Option<Rc<List::Node_1<Rc<(a_, b_, c_)>>>>)
+                  'static>(xs: &Option<Rc<List::Node_1<(a_, b_, c_)>>>)
      ->
-         Rc<(Option<Rc<List::Node_1<a_>>>, Option<Rc<List::Node_1<b_>>>,
-             Option<Rc<List::Node_1<c_>>>)> {
+         (Option<Rc<List::Node_1<a_>>>, Option<Rc<List::Node_1<b_>>>,
+          Option<Rc<List::Node_1<c_>>>) {
         List::foldBack(&Rc::from(move
-                                     |tupledArg: &Rc<(a_, b_, c_)>,
+                                     |tupledArg: &(a_, b_, c_),
                                       tupledArg_1:
-                                          &Rc<(Option<Rc<List::Node_1<a_>>>,
-                                               Option<Rc<List::Node_1<b_>>>,
-                                               Option<Rc<List::Node_1<c_>>>)>|
-                                     Rc::from((List::cons(&tupledArg.0.clone(),
-                                                          &tupledArg_1.0.clone()),
-                                               List::cons(&tupledArg.1.clone(),
-                                                          &tupledArg_1.1.clone()),
-                                               List::cons(&tupledArg.2.clone(),
-                                                          &tupledArg_1.2.clone())))),
-                       xs,
-                       &Rc::from((List::empty(), List::empty(),
-                                  List::empty())))
+                                          &(Option<Rc<List::Node_1<a_>>>,
+                                            Option<Rc<List::Node_1<b_>>>,
+                                            Option<Rc<List::Node_1<c_>>>)|
+                                     (List::cons(&tupledArg.0.clone(),
+                                                 &tupledArg_1.0.clone()),
+                                      List::cons(&tupledArg.1.clone(),
+                                                 &tupledArg_1.1.clone()),
+                                      List::cons(&tupledArg.2.clone(),
+                                                 &tupledArg_1.2.clone()))),
+                       xs, &(List::empty(), List::empty(), List::empty()))
     }
     pub fn zip<a_: Clone + 'static, b_: Clone +
                'static>(xs: &Option<Rc<List::Node_1<a_>>>,
                         ys: &Option<Rc<List::Node_1<b_>>>)
-     -> Option<Rc<List::Node_1<Rc<(a_, b_)>>>> {
-        List::map2(&Rc::from(move |x: &a_, y: &b_|
-                                 Rc::from((x.clone(), y.clone()))), xs, ys)
+     -> Option<Rc<List::Node_1<(a_, b_)>>> {
+        List::map2(&Rc::from(move |x: &a_, y: &b_| (x.clone(), y.clone())),
+                   xs, ys)
     }
     pub fn zip3<a_: Clone + 'static, b_: Clone + 'static, c_: Clone +
                 'static>(xs: &Option<Rc<List::Node_1<a_>>>,
                          ys: &Option<Rc<List::Node_1<b_>>>,
                          zs: &Option<Rc<List::Node_1<c_>>>)
-     -> Option<Rc<List::Node_1<Rc<(a_, b_, c_)>>>> {
+     -> Option<Rc<List::Node_1<(a_, b_, c_)>>> {
         List::map3(&Rc::from(move |x: &a_, y: &b_, z: &c_|
-                                 Rc::from((x.clone(), y.clone(), z.clone()))),
-                   xs, ys, zs)
+                                 (x.clone(), y.clone(), z.clone())), xs, ys,
+                   zs)
     }
     pub fn sortWith<T: Clone +
                     'static>(comparer:
@@ -1252,11 +1240,11 @@ pub mod List {
     pub fn allPairs<T1: Clone + 'static, T2: Clone +
                     'static>(xs: &Option<Rc<List::Node_1<T1>>>,
                              ys: &Option<Rc<List::Node_1<T2>>>)
-     -> Option<Rc<List::Node_1<Rc<(T1, T2)>>>> {
+     -> Option<Rc<List::Node_1<(T1, T2)>>> {
         {
-            let root: Rc<MutCell<Option<Rc<List::Node_1<Rc<(T1, T2)>>>>>> =
+            let root: Rc<MutCell<Option<Rc<List::Node_1<(T1, T2)>>>>> =
                 Rc::from(MutCell::from(List::empty()));
-            let node: Rc<MutCell<Option<Rc<List::Node_1<Rc<(T1, T2)>>>>>> =
+            let node: Rc<MutCell<Option<Rc<List::Node_1<(T1, T2)>>>>> =
                 Rc::from(MutCell::from(root.get().clone()));
             List::iterate(&Rc::from({
                                         let node = node.clone();
@@ -1277,8 +1265,8 @@ pub mod List {
                                                                             |y:
                                                                                  &T2|
                                                                             {
-                                                                                node.set(List::appendConsNoTail(&Rc::from((x.clone(),
-                                                                                                                           y.clone())),
+                                                                                node.set(List::appendConsNoTail(&(x.clone(),
+                                                                                                                  y.clone()),
                                                                                                                 &node.get()));
                                                                                 if List::isEmpty(&root.get())
                                                                                    {
@@ -1346,8 +1334,8 @@ pub mod List {
             }
             List::unfold(&Rc::from(move
                                        |tupledArg:
-                                            &Rc<(i32,
-                                                 Option<Rc<List::Node_1<T>>>)>|
+                                            &(i32,
+                                              Option<Rc<List::Node_1<T>>>)|
                                        {
                                            let i: i32 = tupledArg.0.clone();
                                            let xs_1:
@@ -1361,19 +1349,17 @@ pub mod List {
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"list")) as Rc<str>);
                                                    }
-                                                   Some(Rc::from((List::head(&xs_1),
-                                                                  Rc::from((i
-                                                                                -
-                                                                                1i32,
-                                                                            List::tail(&xs_1))))))
+                                                   Some((List::head(&xs_1),
+                                                         (i - 1i32,
+                                                          List::tail(&xs_1))))
                                                }.clone()
                                            } else {
-                                               None::<Rc<(T,
-                                                          Rc<(i32,
-                                                              Option<Rc<List::Node_1<T>>>)>)>>
+                                               None::<(T,
+                                                       (i32,
+                                                        Option<Rc<List::Node_1<T>>>))>
                                            }
                                        }.clone()),
-                         &Rc::from((count.clone(), xs.clone())))
+                         &(count.clone(), xs.clone()))
         }.clone()
     }
     pub fn takeWhile<T: Clone +
@@ -1386,11 +1372,11 @@ pub mod List {
                                        if if !List::isEmpty(xs_1) {
                                               predicate(&List::head(xs_1))
                                           } else { false } {
-                                           Some(Rc::from((List::head(xs_1),
-                                                          List::tail(xs_1))))
+                                           Some((List::head(xs_1),
+                                                 List::tail(xs_1)))
                                        } else {
-                                           None::<Rc<(T,
-                                                      Option<Rc<List::Node_1<T>>>)>>
+                                           None::<(T,
+                                                   Option<Rc<List::Node_1<T>>>)>
                                        }
                                }), xs)
     }
@@ -1399,8 +1385,7 @@ pub mod List {
      -> Option<Rc<List::Node_1<T>>> {
         List::unfold(&Rc::from(move
                                    |tupledArg:
-                                        &Rc<(i32,
-                                             Option<Rc<List::Node_1<T>>>)>|
+                                        &(i32, Option<Rc<List::Node_1<T>>>)|
                                    {
                                        let i: i32 = tupledArg.0.clone();
                                        let xs_1: Option<Rc<List::Node_1<T>>> =
@@ -1408,35 +1393,32 @@ pub mod List {
                                        if if i > 0i32 {
                                               !List::isEmpty(&xs_1)
                                           } else { false } {
-                                           Some(Rc::from((List::head(&xs_1),
-                                                          Rc::from((i - 1i32,
-                                                                    List::tail(&xs_1))))))
+                                           Some((List::head(&xs_1),
+                                                 (i - 1i32,
+                                                  List::tail(&xs_1))))
                                        } else {
-                                           None::<Rc<(T,
-                                                      Rc<(i32,
-                                                          Option<Rc<List::Node_1<T>>>)>)>>
+                                           None::<(T,
+                                                   (i32,
+                                                    Option<Rc<List::Node_1<T>>>))>
                                        }
-                                   }.clone()),
-                     &Rc::from((count.clone(), xs.clone())))
+                                   }.clone()), &(count.clone(), xs.clone()))
     }
     pub fn splitAt<T: Clone +
                    'static>(index: &i32, xs: &Option<Rc<List::Node_1<T>>>)
-     -> Rc<(Option<Rc<List::Node_1<T>>>, Option<Rc<List::Node_1<T>>>)> {
-        {
-            if index.clone() < 0i32 {
-                panic!("{}",
-                       Rc::from((Rc::from(List::SR::inputMustBeNonNegative().to_string() +
+     -> (Option<Rc<List::Node_1<T>>>, Option<Rc<List::Node_1<T>>>) {
+        if index.clone() < 0i32 {
+            panic!("{}",
+                   Rc::from((Rc::from(List::SR::inputMustBeNonNegative().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"index")) as Rc<str>);
-            }
-            if index.clone() > List::length(xs) {
-                panic!("{}",
-                       Rc::from((Rc::from(List::SR::notEnoughElements().to_string() +
+        }
+        if index.clone() > List::length(xs) {
+            panic!("{}",
+                   Rc::from((Rc::from(List::SR::notEnoughElements().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"index")) as Rc<str>);
-            }
-            Rc::from((List::take(index, xs), List::skip(index, xs)))
-        }.clone()
+        }
+        (List::take(index, xs), List::skip(index, xs))
     }
     pub fn exactlyOne<T: Clone + 'static>(xs: &Option<Rc<List::Node_1<T>>>)
      -> T {

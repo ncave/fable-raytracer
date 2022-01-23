@@ -7,7 +7,6 @@
 #![allow(unused_variables)]
 #![allow(unused_attributes)]
 use crate::import_3bd9ae6a::*;
-use std::rc::Rc;
 pub mod Option_ {
     use super::*;
     pub fn bind<T: Clone + 'static, U: Clone +
@@ -15,7 +14,7 @@ pub mod Option_ {
                          opt: &Option<T>) -> Option<U> {
         match opt { None => None::<U>, Some(opt_0_0) => binder(opt_0_0), }
     }
-    pub fn contains<T: PartialEq + Clone +
+    pub fn contains<T: Eq + core::hash::Hash + Clone +
                     'static>(value: &T, opt: &Option<T>) -> bool {
         match opt {
             None => false,

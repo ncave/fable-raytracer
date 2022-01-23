@@ -9,5 +9,5 @@ let main _args =
     let data = Array.create len 0uy
     WriteLine("{0}", "Raytracer running...")
     let _, elapsed = Platform.measureTime (fun () -> RayTracerDemo.renderScene (data, x, y, w, h, angle))
-    WriteLine("Ray tracing:\n - rendered image size: ({0}x{1})\n - elapsed: {2} ms", w, h, elapsed)
+    WriteLine("Ray tracing done:\n - rendered image size: ({0}x{1})\n - elapsed: {2} ms", w, h, elapsed)
     0

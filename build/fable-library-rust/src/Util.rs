@@ -6,10 +6,10 @@
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 #![allow(unused_attributes)]
-use std::rc::Rc;
 pub mod Util {
     use super::*;
-    pub fn equals<T: PartialEq + Clone + 'static>(x: &T, y: &T) -> bool {
+    pub fn equals<T: Eq + core::hash::Hash + Clone + 'static>(x: &T, y: &T)
+     -> bool {
         x.clone() == y.clone()
     }
     pub fn compare<T: PartialOrd + Clone + 'static>(x: &T, y: &T) -> i32 {

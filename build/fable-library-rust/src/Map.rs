@@ -6,28 +6,22 @@
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 #![allow(unused_attributes)]
-#[path = "./Native.rs"]
-pub(crate) mod import_3bd9ae6a;
-pub use import_3bd9ae6a::*;
+use crate::import_3bd9ae6a::*;
 #[path = "./Option.rs"]
 pub(crate) mod import_8d7d6be8;
 pub use import_8d7d6be8::*;
 #[path = "./Util.rs"]
 pub(crate) mod import_f222008f;
 pub use import_f222008f::*;
-#[path = "./Types.rs"]
-pub(crate) mod import_df4a7900;
-pub use import_df4a7900::*;
 #[path = "./List.rs"]
 pub(crate) mod import_ec6ee4e9;
 pub use import_ec6ee4e9::*;
-#[path = "./Array.rs"]
-pub(crate) mod import_c6216f2;
-pub use import_c6216f2::*;
 #[path = "./Seq.rs"]
 pub(crate) mod import_52af85ec;
 pub use import_52af85ec::*;
-use std::rc::Rc;
+#[path = "./Array.rs"]
+pub(crate) mod import_c6216f2;
+pub use import_c6216f2::*;
 pub mod Map {
     use super::*;
     pub mod SR {
@@ -45,56 +39,54 @@ pub mod Map {
             Native::string(&"The item, key, or index was not found in the collection.")
         }
     }
-    #[derive(Clone, Debug)]
-    pub struct MapTreeNode_2<K: Clone + 'static, V: Clone + 'static> {
+    #[derive(Clone, Debug, Default, Hash)]
+    pub struct MapTree_2<K: Clone + 'static, V: Clone + 'static> {
         pub Height: i32,
         pub Key: K,
         pub Value: V,
-        pub Left: Option<Rc<Map::MapTreeNode_2<K, V>>>,
-        pub Right: Option<Rc<Map::MapTreeNode_2<K, V>>>,
+        pub Left: Option<Rc<Map::MapTree_2<K, V>>>,
+        pub Right: Option<Rc<Map::MapTree_2<K, V>>>,
     }
     pub fn empty<K: Clone + 'static, V: Clone + 'static>()
-     -> Option<Rc<Map::MapTreeNode_2<K, V>>> {
-        None::<Rc<Map::MapTreeNode_2<K, V>>>
+     -> Option<Rc<Map::MapTree_2<K, V>>> {
+        None::<Rc<Map::MapTree_2<K, V>>>
     }
     pub fn isEmpty<K: Clone + 'static, V: Clone +
-                   'static>(m: &Option<Rc<Map::MapTreeNode_2<K, V>>>)
-     -> bool {
+                   'static>(m: &Option<Rc<Map::MapTree_2<K, V>>>) -> bool {
         m.is_none()
     }
     pub fn mkMapTreeLeaf<K: Clone + 'static, V: Clone + 'static>(k: &K, v: &V)
-     -> Option<Rc<Map::MapTreeNode_2<K, V>>> {
-        Some(Rc::from(Map::MapTreeNode_2::<K,
-                                           V>{Height: 1i32,
-                                              Key: k.clone(),
-                                              Value: v.clone(),
-                                              Left: Map::empty(),
-                                              Right: Map::empty(),}))
+     -> Option<Rc<Map::MapTree_2<K, V>>> {
+        Some(Rc::from(Map::MapTree_2::<K,
+                                       V>{Height: 1i32,
+                                          Key: k.clone(),
+                                          Value: v.clone(),
+                                          Left: Map::empty(),
+                                          Right: Map::empty(),}))
     }
     pub fn mkMapTreeNode<K: Clone + 'static, V: Clone +
                          'static>(k: &K, v: &V,
-                                  left: &Option<Rc<Map::MapTreeNode_2<K, V>>>,
-                                  right:
-                                      &Option<Rc<Map::MapTreeNode_2<K, V>>>,
+                                  left: &Option<Rc<Map::MapTree_2<K, V>>>,
+                                  right: &Option<Rc<Map::MapTree_2<K, V>>>,
                                   h: &i32)
-     -> Option<Rc<Map::MapTreeNode_2<K, V>>> {
-        Some(Rc::from(Map::MapTreeNode_2::<K,
-                                           V>{Height: h.clone(),
-                                              Key: k.clone(),
-                                              Value: v.clone(),
-                                              Left: left.clone(),
-                                              Right: right.clone(),}))
+     -> Option<Rc<Map::MapTree_2<K, V>>> {
+        Some(Rc::from(Map::MapTree_2::<K,
+                                       V>{Height: h.clone(),
+                                          Key: k.clone(),
+                                          Value: v.clone(),
+                                          Left: left.clone(),
+                                          Right: right.clone(),}))
     }
     pub fn singleton<K: Clone + 'static, V: Clone + 'static>(k: &K, v: &V)
-     -> Option<Rc<Map::MapTreeNode_2<K, V>>> {
+     -> Option<Rc<Map::MapTree_2<K, V>>> {
         Map::mkMapTreeLeaf(k, v)
     }
     pub fn sizeAux<K: Clone + 'static, V: Clone +
-                   'static>(acc: &i32,
-                            m: &Option<Rc<Map::MapTreeNode_2<K, V>>>) -> i32 {
+                   'static>(acc: &i32, m: &Option<Rc<Map::MapTree_2<K, V>>>)
+     -> i32 {
         match m {
             Some(m_0_0) => {
-                let t: Rc<Map::MapTreeNode_2<K, V>> = m_0_0.clone();
+                let t: Rc<Map::MapTree_2<K, V>> = m_0_0.clone();
                 if t.Height == 1i32 {
                     acc.clone() + 1i32
                 } else {
@@ -106,26 +98,26 @@ pub mod Map {
         }
     }
     pub fn count<a_: Clone + 'static, b_: Clone +
-                 'static>(x: &Option<Rc<Map::MapTreeNode_2<a_, b_>>>) -> i32 {
+                 'static>(x: &Option<Rc<Map::MapTree_2<a_, b_>>>) -> i32 {
         Map::sizeAux(&0i32, x)
     }
     pub fn height<K: Clone + 'static, V: Clone +
-                  'static>(m: &Option<Rc<Map::MapTreeNode_2<K, V>>>) -> i32 {
+                  'static>(m: &Option<Rc<Map::MapTree_2<K, V>>>) -> i32 {
         match m { Some(m_0_0) => m_0_0.Height, _ => 0i32, }
     }
     pub fn mk<K: Clone + 'static, V: Clone +
-              'static>(l: &Option<Rc<Map::MapTreeNode_2<K, V>>>, k: &K, v: &V,
-                       r: &Option<Rc<Map::MapTreeNode_2<K, V>>>)
-     -> Option<Rc<Map::MapTreeNode_2<K, V>>> {
+              'static>(l: &Option<Rc<Map::MapTree_2<K, V>>>, k: &K, v: &V,
+                       r: &Option<Rc<Map::MapTree_2<K, V>>>)
+     -> Option<Rc<Map::MapTree_2<K, V>>> {
         {
             let hl: i32 =
                 {
-                    let m: Option<Rc<Map::MapTreeNode_2<K, V>>> = l.clone();
+                    let m: Option<Rc<Map::MapTree_2<K, V>>> = l.clone();
                     match &m { Some(m_0_0) => m_0_0.Height, _ => 0i32, }
                 };
             let hr: i32 =
                 {
-                    let m_1: Option<Rc<Map::MapTreeNode_2<K, V>>> = r.clone();
+                    let m_1: Option<Rc<Map::MapTree_2<K, V>>> = r.clone();
                     match &m_1 { Some(m_1_0_0) => m_1_0_0.Height, _ => 0i32, }
                 };
             let m_2: i32 = if hl < hr { hr } else { hl };
@@ -135,28 +127,26 @@ pub mod Map {
         }.clone()
     }
     pub fn rebalance<K: Clone + 'static, V: Clone +
-                     'static>(t1: &Option<Rc<Map::MapTreeNode_2<K, V>>>,
-                              k: &K, v: &V,
-                              t2: &Option<Rc<Map::MapTreeNode_2<K, V>>>)
-     -> Option<Rc<Map::MapTreeNode_2<K, V>>> {
+                     'static>(t1: &Option<Rc<Map::MapTree_2<K, V>>>, k: &K,
+                              v: &V, t2: &Option<Rc<Map::MapTree_2<K, V>>>)
+     -> Option<Rc<Map::MapTree_2<K, V>>> {
         {
             let t1h: i32 =
                 {
-                    let m: Option<Rc<Map::MapTreeNode_2<K, V>>> = t1.clone();
+                    let m: Option<Rc<Map::MapTree_2<K, V>>> = t1.clone();
                     match &m { Some(m_0_0) => m_0_0.Height, _ => 0i32, }
                 };
             let t2h: i32 =
                 {
-                    let m_1: Option<Rc<Map::MapTreeNode_2<K, V>>> =
-                        t2.clone();
+                    let m_1: Option<Rc<Map::MapTree_2<K, V>>> = t2.clone();
                     match &m_1 { Some(m_1_0_0) => m_1_0_0.Height, _ => 0i32, }
                 };
             if t2h > t1h + 2i32 {
                 {
-                    let t2_0027: Rc<Map::MapTreeNode_2<K, V>> =
+                    let t2_0027: Rc<Map::MapTree_2<K, V>> =
                         Option_::getValue(t2).clone();
                     if {
-                           let m_2: Option<Rc<Map::MapTreeNode_2<K, V>>> =
+                           let m_2: Option<Rc<Map::MapTree_2<K, V>>> =
                                t2_0027.Left.clone();
                            match &m_2 {
                                Some(m_2_0_0) => m_2_0_0.Height,
@@ -164,7 +154,7 @@ pub mod Map {
                            }
                        } > t1h + 1i32 {
                         {
-                            let t2l: Rc<Map::MapTreeNode_2<K, V>> =
+                            let t2l: Rc<Map::MapTree_2<K, V>> =
                                 Option_::getValue(&t2_0027.Left).clone();
                             Map::mk(&Map::mk(t1, k, v, &t2l.Left), &t2l.Key,
                                     &t2l.Value,
@@ -179,10 +169,10 @@ pub mod Map {
             } else {
                 if t1h > t2h + 2i32 {
                     {
-                        let t1_0027: Rc<Map::MapTreeNode_2<K, V>> =
+                        let t1_0027: Rc<Map::MapTree_2<K, V>> =
                             Option_::getValue(t1).clone();
                         if {
-                               let m_3: Option<Rc<Map::MapTreeNode_2<K, V>>> =
+                               let m_3: Option<Rc<Map::MapTree_2<K, V>>> =
                                    t1_0027.Right.clone();
                                match &m_3 {
                                    Some(m_3_0_0) => m_3_0_0.Height,
@@ -190,7 +180,7 @@ pub mod Map {
                                }
                            } > t2h + 1i32 {
                             {
-                                let t1r: Rc<Map::MapTreeNode_2<K, V>> =
+                                let t1r: Rc<Map::MapTree_2<K, V>> =
                                     Option_::getValue(&t1_0027.Right).clone();
                                 Map::mk(&Map::mk(&t1_0027.Left, &t1_0027.Key,
                                                  &t1_0027.Value, &t1r.Left),
@@ -208,13 +198,12 @@ pub mod Map {
         }.clone()
     }
     pub fn add<K: PartialOrd + Clone + 'static, V: Clone +
-               'static>(k: &K, v: &V,
-                        m: &Option<Rc<Map::MapTreeNode_2<K, V>>>)
-     -> Option<Rc<Map::MapTreeNode_2<K, V>>> {
+               'static>(k: &K, v: &V, m: &Option<Rc<Map::MapTree_2<K, V>>>)
+     -> Option<Rc<Map::MapTree_2<K, V>>> {
         match m {
             Some(m_0_0) =>
             {
-                let t: Rc<Map::MapTreeNode_2<K, V>> = m_0_0.clone();
+                let t: Rc<Map::MapTree_2<K, V>> = m_0_0.clone();
                 let c: i32 = Util::compare(k, &t.Key);
                 if t.Height == 1i32 {
                     if c < 0i32 {
@@ -246,11 +235,11 @@ pub mod Map {
     }
     pub fn tryGetValue<K: PartialOrd + Clone + 'static, V: Clone +
                        'static>(k: &K, v: &Rc<MutCell<V>>,
-                                m: &Option<Rc<Map::MapTreeNode_2<K, V>>>)
+                                m: &Option<Rc<Map::MapTree_2<K, V>>>)
      -> bool {
         match m {
             Some(m_0_0) => {
-                let t: Rc<Map::MapTreeNode_2<K, V>> = m_0_0.clone();
+                let t: Rc<Map::MapTree_2<K, V>> = m_0_0.clone();
                 let c: i32 = Util::compare(k, &t.Key);
                 if c == 0i32 {
                     v.set(t.Value.clone());
@@ -273,8 +262,7 @@ pub mod Map {
         panic!("{}", Map::SR::keyNotFound())
     }
     pub fn find<K: PartialOrd + Clone + 'static, V: Clone +
-                'static>(k: &K, m: &Option<Rc<Map::MapTreeNode_2<K, V>>>)
-     -> V {
+                'static>(k: &K, m: &Option<Rc<Map::MapTree_2<K, V>>>) -> V {
         {
             let v: Rc<MutCell<V>> =
                 Rc::from(MutCell::from(Native::defaultOf::<V>()));
@@ -284,7 +272,7 @@ pub mod Map {
         }.clone()
     }
     pub fn tryFind<K: PartialOrd + Clone + 'static, V: Clone +
-                   'static>(k: &K, m: &Option<Rc<Map::MapTreeNode_2<K, V>>>)
+                   'static>(k: &K, m: &Option<Rc<Map::MapTree_2<K, V>>>)
      -> Option<V> {
         {
             let v: Rc<MutCell<V>> =
@@ -294,86 +282,80 @@ pub mod Map {
             } else { None::<V> }
         }.clone()
     }
+    pub fn item<K: PartialOrd + Clone + 'static, V: Clone +
+                'static>(k: &K, m: &Option<Rc<Map::MapTree_2<K, V>>>) -> V {
+        Map::find(k, m)
+    }
     pub fn partition1<a_: PartialOrd + Clone + 'static, b_: Clone +
                       'static>(f: &Rc<impl Fn(&a_, &b_) -> (bool) + 'static>,
                                k: &a_, v: &b_,
-                               acc1: &Option<Rc<Map::MapTreeNode_2<a_, b_>>>,
-                               acc2: &Option<Rc<Map::MapTreeNode_2<a_, b_>>>)
+                               acc1: &Option<Rc<Map::MapTree_2<a_, b_>>>,
+                               acc2: &Option<Rc<Map::MapTree_2<a_, b_>>>)
      ->
-         Rc<(Option<Rc<Map::MapTreeNode_2<a_, b_>>>,
-             Option<Rc<Map::MapTreeNode_2<a_, b_>>>)> {
+         (Option<Rc<Map::MapTree_2<a_, b_>>>,
+          Option<Rc<Map::MapTree_2<a_, b_>>>) {
         if f(k, v) {
-            Rc::from((Map::add(k, v, acc1), acc2.clone()))
-        } else { Rc::from((acc1.clone(), Map::add(k, v, acc2))) }
+            (Map::add(k, v, acc1), acc2.clone())
+        } else { (acc1.clone(), Map::add(k, v, acc2)) }
     }
     pub fn partitionAux<K: PartialOrd + Clone + 'static, V: Clone +
                         'static>(f: &Rc<impl Fn(&K, &V) -> (bool) + 'static>,
-                                 m: &Option<Rc<Map::MapTreeNode_2<K, V>>>,
-                                 acc_0: &Option<Rc<Map::MapTreeNode_2<K, V>>>,
-                                 acc_1: &Option<Rc<Map::MapTreeNode_2<K, V>>>)
-     ->
-         Rc<(Option<Rc<Map::MapTreeNode_2<K, V>>>,
-             Option<Rc<Map::MapTreeNode_2<K, V>>>)> {
-        {
-            let acc:
-                    Rc<(Option<Rc<Map::MapTreeNode_2<K, V>>>,
-                        Option<Rc<Map::MapTreeNode_2<K, V>>>)> =
-                Rc::from((acc_0.clone(), acc_1.clone()));
-            match m {
-                Some(m_0_0) =>
-                {
-                    let t: Rc<Map::MapTreeNode_2<K, V>> = m_0_0.clone();
-                    if t.Height == 1i32 {
-                        Map::partition1(f, &t.Key, &t.Value, &acc.0.clone(),
-                                        &acc.1.clone())
-                    } else {
-                        {
-                            let acc_2:
-                                    Rc<(Option<Rc<Map::MapTreeNode_2<K, V>>>,
-                                        Option<Rc<Map::MapTreeNode_2<K,
-                                                                     V>>>)> =
-                                Map::partitionAux(f, &t.Right, &acc.0.clone(),
-                                                  &acc.1.clone());
-                            let acc_3:
-                                    Rc<(Option<Rc<Map::MapTreeNode_2<K, V>>>,
-                                        Option<Rc<Map::MapTreeNode_2<K,
-                                                                     V>>>)> =
-                                Map::partition1(f, &t.Key, &t.Value,
-                                                &acc_2.0.clone(),
-                                                &acc_2.1.clone());
-                            Map::partitionAux(f, &t.Left, &acc_3.0.clone(),
-                                              &acc_3.1.clone())
-                        }.clone()
-                    }
-                }.clone(),
-                _ => acc.clone(),
+                                 m: &Option<Rc<Map::MapTree_2<K, V>>>,
+                                 acc_0: &Option<Rc<Map::MapTree_2<K, V>>>,
+                                 acc_1: &Option<Rc<Map::MapTree_2<K, V>>>)
+     -> (Option<Rc<Map::MapTree_2<K, V>>>, Option<Rc<Map::MapTree_2<K, V>>>) {
+        let acc:
+                (Option<Rc<Map::MapTree_2<K, V>>>,
+                 Option<Rc<Map::MapTree_2<K, V>>>) =
+            (acc_0.clone(), acc_1.clone());
+        match m {
+            Some(m_0_0) => {
+                let t: Rc<Map::MapTree_2<K, V>> = m_0_0.clone();
+                if t.Height == 1i32 {
+                    Map::partition1(f, &t.Key, &t.Value, &acc.0.clone(),
+                                    &acc.1.clone())
+                } else {
+                    let acc_2:
+                            (Option<Rc<Map::MapTree_2<K, V>>>,
+                             Option<Rc<Map::MapTree_2<K, V>>>) =
+                        Map::partitionAux(f, &t.Right, &acc.0.clone(),
+                                          &acc.1.clone());
+                    let acc_3:
+                            (Option<Rc<Map::MapTree_2<K, V>>>,
+                             Option<Rc<Map::MapTree_2<K, V>>>) =
+                        Map::partition1(f, &t.Key, &t.Value, &acc_2.0.clone(),
+                                        &acc_2.1.clone());
+                    Map::partitionAux(f, &t.Left, &acc_3.0.clone(),
+                                      &acc_3.1.clone())
+                }
             }
-        }.clone()
+            _ => acc,
+        }
     }
     pub fn partition<a_: PartialOrd + Clone + 'static, b_: Clone +
                      'static>(f: &Rc<impl Fn(&a_, &b_) -> (bool) + 'static>,
-                              m: &Option<Rc<Map::MapTreeNode_2<a_, b_>>>)
+                              m: &Option<Rc<Map::MapTree_2<a_, b_>>>)
      ->
-         Rc<(Option<Rc<Map::MapTreeNode_2<a_, b_>>>,
-             Option<Rc<Map::MapTreeNode_2<a_, b_>>>)> {
+         (Option<Rc<Map::MapTree_2<a_, b_>>>,
+          Option<Rc<Map::MapTree_2<a_, b_>>>) {
         Map::partitionAux(f, m, &Map::empty(), &Map::empty())
     }
     pub fn filter1<a_: PartialOrd + Clone + 'static, b_: Clone +
                    'static>(f: &Rc<impl Fn(&a_, &b_) -> (bool) + 'static>,
                             k: &a_, v: &b_,
-                            acc: &Option<Rc<Map::MapTreeNode_2<a_, b_>>>)
-     -> Option<Rc<Map::MapTreeNode_2<a_, b_>>> {
+                            acc: &Option<Rc<Map::MapTree_2<a_, b_>>>)
+     -> Option<Rc<Map::MapTree_2<a_, b_>>> {
         if f(k, v) { Map::add(k, v, acc) } else { acc.clone() }
     }
     pub fn filterAux<K: PartialOrd + Clone + 'static, V: Clone +
                      'static>(f: &Rc<impl Fn(&K, &V) -> (bool) + 'static>,
-                              m: &Option<Rc<Map::MapTreeNode_2<K, V>>>,
-                              acc: &Option<Rc<Map::MapTreeNode_2<K, V>>>)
-     -> Option<Rc<Map::MapTreeNode_2<K, V>>> {
+                              m: &Option<Rc<Map::MapTree_2<K, V>>>,
+                              acc: &Option<Rc<Map::MapTree_2<K, V>>>)
+     -> Option<Rc<Map::MapTree_2<K, V>>> {
         match m {
             Some(m_0_0) =>
             {
-                let t: Rc<Map::MapTreeNode_2<K, V>> = m_0_0.clone();
+                let t: Rc<Map::MapTree_2<K, V>> = m_0_0.clone();
                 if t.Height == 1i32 {
                     Map::filter1(f, &t.Key, &t.Value, acc)
                 } else {
@@ -388,52 +370,43 @@ pub mod Map {
     }
     pub fn filter<a_: PartialOrd + Clone + 'static, b_: Clone +
                   'static>(f: &Rc<impl Fn(&a_, &b_) -> (bool) + 'static>,
-                           m: &Option<Rc<Map::MapTreeNode_2<a_, b_>>>)
-     -> Option<Rc<Map::MapTreeNode_2<a_, b_>>> {
+                           m: &Option<Rc<Map::MapTree_2<a_, b_>>>)
+     -> Option<Rc<Map::MapTree_2<a_, b_>>> {
         Map::filterAux(f, m, &Map::empty())
     }
     pub fn spliceOutSuccessor<K: Clone + 'static, V: Clone +
-                              'static>(m:
-                                           &Option<Rc<Map::MapTreeNode_2<K,
-                                                                         V>>>)
-     -> Rc<(K, V, Option<Rc<Map::MapTreeNode_2<K, V>>>)> {
+                              'static>(m: &Option<Rc<Map::MapTree_2<K, V>>>)
+     -> (K, V, Option<Rc<Map::MapTree_2<K, V>>>) {
         match m {
-            Some(m_0_0) =>
-            {
-                let t: Rc<Map::MapTreeNode_2<K, V>> = m_0_0.clone();
+            Some(m_0_0) => {
+                let t: Rc<Map::MapTree_2<K, V>> = m_0_0.clone();
                 if t.Height == 1i32 {
-                    Rc::from((t.Key.clone(), t.Value.clone(), Map::empty()))
+                    (t.Key.clone(), t.Value.clone(), Map::empty())
                 } else {
                     if t.Left.is_none() {
-                        Rc::from((t.Key.clone(), t.Value.clone(),
-                                  t.Right.clone()))
+                        (t.Key.clone(), t.Value.clone(), t.Right.clone())
                     } else {
-                        {
-                            let patternInput:
-                                    Rc<(K, V,
-                                        Option<Rc<Map::MapTreeNode_2<K,
-                                                                     V>>>)> =
-                                Map::spliceOutSuccessor(&t.Left);
-                            Rc::from((patternInput.0.clone(),
-                                      patternInput.1.clone(),
-                                      Map::mk(&patternInput.2.clone(), &t.Key,
-                                              &t.Value, &t.Right)))
-                        }.clone()
+                        let patternInput:
+                                (K, V, Option<Rc<Map::MapTree_2<K, V>>>) =
+                            Map::spliceOutSuccessor(&t.Left);
+                        (patternInput.0.clone(), patternInput.1.clone(),
+                         Map::mk(&patternInput.2.clone(), &t.Key, &t.Value,
+                                 &t.Right))
                     }
                 }
-            }.clone(),
+            }
             _ =>
             panic!("{}",
                    Native::string(&"internal error: Map.spliceOutSuccessor")),
         }
     }
     pub fn remove<K: PartialOrd + Clone + 'static, V: Clone +
-                  'static>(k: &K, m: &Option<Rc<Map::MapTreeNode_2<K, V>>>)
-     -> Option<Rc<Map::MapTreeNode_2<K, V>>> {
+                  'static>(k: &K, m: &Option<Rc<Map::MapTree_2<K, V>>>)
+     -> Option<Rc<Map::MapTree_2<K, V>>> {
         match m {
             Some(m_0_0) =>
             {
-                let t: Rc<Map::MapTreeNode_2<K, V>> = m_0_0.clone();
+                let t: Rc<Map::MapTree_2<K, V>> = m_0_0.clone();
                 let c: i32 = Util::compare(k, &t.Key);
                 if t.Height == 1i32 {
                     if c == 0i32 { Map::empty() } else { m.clone() }
@@ -451,9 +424,9 @@ pub mod Map {
                                 } else {
                                     {
                                         let patternInput:
-                                                Rc<(K, V,
-                                                    Option<Rc<Map::MapTreeNode_2<K,
-                                                                                 V>>>)> =
+                                                (K, V,
+                                                 Option<Rc<Map::MapTree_2<K,
+                                                                          V>>>) =
                                             Map::spliceOutSuccessor(&t.Right);
                                         Map::mk(&t.Left,
                                                 &patternInput.0.clone(),
@@ -477,12 +450,12 @@ pub mod Map {
                            u:
                                &Rc<impl Fn(&Option<V>) -> (Option<V>) +
                                    'static>,
-                           m: &Option<Rc<Map::MapTreeNode_2<K, V>>>)
-     -> Option<Rc<Map::MapTreeNode_2<K, V>>> {
+                           m: &Option<Rc<Map::MapTree_2<K, V>>>)
+     -> Option<Rc<Map::MapTree_2<K, V>>> {
         match m {
             Some(m_0_0) =>
             {
-                let t: Rc<Map::MapTreeNode_2<K, V>> = m_0_0.clone();
+                let t: Rc<Map::MapTree_2<K, V>> = m_0_0.clone();
                 if t.Height == 1i32 {
                     {
                         let c: i32 = Util::compare(k, &t.Key);
@@ -551,9 +524,9 @@ pub mod Map {
                                             } else {
                                                 {
                                                     let patternInput:
-                                                            Rc<(K, V,
-                                                                Option<Rc<Map::MapTreeNode_2<K,
-                                                                                             V>>>)> =
+                                                            (K, V,
+                                                             Option<Rc<Map::MapTree_2<K,
+                                                                                      V>>>) =
                                                         Map::spliceOutSuccessor(&t.Right);
                                                     Map::mk(&t.Left,
                                                             &patternInput.0.clone(),
@@ -584,12 +557,11 @@ pub mod Map {
         }
     }
     pub fn containsKey<K: PartialOrd + Clone + 'static, V: Clone +
-                       'static>(k: &K,
-                                m: &Option<Rc<Map::MapTreeNode_2<K, V>>>)
+                       'static>(k: &K, m: &Option<Rc<Map::MapTree_2<K, V>>>)
      -> bool {
         match m {
             Some(m_0_0) => {
-                let t: Rc<Map::MapTreeNode_2<K, V>> = m_0_0.clone();
+                let t: Rc<Map::MapTree_2<K, V>> = m_0_0.clone();
                 let c: i32 = Util::compare(k, &t.Key);
                 if t.Height == 1i32 {
                     c == 0i32
@@ -608,10 +580,10 @@ pub mod Map {
     }
     pub fn iterate<K: Clone + 'static, V: Clone +
                    'static>(f: &Rc<impl Fn(&K, &V) + 'static>,
-                            m: &Option<Rc<Map::MapTreeNode_2<K, V>>>) {
+                            m: &Option<Rc<Map::MapTree_2<K, V>>>) {
         match m {
             Some(m_0_0) => {
-                let t: Rc<Map::MapTreeNode_2<K, V>> = m_0_0.clone();
+                let t: Rc<Map::MapTree_2<K, V>> = m_0_0.clone();
                 if t.Height == 1i32 {
                     f(&t.Key, &t.Value)
                 } else {
@@ -625,12 +597,12 @@ pub mod Map {
     }
     pub fn tryPick<K: Clone + 'static, V: Clone + 'static, a_: Clone +
                    'static>(f: &Rc<impl Fn(&K, &V) -> (Option<a_>) + 'static>,
-                            m: &Option<Rc<Map::MapTreeNode_2<K, V>>>)
+                            m: &Option<Rc<Map::MapTree_2<K, V>>>)
      -> Option<a_> {
         match m {
             Some(m_0_0) =>
             {
-                let t: Rc<Map::MapTreeNode_2<K, V>> = m_0_0.clone();
+                let t: Rc<Map::MapTree_2<K, V>> = m_0_0.clone();
                 if t.Height == 1i32 {
                     f(&t.Key, &t.Value)
                 } else {
@@ -654,12 +626,49 @@ pub mod Map {
             _ => None::<a_>,
         }
     }
+    pub fn pick<K: Clone + 'static, V: Clone + 'static, a_: Clone +
+                'static>(chooser:
+                             &Rc<impl Fn(&K, &V) -> (Option<a_>) + 'static>,
+                         m: &Option<Rc<Map::MapTree_2<K, V>>>) -> a_ {
+        {
+            let matchValue: Option<a_> = Map::tryPick(chooser, m);
+            match &matchValue {
+                Some(matchValue_0_0) => matchValue_0_0.clone(),
+                _ => Map::throwKeyNotFound(),
+            }
+        }.clone()
+    }
+    pub fn findKey<K: Clone + 'static, V: Clone +
+                   'static>(predicate:
+                                &Rc<impl Fn(&K, &V) -> (bool) + 'static>,
+                            m: &Option<Rc<Map::MapTree_2<K, V>>>) -> K {
+        Map::pick(&Rc::from({
+                                let predicate = predicate.clone();
+                                move |k: &K, v: &V|
+                                    if predicate(k, v) {
+                                        Some(k.clone())
+                                    } else { None::<K> }
+                            }), m)
+    }
+    pub fn tryFindKey<K: Clone + 'static, V: Clone +
+                      'static>(predicate:
+                                   &Rc<impl Fn(&K, &V) -> (bool) + 'static>,
+                               m: &Option<Rc<Map::MapTree_2<K, V>>>)
+     -> Option<K> {
+        Map::tryPick(&Rc::from({
+                                   let predicate = predicate.clone();
+                                   move |k: &K, v: &V|
+                                       if predicate(k, v) {
+                                           Some(k.clone())
+                                       } else { None::<K> }
+                               }), m)
+    }
     pub fn exists<K: Clone + 'static, V: Clone +
                   'static>(f: &Rc<impl Fn(&K, &V) -> (bool) + 'static>,
-                           m: &Option<Rc<Map::MapTreeNode_2<K, V>>>) -> bool {
+                           m: &Option<Rc<Map::MapTree_2<K, V>>>) -> bool {
         match m {
             Some(m_0_0) => {
-                let t: Rc<Map::MapTreeNode_2<K, V>> = m_0_0.clone();
+                let t: Rc<Map::MapTree_2<K, V>> = m_0_0.clone();
                 if t.Height == 1i32 {
                     f(&t.Key, &t.Value)
                 } else {
@@ -673,63 +682,64 @@ pub mod Map {
             _ => false,
         }
     }
-    pub fn forall<K: Clone + 'static, V: Clone +
+    pub fn forAll<K: Clone + 'static, V: Clone +
                   'static>(f: &Rc<impl Fn(&K, &V) -> (bool) + 'static>,
-                           m: &Option<Rc<Map::MapTreeNode_2<K, V>>>) -> bool {
+                           m: &Option<Rc<Map::MapTree_2<K, V>>>) -> bool {
         match m {
             Some(m_0_0) => {
-                let t: Rc<Map::MapTreeNode_2<K, V>> = m_0_0.clone();
+                let t: Rc<Map::MapTree_2<K, V>> = m_0_0.clone();
                 if t.Height == 1i32 {
                     f(&t.Key, &t.Value)
                 } else {
-                    if if Map::forall(f, &t.Left) {
+                    if if Map::forAll(f, &t.Left) {
                            f(&t.Key, &t.Value)
                        } else { false } {
-                        Map::forall(f, &t.Right)
+                        Map::forAll(f, &t.Right)
                     } else { false }
                 }
             }
             _ => true,
         }
     }
-    pub fn map<V: Clone + 'static, R: Clone + 'static, K: Clone +
-               'static>(f: &Rc<impl Fn(&V) -> (R) + 'static>,
-                        m: &Option<Rc<Map::MapTreeNode_2<K, V>>>)
-     -> Option<Rc<Map::MapTreeNode_2<K, R>>> {
+    pub fn mapRange<V: Clone + 'static, R: Clone + 'static, K: Clone +
+                    'static>(f: &Rc<impl Fn(&V) -> (R) + 'static>,
+                             m: &Option<Rc<Map::MapTree_2<K, V>>>)
+     -> Option<Rc<Map::MapTree_2<K, R>>> {
         match m {
             Some(m_0_0) =>
             {
-                let t: Rc<Map::MapTreeNode_2<K, V>> = m_0_0.clone();
+                let t: Rc<Map::MapTree_2<K, V>> = m_0_0.clone();
                 if t.Height == 1i32 {
                     Map::mkMapTreeLeaf(&t.Key, &f(&t.Value))
                 } else {
                     {
-                        let l2: Option<Rc<Map::MapTreeNode_2<K, R>>> =
-                            Map::map(f, &t.Left);
+                        let l2: Option<Rc<Map::MapTree_2<K, R>>> =
+                            Map::mapRange(f, &t.Left);
                         Map::mkMapTreeNode(&t.Key, &f(&t.Value), &l2,
-                                           &Map::map(f, &t.Right), &t.Height)
+                                           &Map::mapRange(f, &t.Right),
+                                           &t.Height)
                     }.clone()
                 }
             }.clone(),
             _ => Map::empty(),
         }
     }
-    pub fn mapi<K: Clone + 'static, V: Clone + 'static, R: Clone +
-                'static>(f: &Rc<impl Fn(&K, &V) -> (R) + 'static>,
-                         m: &Option<Rc<Map::MapTreeNode_2<K, V>>>)
-     -> Option<Rc<Map::MapTreeNode_2<K, R>>> {
+    pub fn map<K: Clone + 'static, V: Clone + 'static, R: Clone +
+               'static>(f: &Rc<impl Fn(&K, &V) -> (R) + 'static>,
+                        m: &Option<Rc<Map::MapTree_2<K, V>>>)
+     -> Option<Rc<Map::MapTree_2<K, R>>> {
         match m {
             Some(m_0_0) =>
             {
-                let t: Rc<Map::MapTreeNode_2<K, V>> = m_0_0.clone();
+                let t: Rc<Map::MapTree_2<K, V>> = m_0_0.clone();
                 if t.Height == 1i32 {
                     Map::mkMapTreeLeaf(&t.Key, &f(&t.Key, &t.Value))
                 } else {
                     {
-                        let l2: Option<Rc<Map::MapTreeNode_2<K, R>>> =
-                            Map::mapi(f, &t.Left);
+                        let l2: Option<Rc<Map::MapTree_2<K, R>>> =
+                            Map::map(f, &t.Left);
                         Map::mkMapTreeNode(&t.Key, &f(&t.Key, &t.Value), &l2,
-                                           &Map::mapi(f, &t.Right), &t.Height)
+                                           &Map::map(f, &t.Right), &t.Height)
                     }.clone()
                 }
             }.clone(),
@@ -738,12 +748,12 @@ pub mod Map {
     }
     pub fn foldBack<K: Clone + 'static, V: Clone + 'static, a_: Clone +
                     'static>(f: &Rc<impl Fn(&K, &V, &a_) -> (a_) + 'static>,
-                             m: &Option<Rc<Map::MapTreeNode_2<K, V>>>, x: &a_)
+                             m: &Option<Rc<Map::MapTree_2<K, V>>>, x: &a_)
      -> a_ {
         match m {
             Some(m_0_0) =>
             {
-                let t: Rc<Map::MapTreeNode_2<K, V>> = m_0_0.clone();
+                let t: Rc<Map::MapTree_2<K, V>> = m_0_0.clone();
                 if t.Height == 1i32 {
                     f(&t.Key, &t.Value, x)
                 } else {
@@ -757,12 +767,11 @@ pub mod Map {
     }
     pub fn fold<a_: Clone + 'static, K: Clone + 'static, V: Clone +
                 'static>(f: &Rc<impl Fn(&a_, &K, &V) -> (a_) + 'static>,
-                         x: &a_, m: &Option<Rc<Map::MapTreeNode_2<K, V>>>)
-     -> a_ {
+                         x: &a_, m: &Option<Rc<Map::MapTree_2<K, V>>>) -> a_ {
         match m {
             Some(m_0_0) =>
             {
-                let t: Rc<Map::MapTreeNode_2<K, V>> = m_0_0.clone();
+                let t: Rc<Map::MapTree_2<K, V>> = m_0_0.clone();
                 if t.Height == 1i32 {
                     f(x, &t.Key, &t.Value)
                 } else {
@@ -778,12 +787,12 @@ pub mod Map {
                       a_: Clone +
                       'static>(lo: &K, hi: &K,
                                f: &Rc<impl Fn(&K, &V, &a_) -> (a_) + 'static>,
-                               m: &Option<Rc<Map::MapTreeNode_2<K, V>>>,
-                               x: &a_) -> a_ {
+                               m: &Option<Rc<Map::MapTree_2<K, V>>>, x: &a_)
+     -> a_ {
         match m {
             Some(m_0_0) =>
             {
-                let t: Rc<Map::MapTreeNode_2<K, V>> = m_0_0.clone();
+                let t: Rc<Map::MapTree_2<K, V>> = m_0_0.clone();
                 if t.Height == 1i32 {
                     if if Util::compare(lo, &t.Key) <= 0i32 {
                            Util::compare(&t.Key, hi) <= 0i32
@@ -819,90 +828,145 @@ pub mod Map {
                                 f:
                                     &Rc<impl Fn(&K, &V, &a_) -> (a_) +
                                         'static>,
-                                m: &Option<Rc<Map::MapTreeNode_2<K, V>>>,
-                                x: &a_) -> a_ {
+                                m: &Option<Rc<Map::MapTree_2<K, V>>>, x: &a_)
+     -> a_ {
         if Util::compare(lo, hi) == 1i32 {
             x.clone()
         } else { Map::foldFromTo(lo, hi, f, m, x) }
     }
-    pub fn toArray<a_: Clone + 'static, b_: Clone +
-                   'static>(m: &Option<Rc<Map::MapTreeNode_2<a_, b_>>>)
-     -> Rc<MutCell<Vec<Rc<(a_, b_)>>>> {
+    pub fn copyToArray<a_: Clone + 'static, b_: Clone +
+                       'static>(m: &Option<Rc<Map::MapTree_2<a_, b_>>>,
+                                arr: &Rc<MutCell<Vec<(a_, b_)>>>, i: &i32) {
+        let j: Rc<MutCell<i32>> = Rc::from(MutCell::from(i.clone()));
+        Map::iterate(&Rc::from({
+                                   let arr = arr.clone();
+                                   let j = j.clone();
+                                   move |k: &a_, v: &b_|
+                                       {
+                                           arr.get_mut()[j.get() as usize] =
+                                               (k.clone(), v.clone());
+                                           j.set(j.get() + 1i32)
+                                       }
+                               }), m)
+    }
+    pub fn keys<K: Clone + 'static, V: Clone +
+                'static>(m: &Option<Rc<Map::MapTree_2<K, V>>>)
+     -> Rc<MutCell<Vec<K>>> {
         {
-            let res: Rc<MutCell<Vec<Rc<(a_, b_)>>>> =
-                Native::arrayWithCapacity::<Rc<(a_, b_)>>(&Map::count(m));
+            let res: Rc<MutCell<Vec<K>>> =
+                Native::arrayWithCapacity::<K>(&Map::count(m));
             Map::iterate(&Rc::from({
                                        let res = res.clone();
-                                       move |k: &a_, v: &b_|
-                                           res.get_mut().push(Rc::from((k.clone(),
-                                                                        v.clone())))
+                                       move |k: &K, v: &V|
+                                           res.get_mut().push(k.clone())
+                                   }), m);
+            res.clone()
+        }.clone()
+    }
+    pub fn values<K: Clone + 'static, V: Clone +
+                  'static>(m: &Option<Rc<Map::MapTree_2<K, V>>>)
+     -> Rc<MutCell<Vec<V>>> {
+        {
+            let res: Rc<MutCell<Vec<V>>> =
+                Native::arrayWithCapacity::<V>(&Map::count(m));
+            Map::iterate(&Rc::from({
+                                       let res = res.clone();
+                                       move |k: &K, v: &V|
+                                           res.get_mut().push(v.clone())
+                                   }), m);
+            res.clone()
+        }.clone()
+    }
+    pub fn toArray<K: Clone + 'static, V: Clone +
+                   'static>(m: &Option<Rc<Map::MapTree_2<K, V>>>)
+     -> Rc<MutCell<Vec<(K, V)>>> {
+        {
+            let res: Rc<MutCell<Vec<(K, V)>>> =
+                Native::arrayWithCapacity::<(K, V)>(&Map::count(m));
+            Map::iterate(&Rc::from({
+                                       let res = res.clone();
+                                       move |k: &K, v: &V|
+                                           res.get_mut().push((k.clone(),
+                                                               v.clone()))
                                    }), m);
             res.clone()
         }.clone()
     }
     pub fn toList<K: Clone + 'static, V: Clone +
-                  'static>(m: &Option<Rc<Map::MapTreeNode_2<K, V>>>)
-     -> List_1<Rc<(K, V)>> {
-        Map::foldBack(&Rc::from(move |k: &K, v: &V, acc: &List_1<Rc<(K, V)>>|
-                                    List::cons(&Rc::from((k.clone(),
-                                                          v.clone())), acc)),
-                      m, &List::empty::<Rc<(K, V)>>())
+                  'static>(m: &Option<Rc<Map::MapTree_2<K, V>>>)
+     -> List_1<(K, V)> {
+        Map::foldBack(&Rc::from(move |k: &K, v: &V, acc: &List_1<(K, V)>|
+                                    List::cons(&(k.clone(), v.clone()), acc)),
+                      m, &List::empty::<(K, V)>())
+    }
+    pub fn toSeq<K: Clone + 'static, V: Clone +
+                 'static>(m: &Option<Rc<Map::MapTree_2<K, V>>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<(K, V)>> {
+        Seq::delay(&Rc::from({
+                                 let m = m.clone();
+                                 move || Seq::ofArray(&Map::toArray(&m))
+                             }))
+    }
+    pub fn compareTo<K: PartialOrd + Clone + 'static, V: PartialOrd + Clone +
+                     'static>(m1: &Option<Rc<Map::MapTree_2<K, V>>>,
+                              m2: &Option<Rc<Map::MapTree_2<K, V>>>) -> i32 {
+        Util::compare(&Map::toArray(m1), &Map::toArray(m2))
+    }
+    pub fn equalsTo<K: Eq + core::hash::Hash + Clone + 'static, V: Eq +
+                    core::hash::Hash + Clone +
+                    'static>(m1: &Option<Rc<Map::MapTree_2<K, V>>>,
+                             m2: &Option<Rc<Map::MapTree_2<K, V>>>) -> bool {
+        Map::toArray(m1) == Map::toArray(m2)
     }
     pub fn ofArray<a_: PartialOrd + Clone + 'static, b_: Clone +
-                   'static>(xs: &Rc<MutCell<Vec<Rc<(a_, b_)>>>>)
-     -> Option<Rc<Map::MapTreeNode_2<a_, b_>>> {
+                   'static>(xs: &Rc<MutCell<Vec<(a_, b_)>>>)
+     -> Option<Rc<Map::MapTree_2<a_, b_>>> {
         Array::fold(&Rc::from(move
-                                  |acc:
-                                       &Option<Rc<Map::MapTreeNode_2<a_,
-                                                                     b_>>>,
-                                   tupledArg: &Rc<(a_, b_)>|
+                                  |acc: &Option<Rc<Map::MapTree_2<a_, b_>>>,
+                                   tupledArg: &(a_, b_)|
                                   Map::add(&tupledArg.0.clone(),
                                            &tupledArg.1.clone(), acc)),
                     &Map::empty(), xs)
     }
     pub fn ofList<a_: PartialOrd + Clone + 'static, b_: Clone +
-                  'static>(xs: &List_1<Rc<(a_, b_)>>)
-     -> Option<Rc<Map::MapTreeNode_2<a_, b_>>> {
+                  'static>(xs: &List_1<(a_, b_)>)
+     -> Option<Rc<Map::MapTree_2<a_, b_>>> {
         List::fold(&Rc::from(move
-                                 |acc:
-                                      &Option<Rc<Map::MapTreeNode_2<a_, b_>>>,
-                                  tupledArg: &Rc<(a_, b_)>|
+                                 |acc: &Option<Rc<Map::MapTree_2<a_, b_>>>,
+                                  tupledArg: &(a_, b_)|
                                  Map::add(&tupledArg.0.clone(),
                                           &tupledArg.1.clone(), acc)),
                    &Map::empty(), xs)
     }
     pub fn ofSeq<a_: PartialOrd + Clone + 'static, b_: Clone +
-                 'static>(xs:
-                              &Rc<dyn Seq::Enumerable::IEnumerable_1<Rc<(a_,
-                                                                         b_)>>>)
-     -> Option<Rc<Map::MapTreeNode_2<a_, b_>>> {
+                 'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<(a_, b_)>>)
+     -> Option<Rc<Map::MapTree_2<a_, b_>>> {
         Seq::fold(&Rc::from(move
-                                |acc: &Option<Rc<Map::MapTreeNode_2<a_, b_>>>,
-                                 tupledArg: &Rc<(a_, b_)>|
+                                |acc: &Option<Rc<Map::MapTree_2<a_, b_>>>,
+                                 tupledArg: &(a_, b_)|
                                 Map::add(&tupledArg.0.clone(),
                                          &tupledArg.1.clone(), acc)),
                   &Map::empty(), xs)
     }
-    #[derive(Clone, Debug)]
+    #[derive(Clone, Debug, Default, Hash)]
     pub struct MapIterator_2<K: PartialOrd + Clone + 'static, V: Clone +
                              'static> {
-        pub stack: MutCell<List_1<Option<Rc<Map::MapTreeNode_2<K, V>>>>>,
+        pub stack: MutCell<List_1<Option<Rc<Map::MapTree_2<K, V>>>>>,
         pub started: MutCell<bool>,
     }
     pub fn collapseLHS<K: Clone + 'static, V: Clone +
                        'static>(stack:
-                                    &List_1<Option<Rc<Map::MapTreeNode_2<K,
-                                                                         V>>>>)
-     -> List_1<Option<Rc<Map::MapTreeNode_2<K, V>>>> {
+                                    &List_1<Option<Rc<Map::MapTree_2<K, V>>>>)
+     -> List_1<Option<Rc<Map::MapTree_2<K, V>>>> {
         if !List::isEmpty(stack) {
-            let rest: List_1<Option<Rc<Map::MapTreeNode_2<K, V>>>> =
+            let rest: List_1<Option<Rc<Map::MapTree_2<K, V>>>> =
                 List::tail(stack).clone();
-            let m: Option<Rc<Map::MapTreeNode_2<K, V>>> =
+            let m: Option<Rc<Map::MapTree_2<K, V>>> =
                 List::head(stack).clone();
             match &m {
                 Some(m_0_0) =>
                 {
-                    let t: Rc<Map::MapTreeNode_2<K, V>> = m_0_0.clone();
+                    let t: Rc<Map::MapTree_2<K, V>> = m_0_0.clone();
                     if t.Height == 1i32 {
                         stack.clone()
                     } else {
@@ -915,10 +979,10 @@ pub mod Map {
                 }.clone(),
                 _ => Map::collapseLHS(&rest),
             }
-        } else { List::empty::<Option<Rc<Map::MapTreeNode_2<K, V>>>>() }
+        } else { List::empty::<Option<Rc<Map::MapTree_2<K, V>>>>() }
     }
     pub fn mkIterator<a_: PartialOrd + Clone + 'static, b_: Clone +
-                      'static>(m: &Option<Rc<Map::MapTreeNode_2<a_, b_>>>)
+                      'static>(m: &Option<Rc<Map::MapTree_2<a_, b_>>>)
      -> Rc<Map::MapIterator_2<a_, b_>> {
         Rc::from(Map::MapIterator_2::<a_,
                                       b_>{stack:

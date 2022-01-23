@@ -6,11 +6,10 @@
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 #![allow(unused_attributes)]
-use std::rc::Rc;
 use fable_library_rust::*;
 pub mod RayTracerDemo {
     use super::*;
-    #[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
+    #[derive(Clone, Copy, Debug, Default, PartialEq, PartialOrd)]
     pub struct Vector {
         pub X: f64,
         pub Y: f64,
@@ -98,7 +97,7 @@ pub mod RayTracerDemo {
             }.clone()
         }
     }
-    #[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
+    #[derive(Clone, Copy, Debug, Default, PartialEq, PartialOrd)]
     pub struct Color {
         pub R: f64,
         pub G: f64,
@@ -158,7 +157,7 @@ pub mod RayTracerDemo {
     }
     pub mod RayTracer {
         use super::*;
-        #[derive(Clone, Debug)]
+        #[derive(Clone, Debug, Default)]
         pub struct Camera {
             pos: RayTracerDemo::Vector,
             lookAt: RayTracerDemo::Vector,
@@ -243,7 +242,7 @@ pub mod RayTracerDemo {
                                                       &self.lookAt)
             }
         }
-        #[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
+        #[derive(Clone, Copy, Debug, Default, PartialEq, PartialOrd)]
         pub struct Ray {
             pub Start: RayTracerDemo::Vector,
             pub Dir: RayTracerDemo::Vector,
@@ -272,7 +271,7 @@ pub mod RayTracerDemo {
             fn Surface(&self)
             -> Rc<dyn RayTracerDemo::RayTracer::Surface>;
         }
-        #[derive(Clone, Debug, PartialEq, PartialOrd)]
+        #[derive(Clone, Debug, Default, PartialEq, PartialOrd)]
         pub struct Light {
             pub Pos: RayTracerDemo::Vector,
             pub Color: RayTracerDemo::Color,
@@ -674,7 +673,7 @@ pub mod RayTracerDemo {
     }
     pub mod Surfaces {
         use super::*;
-        #[derive(Clone, Debug)]
+        #[derive(Clone, Debug, Default, Hash)]
         pub struct Shiny {
         }
         impl RayTracerDemo::Surfaces::Shiny {
@@ -694,7 +693,7 @@ pub mod RayTracerDemo {
             fn Reflect(&self, pos: &RayTracerDemo::Vector) -> f64 { 0.7f64 }
             fn Roughness(&self) -> f64 { 250.0f64 }
         }
-        #[derive(Clone, Debug)]
+        #[derive(Clone, Debug, Default, Hash)]
         pub struct Checkerboard {
         }
         impl RayTracerDemo::Surfaces::Checkerboard {

@@ -6,7 +6,7 @@
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 #![allow(unused_attributes)]
-use std::rc::Rc;
+use crate::import_3bd9ae6a::*;
 pub mod Result_ {
     use super::*;
     pub fn map<a_: Clone + 'static, b_: Clone + 'static, c_: Clone +

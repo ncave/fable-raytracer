@@ -6,15 +6,15 @@
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 #![allow(unused_attributes)]
-use crate::import_52af85ec::*;
+use crate::import_971078fd::*;
 use crate::import_3bd9ae6a::*;
 use crate::import_f222008f::*;
-use std::rc::Rc;
+use crate::import_52af85ec::*;
 pub mod Range {
     use super::*;
     pub fn rangeNumeric<T: PartialOrd + Default + core::ops::Add<Output = T> +
                         Clone + 'static>(start: &T, step: &T, stop: &T)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         {
             let stepComparedWithZero: i32 =
                 Util::compare(step, &Native::getZero::<T>());
@@ -42,23 +42,23 @@ pub mod Range {
                                                              0i32
                                                      } else { false }
                                                  } {
-                                                  Some(Rc::from((x.clone(),
-                                                                 x.clone() +
-                                                                     step.clone())))
-                                              } else { None::<Rc<(T, T)>> }
+                                                  Some((x.clone(),
+                                                        x.clone() +
+                                                            step.clone()))
+                                              } else { None::<(T, T)> }
                                           }.clone()
                                   }), start)
         }.clone()
     }
     pub fn rangeChar(start: &char, stop: &char)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<char>> {
+     -> Rc<dyn Interfaces::IEnumerable_1<char>> {
         Seq::unfold(&Rc::from({
                                   let stop = stop.clone();
                                   move |c: &u32|
                                       if c.clone() <= stop as u32 {
-                                          Some(Rc::from((Native::toChar(&c.clone()),
-                                                         c.clone() + 1u32)))
-                                      } else { None::<Rc<(char, u32)>> }
+                                          Some((Native::toChar(&c.clone()),
+                                                c.clone() + 1u32))
+                                      } else { None::<(char, u32)> }
                               }), &(start.clone() as u32))
     }
 }

@@ -7,12 +7,13 @@
 #![allow(unused_variables)]
 #![allow(unused_attributes)]
 use crate::import_3bd9ae6a::*;
+#[path = "./Interfaces.rs"]
+pub(crate) mod import_971078fd;
+pub use import_971078fd::*;
 use crate::import_8d7d6be8::*;
-use crate::import_df4a7900::*;
 use crate::import_ec6ee4e9::*;
-use crate::import_c6216f2::*;
 use crate::import_f222008f::*;
-use std::rc::Rc;
+use crate::import_c6216f2::*;
 pub mod Seq {
     use super::*;
     pub mod SR {
@@ -53,27 +54,15 @@ pub mod Seq {
         pub fn alreadyFinished<a_: Clone + 'static>() -> a_ {
             panic!("{}", Seq::SR::enumerationAlreadyFinished())
         }
-        pub trait IEnumerator_1<T: Clone + 'static> {
-            fn MoveNext(&self)
-            -> bool;
-            fn Current(&self)
-            -> T;
-            fn Dispose(&self);
-        }
-        pub trait IEnumerable_1<T: Clone + 'static> {
-            fn GetEnumerator(&self)
-            -> Rc<dyn Seq::Enumerable::IEnumerator_1<T>>;
-        }
         #[derive(Clone)]
         pub struct Enumerable_1<T: Clone + 'static> {
-            f: Rc<dyn Fn() -> (Rc<dyn Seq::Enumerable::IEnumerator_1<T>>) +
+            f: Rc<dyn Fn() -> (Rc<dyn Interfaces::IEnumerator_1<T>>) +
                   'static>,
         }
         impl <T: Clone + 'static> Seq::Enumerable::Enumerable_1<T> {
             pub fn new(f:
                            &Rc<impl Fn()
-                               ->
-                                   (Rc<dyn Seq::Enumerable::IEnumerator_1<T>>) +
+                               -> (Rc<dyn Interfaces::IEnumerator_1<T>>) +
                                'static>)
              -> Rc<Seq::Enumerable::Enumerable_1<T>> {
                 {
@@ -86,10 +75,9 @@ pub mod Seq {
                 }.clone()
             }
         }
-        impl <T: Clone + 'static> Seq::Enumerable::IEnumerable_1<T> for
+        impl <T: Clone + 'static> Interfaces::IEnumerable_1<T> for
          Enumerable_1<T> {
-            fn GetEnumerator(&self)
-             -> Rc<dyn Seq::Enumerable::IEnumerator_1<T>> {
+            fn GetEnumerator(&self) -> Rc<dyn Interfaces::IEnumerator_1<T>> {
                 (self.f)()
             }
         }
@@ -115,7 +103,7 @@ pub mod Seq {
                 }.clone()
             }
         }
-        impl <T: Clone + 'static> Seq::Enumerable::IEnumerator_1<T> for
+        impl <T: Clone + 'static> Interfaces::IEnumerator_1<T> for
          Enumerator<T> {
             fn Current(&self) -> T {
                 Option_::getValue(&self.curr.get()).clone()
@@ -130,16 +118,16 @@ pub mod Seq {
                             'static>(next:
                                          &Rc<impl Fn() -> (Option<T>) +
                                              'static>)
-         -> Rc<dyn Seq::Enumerable::IEnumerator_1<T>> {
+         -> Rc<dyn Interfaces::IEnumerator_1<T>> {
             (Seq::Enumerable::Enumerator::new(next).clone() as
-                 Rc<dyn Seq::Enumerable::IEnumerator_1<T>>).clone()
+                 Rc<dyn Interfaces::IEnumerator_1<T>>).clone()
         }
         pub fn empty<T: Clone + 'static>()
-         -> Rc<dyn Seq::Enumerable::IEnumerator_1<T>> {
+         -> Rc<dyn Interfaces::IEnumerator_1<T>> {
             Seq::Enumerable::fromFunction(&Rc::from(move || None::<T>))
         }
         pub fn singleton<T: Clone + 'static>(x: &T)
-         -> Rc<dyn Seq::Enumerable::IEnumerator_1<T>> {
+         -> Rc<dyn Interfaces::IEnumerator_1<T>> {
             {
                 let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
                 Seq::Enumerable::fromFunction(&Rc::from({
@@ -161,7 +149,7 @@ pub mod Seq {
             }.clone()
         }
         pub fn ofArray<T: Clone + 'static>(arr: &Rc<MutCell<Vec<T>>>)
-         -> Rc<dyn Seq::Enumerable::IEnumerator_1<T>> {
+         -> Rc<dyn Interfaces::IEnumerator_1<T>> {
             {
                 let len: i32 = arr.clone().len() as i32;
                 let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
@@ -187,7 +175,7 @@ pub mod Seq {
             }.clone()
         }
         pub fn ofList<T: Clone + 'static>(xs: &List_1<T>)
-         -> Rc<dyn Seq::Enumerable::IEnumerator_1<T>> {
+         -> Rc<dyn Interfaces::IEnumerator_1<T>> {
             {
                 let it: Rc<MutCell<List_1<T>>> =
                     Rc::from(MutCell::from(xs.clone()));
@@ -214,14 +202,14 @@ pub mod Seq {
             }.clone()
         }
         pub fn append<T: Clone +
-                      'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>,
-                               ys: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-         -> Rc<dyn Seq::Enumerable::IEnumerator_1<T>> {
+                      'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>,
+                               ys: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+         -> Rc<dyn Interfaces::IEnumerator_1<T>> {
             {
                 let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(-1i32));
                 let innerOpt:
-                        Rc<MutCell<Option<Rc<dyn Seq::Enumerable::IEnumerator_1<T>>>>> =
-                    Rc::from(MutCell::from(None::<Rc<dyn Seq::Enumerable::IEnumerator_1<T>>>));
+                        Rc<MutCell<Option<Rc<dyn Interfaces::IEnumerator_1<T>>>>> =
+                    Rc::from(MutCell::from(None::<Rc<dyn Interfaces::IEnumerator_1<T>>>));
                 let finished: Rc<MutCell<bool>> =
                     Rc::from(MutCell::from(false));
                 Seq::Enumerable::fromFunction(&Rc::from({
@@ -258,7 +246,7 @@ pub mod Seq {
                                                                                           1i32);
                                                                                 {
                                                                                     let it:
-                                                                                            Rc<dyn Seq::Enumerable::IEnumerable_1<T>> =
+                                                                                            Rc<dyn Interfaces::IEnumerable_1<T>> =
                                                                                         if i.get()
                                                                                                ==
                                                                                                0i32
@@ -276,13 +264,13 @@ pub mod Seq {
                                                                             =>
                                                                             {
                                                                                 let inner:
-                                                                                        Rc<dyn Seq::Enumerable::IEnumerator_1<T>> =
+                                                                                        Rc<dyn Interfaces::IEnumerator_1<T>> =
                                                                                     innerOpt_0_0.clone();
                                                                                 if inner.MoveNext()
                                                                                    {
                                                                                     moveNext.set(true)
                                                                                 } else {
-                                                                                    innerOpt.set(None::<Rc<dyn Seq::Enumerable::IEnumerator_1<T>>>)
+                                                                                    innerOpt.set(None::<Rc<dyn Interfaces::IEnumerator_1<T>>>)
                                                                                 }
                                                                             }
                                                                         };
@@ -303,15 +291,15 @@ pub mod Seq {
         }
         pub fn concat<T: Clone +
                       'static>(sources:
-                                   &Rc<dyn Seq::Enumerable::IEnumerable_1<Rc<dyn Seq::Enumerable::IEnumerable_1<T>>>>)
-         -> Rc<dyn Seq::Enumerable::IEnumerator_1<T>> {
+                                   &Rc<dyn Interfaces::IEnumerable_1<Rc<dyn Interfaces::IEnumerable_1<T>>>>)
+         -> Rc<dyn Interfaces::IEnumerator_1<T>> {
             {
                 let outerOpt:
-                        Rc<MutCell<Option<Rc<dyn Seq::Enumerable::IEnumerator_1<Rc<dyn Seq::Enumerable::IEnumerable_1<T>>>>>>> =
-                    Rc::from(MutCell::from(None::<Rc<dyn Seq::Enumerable::IEnumerator_1<Rc<dyn Seq::Enumerable::IEnumerable_1<T>>>>>));
+                        Rc<MutCell<Option<Rc<dyn Interfaces::IEnumerator_1<Rc<dyn Interfaces::IEnumerable_1<T>>>>>>> =
+                    Rc::from(MutCell::from(None::<Rc<dyn Interfaces::IEnumerator_1<Rc<dyn Interfaces::IEnumerable_1<T>>>>>));
                 let innerOpt:
-                        Rc<MutCell<Option<Rc<dyn Seq::Enumerable::IEnumerator_1<T>>>>> =
-                    Rc::from(MutCell::from(None::<Rc<dyn Seq::Enumerable::IEnumerator_1<T>>>));
+                        Rc<MutCell<Option<Rc<dyn Interfaces::IEnumerator_1<T>>>>> =
+                    Rc::from(MutCell::from(None::<Rc<dyn Interfaces::IEnumerator_1<T>>>));
                 let finished: Rc<MutCell<bool>> =
                     Rc::from(MutCell::from(false));
                 Seq::Enumerable::fromFunction(&Rc::from({
@@ -343,7 +331,7 @@ pub mod Seq {
                                                                             =>
                                                                             {
                                                                                 let outer:
-                                                                                        Rc<dyn Seq::Enumerable::IEnumerator_1<Rc<dyn Seq::Enumerable::IEnumerable_1<T>>>> =
+                                                                                        Rc<dyn Interfaces::IEnumerator_1<Rc<dyn Interfaces::IEnumerable_1<T>>>> =
                                                                                     outerOpt_0_0.clone();
                                                                                 match &innerOpt.get()
                                                                                     {
@@ -352,7 +340,7 @@ pub mod Seq {
                                                                                     if outer.MoveNext()
                                                                                        {
                                                                                         let it:
-                                                                                                Rc<dyn Seq::Enumerable::IEnumerable_1<T>> =
+                                                                                                Rc<dyn Interfaces::IEnumerable_1<T>> =
                                                                                             outer.Current().clone();
                                                                                         innerOpt.set(Some(it.GetEnumerator()))
                                                                                     } else {
@@ -362,13 +350,13 @@ pub mod Seq {
                                                                                     =>
                                                                                     {
                                                                                         let inner:
-                                                                                                Rc<dyn Seq::Enumerable::IEnumerator_1<T>> =
+                                                                                                Rc<dyn Interfaces::IEnumerator_1<T>> =
                                                                                             innerOpt_0_0.clone();
                                                                                         if inner.MoveNext()
                                                                                            {
                                                                                             moveNext.set(true)
                                                                                         } else {
-                                                                                            innerOpt.set(None::<Rc<dyn Seq::Enumerable::IEnumerator_1<T>>>)
+                                                                                            innerOpt.set(None::<Rc<dyn Interfaces::IEnumerator_1<T>>>)
                                                                                         }
                                                                                     }
                                                                                 }
@@ -396,7 +384,7 @@ pub mod Seq {
                                               &Rc<impl Fn(&T) -> (Option<U>) +
                                                   'static>,
                                           closef: &Rc<impl Fn(&T) + 'static>)
-         -> Rc<dyn Seq::Enumerable::IEnumerator_1<U>> {
+         -> Rc<dyn Interfaces::IEnumerator_1<U>> {
             {
                 let finished: Rc<MutCell<bool>> =
                     Rc::from(MutCell::from(false));
@@ -460,9 +448,9 @@ pub mod Seq {
         pub fn unfold<State: Clone + 'static, T: Clone +
                       'static>(f:
                                    &Rc<impl Fn(&State)
-                                       -> (Option<Rc<(T, State)>>) + 'static>,
+                                       -> (Option<(T, State)>) + 'static>,
                                state: &State)
-         -> Rc<dyn Seq::Enumerable::IEnumerator_1<T>> {
+         -> Rc<dyn Interfaces::IEnumerator_1<T>> {
             {
                 let acc: Rc<MutCell<State>> =
                     Rc::from(MutCell::from(state.clone()));
@@ -473,8 +461,8 @@ pub mod Seq {
                                                             move ||
                                                                 {
                                                                     let matchValue:
-                                                                            Option<Rc<(T,
-                                                                                       State)>> =
+                                                                            Option<(T,
+                                                                                    State)> =
                                                                         f(&acc.get());
                                                                     match &matchValue
                                                                         {
@@ -502,25 +490,23 @@ pub mod Seq {
     pub fn mkSeq<T: Clone +
                  'static>(f:
                               &Rc<impl Fn()
-                                  ->
-                                      (Rc<dyn Seq::Enumerable::IEnumerator_1<T>>) +
+                                  -> (Rc<dyn Interfaces::IEnumerator_1<T>>) +
                                   'static>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         (Seq::Enumerable::Enumerable_1::new(f).clone() as
-             Rc<dyn Seq::Enumerable::IEnumerable_1<T>>).clone()
+             Rc<dyn Interfaces::IEnumerable_1<T>>).clone()
     }
     pub fn ofSeq<T: Clone +
-                 'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerator_1<T>> {
+                 'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerator_1<T>> {
         xs.clone().GetEnumerator()
     }
     pub fn delay<T: Clone +
                  'static>(generator:
                               &Rc<impl Fn()
-                                  ->
-                                      (Rc<dyn Seq::Enumerable::IEnumerable_1<T>>) +
+                                  -> (Rc<dyn Interfaces::IEnumerable_1<T>>) +
                                   'static>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::mkSeq(&Rc::from({
                                  let generator = generator.clone();
                                  move || generator().GetEnumerator()
@@ -528,8 +514,8 @@ pub mod Seq {
     }
     pub fn concat<T: Clone +
                   'static>(sources:
-                               &Rc<dyn Seq::Enumerable::IEnumerable_1<Rc<dyn Seq::Enumerable::IEnumerable_1<T>>>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+                               &Rc<dyn Interfaces::IEnumerable_1<Rc<dyn Interfaces::IEnumerable_1<T>>>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::mkSeq(&Rc::from({
                                  let sources = sources.clone();
                                  move || Seq::Enumerable::concat(&sources)
@@ -537,10 +523,9 @@ pub mod Seq {
     }
     pub fn unfold<State: Clone + 'static, T: Clone +
                   'static>(generator:
-                               &Rc<impl Fn(&State)
-                                   -> (Option<Rc<(T, State)>>) + 'static>,
-                           state: &State)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+                               &Rc<impl Fn(&State) -> (Option<(T, State)>) +
+                                   'static>, state: &State)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::mkSeq(&Rc::from({
                                  let generator = generator.clone();
                                  let state = state.clone();
@@ -550,25 +535,25 @@ pub mod Seq {
                              }))
     }
     pub fn empty<a_: Clone + 'static>()
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<a_>> {
+     -> Rc<dyn Interfaces::IEnumerable_1<a_>> {
         Seq::mkSeq(&Rc::from(move || Seq::Enumerable::empty()))
     }
     pub fn singleton<T: Clone + 'static>(x: &T)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::mkSeq(&Rc::from({
                                  let x = x.clone();
                                  move || Seq::Enumerable::singleton(&x)
                              }))
     }
     pub fn ofArray<T: Clone + 'static>(arr: &Rc<MutCell<Vec<T>>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::mkSeq(&Rc::from({
                                  let arr = arr.clone();
                                  move || Seq::Enumerable::ofArray(&arr)
                              }))
     }
     pub fn ofList<T: Clone + 'static>(xs: &List_1<T>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::mkSeq(&Rc::from({
                                  let xs = xs.clone();
                                  move || Seq::Enumerable::ofList(&xs)
@@ -579,7 +564,7 @@ pub mod Seq {
                              compute:
                                  &Rc<impl Fn(&a_) -> (Option<b_>) + 'static>,
                              dispose: &Rc<impl Fn(&a_) + 'static>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<b_>> {
+     -> Rc<dyn Interfaces::IEnumerable_1<b_>> {
         Seq::mkSeq(&Rc::from({
                                  let compute = compute.clone();
                                  let create = create.clone();
@@ -596,7 +581,7 @@ pub mod Seq {
                                         &Rc<impl Fn(&i32, &a_)
                                             -> (Option<b_>) + 'static>,
                                     dispose: &Rc<impl Fn(&a_) + 'static>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<b_>> {
+     -> Rc<dyn Interfaces::IEnumerable_1<b_>> {
         Seq::mkSeq(&Rc::from({
                                  let compute = compute.clone();
                                  let create = create.clone();
@@ -629,9 +614,9 @@ pub mod Seq {
                              }))
     }
     pub fn append<T: Clone +
-                  'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>,
-                           ys: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+                  'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>,
+                           ys: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::mkSeq(&Rc::from({
                                  let xs = xs.clone();
                                  let ys = ys.clone();
@@ -640,8 +625,8 @@ pub mod Seq {
     }
     pub fn choose<T: Clone + 'static, U: Clone +
                   'static>(chooser: &Rc<impl Fn(&T) -> (Option<U>) + 'static>,
-                           xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<U>> {
+                           xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<U>> {
         Seq::generate(&Rc::from({
                                     let xs = xs.clone();
                                     move || Seq::ofSeq(&xs)
@@ -650,7 +635,7 @@ pub mod Seq {
                                     let chooser = chooser.clone();
                                     move
                                         |e:
-                                             &Rc<dyn Seq::Enumerable::IEnumerator_1<T>>|
+                                             &Rc<dyn Interfaces::IEnumerator_1<T>>|
                                         {
                                             let curr: Rc<MutCell<Option<U>>> =
                                                 Rc::from(MutCell::from(None::<U>));
@@ -664,22 +649,20 @@ pub mod Seq {
                                 }),
                       &Rc::from(move
                                     |e_1:
-                                         &Rc<dyn Seq::Enumerable::IEnumerator_1<T>>|
+                                         &Rc<dyn Interfaces::IEnumerator_1<T>>|
                                     e_1.clone().Dispose()))
     }
     pub fn compareWith<T: Clone +
                        'static>(comparer:
                                     &Rc<impl Fn(&T, &T) -> (i32) + 'static>,
-                                xs:
-                                    &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>,
-                                ys:
-                                    &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                                xs: &Rc<dyn Interfaces::IEnumerable_1<T>>,
+                                ys: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> i32 {
-        let e1: Rc<dyn Seq::Enumerable::IEnumerator_1<T>> = Seq::ofSeq(xs);
+        let e1: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
         {
             let try_result =
                 {
-                    let e2: Rc<dyn Seq::Enumerable::IEnumerator_1<T>> =
+                    let e2: Rc<dyn Interfaces::IEnumerator_1<T>> =
                         Seq::ofSeq(ys);
                     {
                         let try_result_1 =
@@ -720,11 +703,24 @@ pub mod Seq {
             try_result
         }
     }
+    pub fn compareTo<T: PartialOrd + Clone +
+                     'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>,
+                              ys: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> i32 {
+        Seq::compareWith(&Rc::from(move |e1: &T, e2: &T|
+                                       Util::compare(e1, e2)), xs, ys)
+    }
+    pub fn equalsTo<T: PartialOrd + Clone +
+                    'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>,
+                             ys: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> bool {
+        Seq::compareTo(xs, ys) == 0i32
+    }
     pub fn exactlyOne<T: Clone +
-                      'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                      'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> T {
         {
-            let e: Rc<dyn Seq::Enumerable::IEnumerator_1<T>> = Seq::ofSeq(xs);
+            let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
             {
                 let try_result =
                     if e.MoveNext() {
@@ -749,11 +745,10 @@ pub mod Seq {
         }.clone()
     }
     pub fn tryExactlyOne<T: Clone +
-                         'static>(xs:
-                                      &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                         'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Option<T> {
         {
-            let e: Rc<dyn Seq::Enumerable::IEnumerator_1<T>> = Seq::ofSeq(xs);
+            let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
             {
                 let try_result =
                     if e.MoveNext() {
@@ -769,9 +764,9 @@ pub mod Seq {
     }
     pub fn exists<T: Clone +
                   'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
-                           xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                           xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> bool {
-        let e: Rc<dyn Seq::Enumerable::IEnumerator_1<T>> = Seq::ofSeq(xs);
+        let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
         {
             let try_result =
                 {
@@ -789,14 +784,14 @@ pub mod Seq {
     pub fn exists2<T1: Clone + 'static, T2: Clone +
                    'static>(predicate:
                                 &Rc<impl Fn(&T1, &T2) -> (bool) + 'static>,
-                            xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T1>>,
-                            ys: &Rc<dyn Seq::Enumerable::IEnumerable_1<T2>>)
+                            xs: &Rc<dyn Interfaces::IEnumerable_1<T1>>,
+                            ys: &Rc<dyn Interfaces::IEnumerable_1<T2>>)
      -> bool {
-        let e1: Rc<dyn Seq::Enumerable::IEnumerator_1<T1>> = Seq::ofSeq(xs);
+        let e1: Rc<dyn Interfaces::IEnumerator_1<T1>> = Seq::ofSeq(xs);
         {
             let try_result =
                 {
-                    let e2: Rc<dyn Seq::Enumerable::IEnumerator_1<T2>> =
+                    let e2: Rc<dyn Interfaces::IEnumerator_1<T2>> =
                         Seq::ofSeq(ys);
                     {
                         let try_result_1 =
@@ -821,9 +816,9 @@ pub mod Seq {
             try_result
         }
     }
-    pub fn contains<T: PartialEq + Clone +
+    pub fn contains<T: Eq + core::hash::Hash + Clone +
                     'static>(value: &T,
-                             xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                             xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> bool {
         Seq::exists(&Rc::from({
                                   let value = value.clone();
@@ -832,8 +827,8 @@ pub mod Seq {
     }
     pub fn filter<T: Clone +
                   'static>(f: &Rc<impl Fn(&T) -> (bool) + 'static>,
-                           xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+                           xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::choose(&Rc::from({
                                   let f = f.clone();
                                   move |x: &T|
@@ -844,10 +839,10 @@ pub mod Seq {
     }
     pub fn tryFind<T: Clone +
                    'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
-                            xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                            xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Option<T> {
         {
-            let e: Rc<dyn Seq::Enumerable::IEnumerator_1<T>> = Seq::ofSeq(xs);
+            let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
             {
                 let try_result =
                     {
@@ -868,8 +863,7 @@ pub mod Seq {
     }
     pub fn find<T: Clone +
                 'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
-                         xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> T {
+                         xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> T {
         {
             let matchValue: Option<T> = Seq::tryFind(predicate, xs);
             match &matchValue {
@@ -881,16 +875,14 @@ pub mod Seq {
     pub fn tryFindIndex<T: Clone +
                         'static>(predicate:
                                      &Rc<impl Fn(&T) -> (bool) + 'static>,
-                                 xs:
-                                     &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                                 xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Option<i32> {
         {
             fn inner_loop<T: Clone +
                           'static>(i: &i32,
                                    predicate_1:
                                        &Rc<impl Fn(&T) -> (bool) + 'static>,
-                                   e:
-                                       &Rc<dyn Seq::Enumerable::IEnumerator_1<T>>)
+                                   e: &Rc<dyn Interfaces::IEnumerator_1<T>>)
              -> Option<i32> {
                 if e.clone().MoveNext() {
                     if predicate_1(&e.Current()) {
@@ -898,8 +890,7 @@ pub mod Seq {
                     } else { inner_loop(&(i.clone() + 1i32), predicate_1, e) }
                 } else { None::<i32> }
             }
-            let e_1: Rc<dyn Seq::Enumerable::IEnumerator_1<T>> =
-                Seq::ofSeq(xs);
+            let e_1: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
             {
                 let try_result = inner_loop(&0i32, predicate, &e_1);
                 if false { e_1.Dispose(); }
@@ -909,7 +900,7 @@ pub mod Seq {
     }
     pub fn findIndex<T: Clone +
                      'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
-                              xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                              xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> i32 {
         let matchValue: Option<i32> = Seq::tryFindIndex(predicate, xs);
         match &matchValue {
@@ -921,13 +912,12 @@ pub mod Seq {
                 'static>(folder:
                              &Rc<impl Fn(&State, &T) -> (State) + 'static>,
                          state: &State,
-                         xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> State {
+                         xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> State {
         {
             let acc: Rc<MutCell<State>> =
                 Rc::from(MutCell::from(state.clone()));
             {
-                let enumerator: Rc<dyn Seq::Enumerable::IEnumerator_1<T>> =
+                let enumerator: Rc<dyn Interfaces::IEnumerator_1<T>> =
                     xs.clone().GetEnumerator();
                 {
                     let try_result =
@@ -943,12 +933,12 @@ pub mod Seq {
         }.clone()
     }
     pub fn toArray<T: Clone +
-                   'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                   'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Rc<MutCell<Vec<T>>> {
         {
             let res: Rc<MutCell<Vec<T>>> = Native::arrayEmpty::<T>();
             {
-                let enumerator: Rc<dyn Seq::Enumerable::IEnumerator_1<T>> =
+                let enumerator: Rc<dyn Interfaces::IEnumerator_1<T>> =
                     xs.clone().GetEnumerator();
                 {
                     let try_result =
@@ -960,17 +950,17 @@ pub mod Seq {
                     try_result
                 }
             }
-            Native::arrayCopy(&res)
+            res.clone()
         }.clone()
     }
     pub fn toList<T: Clone +
-                  'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                  'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> List_1<T> {
         {
             let acc: Rc<MutCell<List_1<T>>> =
                 Rc::from(MutCell::from(List::empty::<T>()));
             {
-                let enumerator: Rc<dyn Seq::Enumerable::IEnumerator_1<T>> =
+                let enumerator: Rc<dyn Interfaces::IEnumerator_1<T>> =
                     xs.clone().GetEnumerator();
                 {
                     let try_result =
@@ -987,7 +977,7 @@ pub mod Seq {
     }
     pub fn foldBack<T: Clone + 'static, a_: Clone +
                     'static>(folder: &Rc<impl Fn(&T, &a_) -> (a_) + 'static>,
-                             xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>,
+                             xs: &Rc<dyn Interfaces::IEnumerable_1<T>>,
                              state: &a_) -> a_ {
         Array::foldBack(folder, &Seq::toArray(xs), state)
     }
@@ -995,16 +985,15 @@ pub mod Seq {
                  'static>(folder:
                               &Rc<impl Fn(&State, &T1, &T2) -> (State) +
                                   'static>, state: &State,
-                          xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T1>>,
-                          ys: &Rc<dyn Seq::Enumerable::IEnumerable_1<T2>>)
+                          xs: &Rc<dyn Interfaces::IEnumerable_1<T1>>,
+                          ys: &Rc<dyn Interfaces::IEnumerable_1<T2>>)
      -> State {
         {
-            let e1: Rc<dyn Seq::Enumerable::IEnumerator_1<T1>> =
-                Seq::ofSeq(xs);
+            let e1: Rc<dyn Interfaces::IEnumerator_1<T1>> = Seq::ofSeq(xs);
             {
                 let try_result =
                     {
-                        let e2: Rc<dyn Seq::Enumerable::IEnumerator_1<T2>> =
+                        let e2: Rc<dyn Interfaces::IEnumerator_1<T2>> =
                             Seq::ofSeq(ys);
                         {
                             let try_result_1 =
@@ -1033,14 +1022,14 @@ pub mod Seq {
                      'static>(folder:
                                   &Rc<impl Fn(&T1, &T2, &State) -> (State) +
                                       'static>,
-                              xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T1>>,
-                              ys: &Rc<dyn Seq::Enumerable::IEnumerable_1<T2>>,
+                              xs: &Rc<dyn Interfaces::IEnumerable_1<T1>>,
+                              ys: &Rc<dyn Interfaces::IEnumerable_1<T2>>,
                               state: &State) -> State {
         Array::foldBack2(folder, &Seq::toArray(xs), &Seq::toArray(ys), state)
     }
     pub fn forAll<T: Clone +
                   'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
-                           xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                           xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> bool {
         !Seq::exists(&Rc::from({
                                    let predicate = predicate.clone();
@@ -1050,8 +1039,8 @@ pub mod Seq {
     pub fn forAll2<T1: Clone + 'static, T2: Clone +
                    'static>(predicate:
                                 &Rc<impl Fn(&T1, &T2) -> (bool) + 'static>,
-                            xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T1>>,
-                            ys: &Rc<dyn Seq::Enumerable::IEnumerable_1<T2>>)
+                            xs: &Rc<dyn Interfaces::IEnumerable_1<T1>>,
+                            ys: &Rc<dyn Interfaces::IEnumerable_1<T2>>)
      -> bool {
         !Seq::exists2(&Rc::from({
                                     let predicate = predicate.clone();
@@ -1061,15 +1050,13 @@ pub mod Seq {
     pub fn tryFindBack<T: Clone +
                        'static>(predicate:
                                     &Rc<impl Fn(&T) -> (bool) + 'static>,
-                                xs:
-                                    &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                                xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Option<T> {
         Array::tryFindBack(predicate, &Seq::toArray(xs))
     }
     pub fn findBack<T: Clone +
                     'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
-                             xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> T {
+                             xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> T {
         {
             let matchValue: Option<T> = Seq::tryFindBack(predicate, xs);
             match &matchValue {
@@ -1082,15 +1069,14 @@ pub mod Seq {
                             'static>(predicate:
                                          &Rc<impl Fn(&T) -> (bool) + 'static>,
                                      xs:
-                                         &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                                         &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Option<i32> {
         Array::tryFindIndexBack(predicate, &Seq::toArray(xs))
     }
     pub fn findIndexBack<T: Clone +
                          'static>(predicate:
                                       &Rc<impl Fn(&T) -> (bool) + 'static>,
-                                  xs:
-                                      &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                                  xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> i32 {
         let matchValue: Option<i32> = Seq::tryFindIndexBack(predicate, xs);
         match &matchValue {
@@ -1099,10 +1085,10 @@ pub mod Seq {
         }
     }
     pub fn tryHead<T: Clone +
-                   'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                   'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Option<T> {
         {
-            let e: Rc<dyn Seq::Enumerable::IEnumerator_1<T>> = Seq::ofSeq(xs);
+            let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
             {
                 let try_result =
                     if e.MoveNext() {
@@ -1113,8 +1099,7 @@ pub mod Seq {
             }.clone()
         }.clone()
     }
-    pub fn head<T: Clone +
-                'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+    pub fn head<T: Clone + 'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> T {
         {
             let matchValue: Option<T> = Seq::tryHead(xs);
@@ -1131,28 +1116,27 @@ pub mod Seq {
     pub fn initialize<a_: Clone +
                       'static>(count: &i32,
                                f: &Rc<impl Fn(&i32) -> (a_) + 'static>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<a_>> {
+     -> Rc<dyn Interfaces::IEnumerable_1<a_>> {
         Seq::unfold(&Rc::from({
                                   let count = count.clone();
                                   let f = f.clone();
                                   move |i: &i32|
                                       if i.clone() < count {
-                                          Some(Rc::from((f(i),
-                                                         i.clone() + 1i32)))
-                                      } else { None::<Rc<(a_, i32)>> }
+                                          Some((f(i), i.clone() + 1i32))
+                                      } else { None::<(a_, i32)> }
                               }), &0i32)
     }
     pub fn initializeInfinite<a_: Clone +
                               'static>(f:
                                            &Rc<impl Fn(&i32) -> (a_) +
                                                'static>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<a_>> {
+     -> Rc<dyn Interfaces::IEnumerable_1<a_>> {
         Seq::initialize(&i32::MAX, f)
     }
     pub fn isEmpty<T: Clone +
-                   'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                   'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> bool {
-        let e: Rc<dyn Seq::Enumerable::IEnumerator_1<T>> = Seq::ofSeq(xs);
+        let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
         {
             let try_result = !e.MoveNext();
             if false { e.Dispose(); }
@@ -1161,7 +1145,7 @@ pub mod Seq {
     }
     pub fn tryItem<T: Clone +
                    'static>(index: &i32,
-                            xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                            xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Option<T> {
         {
             let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(index.clone()));
@@ -1169,7 +1153,7 @@ pub mod Seq {
                 None::<T>
             } else {
                 {
-                    let e: Rc<dyn Seq::Enumerable::IEnumerator_1<T>> =
+                    let e: Rc<dyn Interfaces::IEnumerator_1<T>> =
                         Seq::ofSeq(xs);
                     {
                         let try_result =
@@ -1192,8 +1176,7 @@ pub mod Seq {
     }
     pub fn item<T: Clone +
                 'static>(index: &i32,
-                         xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> T {
+                         xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> T {
         {
             let matchValue: Option<T> = Seq::tryItem(index, xs);
             match &matchValue {
@@ -1208,7 +1191,7 @@ pub mod Seq {
     }
     pub fn iterate<T: Clone +
                    'static>(action: &Rc<impl Fn(&T) + 'static>,
-                            xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>) {
+                            xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) {
         Seq::fold(&Rc::from({
                                 let action = action.clone();
                                 move |unitVar0: &(), x: &T| action(x)
@@ -1216,9 +1199,8 @@ pub mod Seq {
     }
     pub fn iterate2<T1: Clone + 'static, T2: Clone +
                     'static>(action: &Rc<impl Fn(&T1, &T2) + 'static>,
-                             xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T1>>,
-                             ys:
-                                 &Rc<dyn Seq::Enumerable::IEnumerable_1<T2>>) {
+                             xs: &Rc<dyn Interfaces::IEnumerable_1<T1>>,
+                             ys: &Rc<dyn Interfaces::IEnumerable_1<T2>>) {
         Seq::fold2(&Rc::from({
                                  let action = action.clone();
                                  move |unitVar0: &(), x: &T1, y: &T2|
@@ -1228,7 +1210,7 @@ pub mod Seq {
     pub fn iterateIndexed<T: Clone +
                           'static>(action: &Rc<impl Fn(&i32, &T) + 'static>,
                                    xs:
-                                       &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>) {
+                                       &Rc<dyn Interfaces::IEnumerable_1<T>>) {
         Util::ignore(&Seq::fold(&Rc::from({
                                               let action = action.clone();
                                               move |i: &i32, x: &T|
@@ -1243,9 +1225,9 @@ pub mod Seq {
                                         &Rc<impl Fn(&i32, &T1, &T2) +
                                             'static>,
                                     xs:
-                                        &Rc<dyn Seq::Enumerable::IEnumerable_1<T1>>,
+                                        &Rc<dyn Interfaces::IEnumerable_1<T1>>,
                                     ys:
-                                        &Rc<dyn Seq::Enumerable::IEnumerable_1<T2>>) {
+                                        &Rc<dyn Interfaces::IEnumerable_1<T2>>) {
         Util::ignore(&Seq::fold2(&Rc::from({
                                                let action = action.clone();
                                                move |i: &i32, x: &T1, y: &T2|
@@ -1256,10 +1238,10 @@ pub mod Seq {
                                            }), &0i32, xs, ys));
     }
     pub fn tryLast<T: Clone +
-                   'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                   'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Option<T> {
         {
-            let e: Rc<dyn Seq::Enumerable::IEnumerator_1<T>> = Seq::ofSeq(xs);
+            let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
             {
                 let try_result =
                     if e.MoveNext() {
@@ -1277,8 +1259,7 @@ pub mod Seq {
             }.clone()
         }.clone()
     }
-    pub fn last<T: Clone +
-                'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+    pub fn last<T: Clone + 'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> T {
         {
             let matchValue: Option<T> = Seq::tryLast(xs);
@@ -1293,10 +1274,9 @@ pub mod Seq {
         }.clone()
     }
     pub fn length<T: Clone +
-                  'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> i32 {
+                  'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> i32 {
         let count: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
-        let e: Rc<dyn Seq::Enumerable::IEnumerator_1<T>> = Seq::ofSeq(xs);
+        let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
         {
             let try_result =
                 {
@@ -1309,8 +1289,8 @@ pub mod Seq {
     }
     pub fn map<T: Clone + 'static, U: Clone +
                'static>(mapping: &Rc<impl Fn(&T) -> (U) + 'static>,
-                        xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<U>> {
+                        xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<U>> {
         Seq::generate(&Rc::from({
                                     let xs = xs.clone();
                                     move || Seq::ofSeq(&xs)
@@ -1319,21 +1299,21 @@ pub mod Seq {
                                     let mapping = mapping.clone();
                                     move
                                         |e:
-                                             &Rc<dyn Seq::Enumerable::IEnumerator_1<T>>|
+                                             &Rc<dyn Interfaces::IEnumerator_1<T>>|
                                         if e.clone().MoveNext() {
                                             Some(mapping(&e.Current()))
                                         } else { None::<U> }
                                 }),
                       &Rc::from(move
                                     |e_1:
-                                         &Rc<dyn Seq::Enumerable::IEnumerator_1<T>>|
+                                         &Rc<dyn Interfaces::IEnumerator_1<T>>|
                                     e_1.clone().Dispose()))
     }
     pub fn mapIndexed<T: Clone + 'static, U: Clone +
                       'static>(mapping:
                                    &Rc<impl Fn(&i32, &T) -> (U) + 'static>,
-                               xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<U>> {
+                               xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<U>> {
         Seq::generateIndexed(&Rc::from({
                                            let xs = xs.clone();
                                            move || Seq::ofSeq(&xs)
@@ -1343,7 +1323,7 @@ pub mod Seq {
                                            move
                                                |i: &i32,
                                                 e:
-                                                    &Rc<dyn Seq::Enumerable::IEnumerator_1<T>>|
+                                                    &Rc<dyn Interfaces::IEnumerator_1<T>>|
                                                if e.clone().MoveNext() {
                                                    Some(mapping(i,
                                                                 &e.Current()))
@@ -1351,39 +1331,37 @@ pub mod Seq {
                                        }),
                              &Rc::from(move
                                            |e_1:
-                                                &Rc<dyn Seq::Enumerable::IEnumerator_1<T>>|
+                                                &Rc<dyn Interfaces::IEnumerator_1<T>>|
                                            e_1.clone().Dispose()))
     }
     pub fn indexed<T: Clone +
-                   'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<Rc<(i32, T)>>> {
+                   'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<(i32, T)>> {
         Seq::mapIndexed(&Rc::from(move |i: &i32, x: &T|
-                                      Rc::from((i.clone(), x.clone()))), xs)
+                                      (i.clone(), x.clone())), xs)
     }
     pub fn map2<T1: Clone + 'static, T2: Clone + 'static, U: Clone +
                 'static>(mapping: &Rc<impl Fn(&T1, &T2) -> (U) + 'static>,
-                         xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T1>>,
-                         ys: &Rc<dyn Seq::Enumerable::IEnumerable_1<T2>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<U>> {
+                         xs: &Rc<dyn Interfaces::IEnumerable_1<T1>>,
+                         ys: &Rc<dyn Interfaces::IEnumerable_1<T2>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<U>> {
         Seq::generate(&Rc::from({
                                     let xs = xs.clone();
                                     let ys = ys.clone();
-                                    move ||
-                                        Rc::from((Seq::ofSeq(&xs),
-                                                  Seq::ofSeq(&ys)))
+                                    move || (Seq::ofSeq(&xs), Seq::ofSeq(&ys))
                                 }),
                       &Rc::from({
                                     let mapping = mapping.clone();
                                     move
                                         |tupledArg:
-                                             &Rc<(Rc<dyn Seq::Enumerable::IEnumerator_1<T1>>,
-                                                  Rc<dyn Seq::Enumerable::IEnumerator_1<T2>>)>|
+                                             &(Rc<dyn Interfaces::IEnumerator_1<T1>>,
+                                               Rc<dyn Interfaces::IEnumerator_1<T2>>)|
                                         {
                                             let e1:
-                                                    Rc<dyn Seq::Enumerable::IEnumerator_1<T1>> =
+                                                    Rc<dyn Interfaces::IEnumerator_1<T1>> =
                                                 tupledArg.0.clone();
                                             let e2:
-                                                    Rc<dyn Seq::Enumerable::IEnumerator_1<T2>> =
+                                                    Rc<dyn Interfaces::IEnumerator_1<T2>> =
                                                 tupledArg.1.clone();
                                             if if e1.MoveNext() {
                                                    e2.MoveNext()
@@ -1395,8 +1373,8 @@ pub mod Seq {
                                 }),
                       &Rc::from(move
                                     |tupledArg_1:
-                                         &Rc<(Rc<dyn Seq::Enumerable::IEnumerator_1<T1>>,
-                                              Rc<dyn Seq::Enumerable::IEnumerator_1<T2>>)>|
+                                         &(Rc<dyn Interfaces::IEnumerator_1<T1>>,
+                                           Rc<dyn Interfaces::IEnumerator_1<T2>>)|
                                     {
                                         let try_result =
                                             tupledArg_1.0.clone().Dispose();
@@ -1408,31 +1386,29 @@ pub mod Seq {
                        'static>(mapping:
                                     &Rc<impl Fn(&i32, &T1, &T2) -> (U) +
                                         'static>,
-                                xs:
-                                    &Rc<dyn Seq::Enumerable::IEnumerable_1<T1>>,
-                                ys:
-                                    &Rc<dyn Seq::Enumerable::IEnumerable_1<T2>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<U>> {
+                                xs: &Rc<dyn Interfaces::IEnumerable_1<T1>>,
+                                ys: &Rc<dyn Interfaces::IEnumerable_1<T2>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<U>> {
         Seq::generateIndexed(&Rc::from({
                                            let xs = xs.clone();
                                            let ys = ys.clone();
                                            move ||
-                                               Rc::from((Seq::ofSeq(&xs),
-                                                         Seq::ofSeq(&ys)))
+                                               (Seq::ofSeq(&xs),
+                                                Seq::ofSeq(&ys))
                                        }),
                              &Rc::from({
                                            let mapping = mapping.clone();
                                            move
                                                |i: &i32,
                                                 tupledArg:
-                                                    &Rc<(Rc<dyn Seq::Enumerable::IEnumerator_1<T1>>,
-                                                         Rc<dyn Seq::Enumerable::IEnumerator_1<T2>>)>|
+                                                    &(Rc<dyn Interfaces::IEnumerator_1<T1>>,
+                                                      Rc<dyn Interfaces::IEnumerator_1<T2>>)|
                                                {
                                                    let e1:
-                                                           Rc<dyn Seq::Enumerable::IEnumerator_1<T1>> =
+                                                           Rc<dyn Interfaces::IEnumerator_1<T1>> =
                                                        tupledArg.0.clone();
                                                    let e2:
-                                                           Rc<dyn Seq::Enumerable::IEnumerator_1<T2>> =
+                                                           Rc<dyn Interfaces::IEnumerator_1<T2>> =
                                                        tupledArg.1.clone();
                                                    if if e1.MoveNext() {
                                                           e2.MoveNext()
@@ -1445,8 +1421,8 @@ pub mod Seq {
                                        }),
                              &Rc::from(move
                                            |tupledArg_1:
-                                                &Rc<(Rc<dyn Seq::Enumerable::IEnumerator_1<T1>>,
-                                                     Rc<dyn Seq::Enumerable::IEnumerator_1<T2>>)>|
+                                                &(Rc<dyn Interfaces::IEnumerator_1<T1>>,
+                                                  Rc<dyn Interfaces::IEnumerator_1<T2>>)|
                                            {
                                                let try_result =
                                                    tupledArg_1.0.clone().Dispose();
@@ -1458,35 +1434,34 @@ pub mod Seq {
                 U: Clone +
                 'static>(mapping:
                              &Rc<impl Fn(&T1, &T2, &T3) -> (U) + 'static>,
-                         xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T1>>,
-                         ys: &Rc<dyn Seq::Enumerable::IEnumerable_1<T2>>,
-                         zs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T3>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<U>> {
+                         xs: &Rc<dyn Interfaces::IEnumerable_1<T1>>,
+                         ys: &Rc<dyn Interfaces::IEnumerable_1<T2>>,
+                         zs: &Rc<dyn Interfaces::IEnumerable_1<T3>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<U>> {
         Seq::generate(&Rc::from({
                                     let xs = xs.clone();
                                     let ys = ys.clone();
                                     let zs = zs.clone();
                                     move ||
-                                        Rc::from((Seq::ofSeq(&xs),
-                                                  Seq::ofSeq(&ys),
-                                                  Seq::ofSeq(&zs)))
+                                        (Seq::ofSeq(&xs), Seq::ofSeq(&ys),
+                                         Seq::ofSeq(&zs))
                                 }),
                       &Rc::from({
                                     let mapping = mapping.clone();
                                     move
                                         |tupledArg:
-                                             &Rc<(Rc<dyn Seq::Enumerable::IEnumerator_1<T1>>,
-                                                  Rc<dyn Seq::Enumerable::IEnumerator_1<T2>>,
-                                                  Rc<dyn Seq::Enumerable::IEnumerator_1<T3>>)>|
+                                             &(Rc<dyn Interfaces::IEnumerator_1<T1>>,
+                                               Rc<dyn Interfaces::IEnumerator_1<T2>>,
+                                               Rc<dyn Interfaces::IEnumerator_1<T3>>)|
                                         {
                                             let e1:
-                                                    Rc<dyn Seq::Enumerable::IEnumerator_1<T1>> =
+                                                    Rc<dyn Interfaces::IEnumerator_1<T1>> =
                                                 tupledArg.0.clone();
                                             let e2:
-                                                    Rc<dyn Seq::Enumerable::IEnumerator_1<T2>> =
+                                                    Rc<dyn Interfaces::IEnumerator_1<T2>> =
                                                 tupledArg.1.clone();
                                             let e3:
-                                                    Rc<dyn Seq::Enumerable::IEnumerator_1<T3>> =
+                                                    Rc<dyn Interfaces::IEnumerator_1<T3>> =
                                                 tupledArg.2.clone();
                                             if if if e1.MoveNext() {
                                                       e2.MoveNext()
@@ -1501,9 +1476,9 @@ pub mod Seq {
                                 }),
                       &Rc::from(move
                                     |tupledArg_1:
-                                         &Rc<(Rc<dyn Seq::Enumerable::IEnumerator_1<T1>>,
-                                              Rc<dyn Seq::Enumerable::IEnumerator_1<T2>>,
-                                              Rc<dyn Seq::Enumerable::IEnumerator_1<T3>>)>|
+                                         &(Rc<dyn Interfaces::IEnumerator_1<T1>>,
+                                           Rc<dyn Interfaces::IEnumerator_1<T2>>,
+                                           Rc<dyn Interfaces::IEnumerator_1<T3>>)|
                                     {
                                         let try_result =
                                             tupledArg_1.0.clone().Dispose();
@@ -1517,46 +1492,41 @@ pub mod Seq {
                                     }))
     }
     pub fn readOnly<T: Clone +
-                    'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+                    'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::map(&Rc::from(move |x: &T| x.clone()), xs)
     }
     pub fn mapFold<State: Clone + 'static, T: Clone + 'static, U: Clone +
                    'static>(mapping:
-                                &Rc<impl Fn(&State, &T) -> (Rc<(U, State)>) +
+                                &Rc<impl Fn(&State, &T) -> ((U, State)) +
                                     'static>, state: &State,
-                            xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<(Rc<dyn Seq::Enumerable::IEnumerable_1<U>>, State)> {
-        {
-            let patternInput: Rc<(Rc<MutCell<Vec<U>>>, State)> =
-                Array::mapFold(mapping, state, &Seq::toArray(xs));
-            Rc::from((Seq::readOnly(&Seq::ofArray(&patternInput.0.clone())),
-                      patternInput.1.clone()))
-        }.clone()
+                            xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> (Rc<dyn Interfaces::IEnumerable_1<U>>, State) {
+        let patternInput: (Rc<MutCell<Vec<U>>>, State) =
+            Array::mapFold(mapping, state, &Seq::toArray(xs));
+        (Seq::readOnly(&Seq::ofArray(&patternInput.0.clone())),
+         patternInput.1.clone())
     }
     pub fn mapFoldBack<T: Clone + 'static, State: Clone + 'static, U: Clone +
                        'static>(mapping:
-                                    &Rc<impl Fn(&T, &State)
-                                        -> (Rc<(U, State)>) + 'static>,
-                                xs:
-                                    &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>,
+                                    &Rc<impl Fn(&T, &State) -> ((U, State)) +
+                                        'static>,
+                                xs: &Rc<dyn Interfaces::IEnumerable_1<T>>,
                                 state: &State)
-     -> Rc<(Rc<dyn Seq::Enumerable::IEnumerable_1<U>>, State)> {
-        {
-            let patternInput: Rc<(Rc<MutCell<Vec<U>>>, State)> =
-                Array::mapFoldBack(mapping, &Seq::toArray(xs), state);
-            Rc::from((Seq::readOnly(&Seq::ofArray(&patternInput.0.clone())),
-                      patternInput.1.clone()))
-        }.clone()
+     -> (Rc<dyn Interfaces::IEnumerable_1<U>>, State) {
+        let patternInput: (Rc<MutCell<Vec<U>>>, State) =
+            Array::mapFoldBack(mapping, &Seq::toArray(xs), state);
+        (Seq::readOnly(&Seq::ofArray(&patternInput.0.clone())),
+         patternInput.1.clone())
     }
     pub fn collect<T: Clone + 'static, U: Clone +
                    'static>(mapping:
                                 &Rc<impl Fn(&T)
                                     ->
-                                        (Rc<dyn Seq::Enumerable::IEnumerable_1<U>>) +
+                                        (Rc<dyn Interfaces::IEnumerable_1<U>>) +
                                     'static>,
-                            xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<U>> {
+                            xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<U>> {
         Seq::delay(&Rc::from({
                                  let mapping = mapping.clone();
                                  let xs = xs.clone();
@@ -1564,13 +1534,13 @@ pub mod Seq {
                              }))
     }
     pub fn cache<T: Clone +
-                 'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+                 'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         {
             let prefix: Rc<MutCell<Vec<T>>> = Native::arrayEmpty::<T>();
             let enumOpt:
-                    Rc<MutCell<Option<Rc<dyn Seq::Enumerable::IEnumerator_1<T>>>>> =
-                Rc::from(MutCell::from(None::<Rc<dyn Seq::Enumerable::IEnumerator_1<T>>>));
+                    Rc<MutCell<Option<Rc<dyn Interfaces::IEnumerator_1<T>>>>> =
+                Rc::from(MutCell::from(None::<Rc<dyn Interfaces::IEnumerator_1<T>>>));
             let finished: Rc<MutCell<bool>> = Rc::from(MutCell::from(false));
             Seq::unfold(&Rc::from({
                                       let enumOpt = enumOpt.clone();
@@ -1579,9 +1549,8 @@ pub mod Seq {
                                       let xs = xs.clone();
                                       move |i: &i32|
                                           if i.clone() < prefix.len() as i32 {
-                                              Some(Rc::from((prefix[i.clone()].clone(),
-                                                             i.clone() +
-                                                                 1i32)))
+                                              Some((prefix[i.clone()].clone(),
+                                                    i.clone() + 1i32))
                                           } else {
                                               {
                                                   if enumOpt.get().is_none() {
@@ -1590,45 +1559,43 @@ pub mod Seq {
                                                   if enumOpt.get().is_some() {
                                                       if {
                                                              let e:
-                                                                     Rc<dyn Seq::Enumerable::IEnumerator_1<T>> =
+                                                                     Rc<dyn Interfaces::IEnumerator_1<T>> =
                                                                  Option_::getValue(&enumOpt.get()).clone();
                                                              !finished.get()
                                                          } {
                                                           let e_1:
-                                                                  Rc<dyn Seq::Enumerable::IEnumerator_1<T>> =
+                                                                  Rc<dyn Interfaces::IEnumerator_1<T>> =
                                                               Option_::getValue(&enumOpt.get()).clone();
                                                           if e_1.MoveNext() {
                                                               {
-                                                                  prefix.get_mut().push(e_1.Current());
-                                                                  Some(Rc::from((e_1.Current().clone(),
-                                                                                 i.clone()
-                                                                                     +
-                                                                                     1i32)))
+                                                                  prefix.get_mut().push(e_1.Current().clone());
+                                                                  Some((e_1.Current().clone(),
+                                                                        i.clone()
+                                                                            +
+                                                                            1i32))
                                                               }.clone()
                                                           } else {
                                                               {
                                                                   finished.set(true);
-                                                                  None::<Rc<(T,
-                                                                             i32)>>
+                                                                  None::<(T,
+                                                                          i32)>
                                                               }.clone()
                                                           }
                                                       } else {
-                                                          None::<Rc<(T, i32)>>
+                                                          None::<(T, i32)>
                                                       }
-                                                  } else {
-                                                      None::<Rc<(T, i32)>>
-                                                  }
+                                                  } else { None::<(T, i32)> }
                                               }.clone()
                                           }
                                   }), &0i32)
         }.clone()
     }
     pub fn allPairs<T1: Clone + 'static, T2: Clone +
-                    'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T1>>,
-                             ys: &Rc<dyn Seq::Enumerable::IEnumerable_1<T2>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<Rc<(T1, T2)>>> {
+                    'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T1>>,
+                             ys: &Rc<dyn Interfaces::IEnumerable_1<T2>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<(T1, T2)>> {
         {
-            let ysCache: Rc<dyn Seq::Enumerable::IEnumerable_1<T2>> =
+            let ysCache: Rc<dyn Interfaces::IEnumerable_1<T2>> =
                 Seq::cache(ys);
             Seq::delay(&Rc::from({
                                      let xs = xs.clone();
@@ -1648,8 +1615,8 @@ pub mod Seq {
                                                                                                         move
                                                                                                             |y:
                                                                                                                  &T2|
-                                                                                                            Rc::from((x.clone(),
-                                                                                                                      y.clone()))
+                                                                                                            (x.clone(),
+                                                                                                             y.clone())
                                                                                                     }),
                                                                                           &ysCache)
                                                                          }),
@@ -1660,10 +1627,10 @@ pub mod Seq {
     pub fn tryPick<T: Clone + 'static, a_: Clone +
                    'static>(chooser:
                                 &Rc<impl Fn(&T) -> (Option<a_>) + 'static>,
-                            xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                            xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Option<a_> {
         {
-            let e: Rc<dyn Seq::Enumerable::IEnumerator_1<T>> = Seq::ofSeq(xs);
+            let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
             {
                 let try_result =
                     {
@@ -1683,8 +1650,7 @@ pub mod Seq {
     }
     pub fn pick<T: Clone + 'static, a_: Clone +
                 'static>(chooser: &Rc<impl Fn(&T) -> (Option<a_>) + 'static>,
-                         xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> a_ {
+                         xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> a_ {
         {
             let matchValue: Option<a_> = Seq::tryPick(chooser, xs);
             match &matchValue {
@@ -1695,10 +1661,9 @@ pub mod Seq {
     }
     pub fn reduce<T: Clone +
                   'static>(folder: &Rc<impl Fn(&T, &T) -> (T) + 'static>,
-                           xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> T {
+                           xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> T {
         {
-            let e: Rc<dyn Seq::Enumerable::IEnumerator_1<T>> = Seq::ofSeq(xs);
+            let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
             {
                 let try_result =
                     if e.MoveNext() {
@@ -1718,7 +1683,7 @@ pub mod Seq {
     }
     pub fn reduceBack<T: Clone +
                       'static>(folder: &Rc<impl Fn(&T, &T) -> (T) + 'static>,
-                               xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                               xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> T {
         {
             let arr: Rc<MutCell<Vec<T>>> = Seq::toArray(xs);
@@ -1728,7 +1693,7 @@ pub mod Seq {
         }.clone()
     }
     pub fn replicate<a_: Clone + 'static>(n: &i32, x: &a_)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<a_>> {
+     -> Rc<dyn Interfaces::IEnumerable_1<a_>> {
         Seq::initialize(n,
                         &Rc::from({
                                       let x = x.clone();
@@ -1736,8 +1701,8 @@ pub mod Seq {
                                   }))
     }
     pub fn reverse<T: Clone +
-                   'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+                   'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::delay(&Rc::from({
                                  let xs = xs.clone();
                                  move ||
@@ -1748,8 +1713,8 @@ pub mod Seq {
                 'static>(folder:
                              &Rc<impl Fn(&State, &T) -> (State) + 'static>,
                          state: &State,
-                         xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<State>> {
+                         xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<State>> {
         Seq::delay(&Rc::from({
                                  let folder = folder.clone();
                                  let state = state.clone();
@@ -1783,9 +1748,9 @@ pub mod Seq {
                     'static>(folder:
                                  &Rc<impl Fn(&T, &State) -> (State) +
                                      'static>,
-                             xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>,
+                             xs: &Rc<dyn Interfaces::IEnumerable_1<T>>,
                              state: &State)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<State>> {
+     -> Rc<dyn Interfaces::IEnumerable_1<State>> {
         Seq::delay(&Rc::from({
                                  let folder = folder.clone();
                                  let state = state.clone();
@@ -1798,15 +1763,15 @@ pub mod Seq {
     }
     pub fn skip<T: Clone +
                 'static>(count: &i32,
-                         xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+                         xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::mkSeq(&Rc::from({
                                  let count = count.clone();
                                  let xs = xs.clone();
                                  move ||
                                      {
                                          let e:
-                                                 Rc<dyn Seq::Enumerable::IEnumerator_1<T>> =
+                                                 Rc<dyn Interfaces::IEnumerator_1<T>> =
                                              Seq::ofSeq(&xs);
                                          for i in 1i32..=count {
                                              if !e.MoveNext() {
@@ -1822,8 +1787,8 @@ pub mod Seq {
     }
     pub fn skipWhile<T: Clone +
                      'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
-                              xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+                              xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::delay(&Rc::from({
                                  let predicate = predicate.clone();
                                  let xs = xs.clone();
@@ -1851,15 +1816,14 @@ pub mod Seq {
                                      }.clone()
                              }))
     }
-    pub fn tail<T: Clone +
-                'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+    pub fn tail<T: Clone + 'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::skip(&1i32, xs)
     }
     pub fn take<T: Clone +
                 'static>(count: &i32,
-                         xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+                         xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::generateIndexed(&Rc::from({
                                            let xs = xs.clone();
                                            move || Seq::ofSeq(&xs)
@@ -1869,7 +1833,7 @@ pub mod Seq {
                                            move
                                                |i: &i32,
                                                 e:
-                                                    &Rc<dyn Seq::Enumerable::IEnumerator_1<T>>|
+                                                    &Rc<dyn Interfaces::IEnumerator_1<T>>|
                                                if i.clone() < count {
                                                    {
                                                        if !e.clone().MoveNext()
@@ -1885,13 +1849,13 @@ pub mod Seq {
                                        }),
                              &Rc::from(move
                                            |e_1:
-                                                &Rc<dyn Seq::Enumerable::IEnumerator_1<T>>|
+                                                &Rc<dyn Interfaces::IEnumerator_1<T>>|
                                            e_1.clone().Dispose()))
     }
     pub fn takeWhile<T: Clone +
                      'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
-                              xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+                              xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::generate(&Rc::from({
                                     let xs = xs.clone();
                                     move || Seq::ofSeq(&xs)
@@ -1900,7 +1864,7 @@ pub mod Seq {
                                     let predicate = predicate.clone();
                                     move
                                         |e:
-                                             &Rc<dyn Seq::Enumerable::IEnumerator_1<T>>|
+                                             &Rc<dyn Interfaces::IEnumerator_1<T>>|
                                         if if e.clone().MoveNext() {
                                                predicate(&e.Current())
                                            } else { false } {
@@ -1909,13 +1873,13 @@ pub mod Seq {
                                 }),
                       &Rc::from(move
                                     |e_1:
-                                         &Rc<dyn Seq::Enumerable::IEnumerator_1<T>>|
+                                         &Rc<dyn Interfaces::IEnumerator_1<T>>|
                                     e_1.clone().Dispose()))
     }
     pub fn truncate<T: Clone +
                     'static>(count: &i32,
-                             xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+                             xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::generateIndexed(&Rc::from({
                                            let xs = xs.clone();
                                            move || Seq::ofSeq(&xs)
@@ -1925,7 +1889,7 @@ pub mod Seq {
                                            move
                                                |i: &i32,
                                                 e:
-                                                    &Rc<dyn Seq::Enumerable::IEnumerator_1<T>>|
+                                                    &Rc<dyn Interfaces::IEnumerator_1<T>>|
                                                if if i.clone() < count {
                                                       e.clone().MoveNext()
                                                   } else { false } {
@@ -1934,28 +1898,28 @@ pub mod Seq {
                                        }),
                              &Rc::from(move
                                            |e_1:
-                                                &Rc<dyn Seq::Enumerable::IEnumerator_1<T>>|
+                                                &Rc<dyn Interfaces::IEnumerator_1<T>>|
                                            e_1.clone().Dispose()))
     }
     pub fn zip<T1: Clone + 'static, T2: Clone +
-               'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T1>>,
-                        ys: &Rc<dyn Seq::Enumerable::IEnumerable_1<T2>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<Rc<(T1, T2)>>> {
-        Seq::map2(&Rc::from(move |x: &T1, y: &T2|
-                                Rc::from((x.clone(), y.clone()))), xs, ys)
+               'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T1>>,
+                        ys: &Rc<dyn Interfaces::IEnumerable_1<T2>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<(T1, T2)>> {
+        Seq::map2(&Rc::from(move |x: &T1, y: &T2| (x.clone(), y.clone())), xs,
+                  ys)
     }
     pub fn zip3<T1: Clone + 'static, T2: Clone + 'static, T3: Clone +
-                'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T1>>,
-                         ys: &Rc<dyn Seq::Enumerable::IEnumerable_1<T2>>,
-                         zs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T3>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<Rc<(T1, T2, T3)>>> {
+                'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T1>>,
+                         ys: &Rc<dyn Interfaces::IEnumerable_1<T2>>,
+                         zs: &Rc<dyn Interfaces::IEnumerable_1<T3>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<(T1, T2, T3)>> {
         Seq::map3(&Rc::from(move |x: &T1, y: &T2, z: &T3|
-                                Rc::from((x.clone(), y.clone(), z.clone()))),
-                  xs, ys, zs)
+                                (x.clone(), y.clone(), z.clone())), xs, ys,
+                  zs)
     }
     pub fn pairwise<T: Clone +
-                    'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<Rc<(T, T)>>> {
+                    'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<(T, T)>> {
         Seq::delay(&Rc::from({
                                  let xs = xs.clone();
                                  move ||
@@ -1964,8 +1928,8 @@ pub mod Seq {
     }
     pub fn splitInto<T: Clone +
                      'static>(chunks: &i32,
-                              xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<Rc<MutCell<Vec<T>>>>> {
+                              xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<Rc<MutCell<Vec<T>>>>> {
         Seq::delay(&Rc::from({
                                  let chunks = chunks.clone();
                                  let xs = xs.clone();
@@ -1976,14 +1940,14 @@ pub mod Seq {
     }
     pub fn r#where<T: Clone +
                    'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
-                            xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+                            xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::filter(predicate, xs)
     }
     pub fn windowed<T: Clone +
                     'static>(windowSize: &i32,
-                             xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<Rc<MutCell<Vec<T>>>>> {
+                             xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<Rc<MutCell<Vec<T>>>>> {
         Seq::delay(&Rc::from({
                                  let windowSize = windowSize.clone();
                                  let xs = xs.clone();
@@ -1995,8 +1959,8 @@ pub mod Seq {
     pub fn sortWith<T: Clone +
                     'static>(comparer:
                                  &Rc<impl Fn(&T, &T) -> (i32) + 'static>,
-                             xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+                             xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::delay(&Rc::from({
                                  let comparer = comparer.clone();
                                  let xs = xs.clone();
@@ -2011,15 +1975,15 @@ pub mod Seq {
                              }))
     }
     pub fn sort<T: PartialOrd + Clone +
-                'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+                'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::sortWith(&Rc::from(move |e1: &T, e2: &T| Util::compare(e1, e2)),
                       xs)
     }
     pub fn sortBy<T: Clone + 'static, U: PartialOrd + Clone +
                   'static>(projection: &Rc<impl Fn(&T) -> (U) + 'static>,
-                           xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+                           xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::sortWith(&Rc::from({
                                     let projection = projection.clone();
                                     move |x: &T, y: &T|
@@ -2028,9 +1992,8 @@ pub mod Seq {
                                 }), xs)
     }
     pub fn sortDescending<T: PartialOrd + Clone +
-                          'static>(xs:
-                                       &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+                          'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::sortWith(&Rc::from(move |x: &T, y: &T|
                                     Util::compare(x, y) * -1i32), xs)
     }
@@ -2038,8 +2001,8 @@ pub mod Seq {
                             'static>(projection:
                                          &Rc<impl Fn(&T) -> (U) + 'static>,
                                      xs:
-                                         &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+                                         &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::sortWith(&Rc::from({
                                     let projection = projection.clone();
                                     move |x: &T, y: &T|
@@ -2048,15 +2011,14 @@ pub mod Seq {
                                 }), xs)
     }
     pub fn sum<T: core::ops::Add<Output = T> + Default + Clone +
-               'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>) -> T {
+               'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> T {
         Seq::fold(&Rc::from(move |acc: &T, x: &T| acc.clone() + x.clone()),
                   &Native::getZero::<T>(), xs)
     }
     pub fn sumBy<T: Clone + 'static, U: core::ops::Add<Output = U> + Default +
                  Clone +
                  'static>(projection: &Rc<impl Fn(&T) -> (U) + 'static>,
-                          xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> U {
+                          xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> U {
         Seq::fold(&Rc::from({
                                 let projection = projection.clone();
                                 move |acc: &U, x: &T|
@@ -2065,8 +2027,7 @@ pub mod Seq {
     }
     pub fn maxBy<T: Clone + 'static, U: PartialOrd + Clone +
                  'static>(projection: &Rc<impl Fn(&T) -> (U) + 'static>,
-                          xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> T {
+                          xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> T {
         Seq::reduce(&Rc::from({
                                   let projection = projection.clone();
                                   move |x: &T, y: &T|
@@ -2076,7 +2037,7 @@ pub mod Seq {
                               }), xs)
     }
     pub fn max<T: PartialOrd + Clone +
-               'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>) -> T {
+               'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> T {
         Seq::reduce(&Rc::from(move |x: &T, y: &T|
                                   if x.clone() > y.clone() {
                                       x.clone()
@@ -2084,8 +2045,7 @@ pub mod Seq {
     }
     pub fn minBy<T: Clone + 'static, U: PartialOrd + Clone +
                  'static>(projection: &Rc<impl Fn(&T) -> (U) + 'static>,
-                          xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> T {
+                          xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> T {
         Seq::reduce(&Rc::from({
                                   let projection = projection.clone();
                                   move |x: &T, y: &T|
@@ -2095,7 +2055,7 @@ pub mod Seq {
                               }), xs)
     }
     pub fn min<T: PartialOrd + Clone +
-               'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>) -> T {
+               'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> T {
         Seq::reduce(&Rc::from(move |x: &T, y: &T|
                                   if x.clone() < y.clone() {
                                       x.clone()
@@ -2103,8 +2063,7 @@ pub mod Seq {
     }
     pub fn average<T: core::ops::Add<Output = T> +
                    core::ops::Div<Output = T> + From<i32> + Default + Clone +
-                   'static>(xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> T {
+                   'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> T {
         {
             let count: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
             let total: T =
@@ -2126,7 +2085,7 @@ pub mod Seq {
                      core::ops::Div<Output = U> + From<i32> + Default +
                      Clone +
                      'static>(projection: &Rc<impl Fn(&T) -> (U) + 'static>,
-                              xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
+                              xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> U {
         {
             let count: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
@@ -2148,8 +2107,8 @@ pub mod Seq {
     }
     pub fn permute<T: Clone +
                    'static>(f: &Rc<impl Fn(&i32) -> (i32) + 'static>,
-                            xs: &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<T>> {
+                            xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<T>> {
         Seq::delay(&Rc::from({
                                  let f = f.clone();
                                  let xs = xs.clone();
@@ -2160,9 +2119,8 @@ pub mod Seq {
     }
     pub fn chunkBySize<T: Clone +
                        'static>(chunkSize: &i32,
-                                xs:
-                                    &Rc<dyn Seq::Enumerable::IEnumerable_1<T>>)
-     -> Rc<dyn Seq::Enumerable::IEnumerable_1<Rc<MutCell<Vec<T>>>>> {
+                                xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
+     -> Rc<dyn Interfaces::IEnumerable_1<Rc<MutCell<Vec<T>>>>> {
         Seq::delay(&Rc::from({
                                  let chunkSize = chunkSize.clone();
                                  let xs = xs.clone();

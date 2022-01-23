@@ -12,24 +12,21 @@ pub use import_feb400d7::*;
 #[path = "./Platform.rs"]
 pub(crate) mod import_163eefb1;
 pub use import_163eefb1::*;
-use std::rc::Rc;
 use fable_library_rust::*;
 pub mod TestApp {
     use super::*;
     pub fn main(_args: &Rc<MutCell<Vec<Rc<str>>>>) -> i32 {
-        let patternInput: Rc<(i32, i32, i32, i32)> =
-            Rc::from((0i32, 0i32, 1024i32, 1024i32));
+        let patternInput: (i32, i32, i32, i32) =
+            (0i32, 0i32, 1024i32, 1024i32);
         let w: i32 = patternInput.2.clone();
         let h: i32 = patternInput.3.clone();
         let data: Rc<MutCell<Vec<u8>>> =
             Native::arrayCreate(&(w * h * 4i32), &0u8);
         println!("{0}", &Native::string(&"Raytracer running..."));
         {
-            let patternInput_1: Rc<((), f64)> =
+            let patternInput_1: ((), f64) =
                 Platform::measureTime(&Rc::from({
                                                     let data = data.clone();
-                                                    let patternInput =
-                                                        patternInput.clone();
                                                     move ||
                                                         RayTracerDemo::renderScene(&data,
                                                                                    &patternInput.0.clone(),
@@ -38,7 +35,7 @@ pub mod TestApp {
                                                                                    &h,
                                                                                    &0.0f64)
                                                 }));
-            println!("Ray tracing:
+            println!("Ray tracing done:
  - rendered image size: ({0}x{1})
  - elapsed: {2} ms",
                      &w, &h, &patternInput_1.1.clone());
