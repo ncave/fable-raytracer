@@ -7,7 +7,7 @@
     "build-cli": "dotnet run -c Release --project ../Fable/src/Fable.Cli -- fable-raytracer.fsproj --outDir out",
     "build-rust-lib": "dotnet run -c Release --project ../Fable/src/Fable.Cli -- ../Fable/src/fable-library-rust/src --outDir build/fable-library-rust/src  --fableLib . --exclude Fable.Core --define FABLE_LIBRARY --lang Rust --noCache",
     "build-rust": "dotnet run -c Release --project ../Fable/src/Fable.Cli -- fable-raytracer.fsproj --outDir .  --fableLib . --lang Rust --noCache",
-    "build-native": "dotnet publish -c Release -r linux-x64 --self-contained",
+    "build-native": "dotnet publish -c Release -r linux-x64 --self-contained /p:RunNativeAot=True && strip bin/Release/net6.0/linux-x64/publish/fable-raytracer",
     "build-js": "dotnet fable fable-raytracer.fsproj --outDir out",
 
     "build-wasm-web": "wasm-pack build --target web",
