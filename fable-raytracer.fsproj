@@ -12,7 +12,7 @@
       $(RestoreAdditionalProjectSources)
     </RestoreAdditionalProjectSources>
     <IlcDisableReflection>true</IlcDisableReflection>
-    <IlcOptimizationPreference>Size</IlcOptimizationPreference>
+    <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
   </PropertyGroup>
 
   <ItemGroup>
