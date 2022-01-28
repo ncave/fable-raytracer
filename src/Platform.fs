@@ -2,7 +2,7 @@ module Platform
 
 #if FABLE_COMPILER_RUST
 
-open Fable.Core.JsInterop
+open Fable.Core
 
 module Performance =
     type Duration =
@@ -14,7 +14,8 @@ module Performance =
         abstract elapsed: unit -> Duration
 
     // let inline now(): Instant = importMember "std::time::Instant"
-    let inline internal now(): obj = emitJsExpr () "std::time::Instant::now"
+    [<Emit("std::time::Instant::now")>]
+    let inline internal now(): obj = nativeOnly
 
 let measureTime (f: unit -> 'T): 'T * float =
     let t0 = Performance.now()

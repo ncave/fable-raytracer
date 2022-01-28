@@ -151,7 +151,7 @@ pub mod Seq {
         pub fn ofArray<T: Clone + 'static>(arr: &Rc<MutCell<Vec<T>>>)
          -> Rc<dyn Interfaces::IEnumerator_1<T>> {
             {
-                let len: i32 = arr.clone().len() as i32;
+                let len: i32 = arr.len() as i32;
                 let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
                 Seq::Enumerable::fromFunction(&Rc::from({
                                                             let arr =
@@ -499,7 +499,7 @@ pub mod Seq {
     pub fn ofSeq<T: Clone +
                  'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Rc<dyn Interfaces::IEnumerator_1<T>> {
-        xs.clone().GetEnumerator()
+        xs.GetEnumerator()
     }
     pub fn delay<T: Clone +
                  'static>(generator:
@@ -640,7 +640,7 @@ pub mod Seq {
                                             let curr: Rc<MutCell<Option<U>>> =
                                                 Rc::from(MutCell::from(None::<U>));
                                             while if curr.get().is_none() {
-                                                      e.clone().MoveNext()
+                                                      e.MoveNext()
                                                   } else { false } {
                                                 curr.set(chooser(&e.Current()));
                                             }
@@ -650,7 +650,7 @@ pub mod Seq {
                       &Rc::from(move
                                     |e_1:
                                          &Rc<dyn Interfaces::IEnumerator_1<T>>|
-                                    e_1.clone().Dispose()))
+                                    e_1.Dispose()))
     }
     pub fn compareWith<T: Clone +
                        'static>(comparer:
@@ -855,7 +855,7 @@ pub mod Seq {
                             if predicate(&c) { res.set(Some(c.clone())); }
                         }
                         res.get().clone()
-                    };
+                    }.clone();
                 if false { e.Dispose(); }
                 try_result
             }.clone()
@@ -884,7 +884,7 @@ pub mod Seq {
                                        &Rc<impl Fn(&T) -> (bool) + 'static>,
                                    e: &Rc<dyn Interfaces::IEnumerator_1<T>>)
              -> Option<i32> {
-                if e.clone().MoveNext() {
+                if e.MoveNext() {
                     if predicate_1(&e.Current()) {
                         Some(i.clone())
                     } else { inner_loop(&(i.clone() + 1i32), predicate_1, e) }
@@ -918,7 +918,7 @@ pub mod Seq {
                 Rc::from(MutCell::from(state.clone()));
             {
                 let enumerator: Rc<dyn Interfaces::IEnumerator_1<T>> =
-                    xs.clone().GetEnumerator();
+                    xs.GetEnumerator();
                 {
                     let try_result =
                         while enumerator.MoveNext() {
@@ -939,7 +939,7 @@ pub mod Seq {
             let res: Rc<MutCell<Vec<T>>> = Native::arrayEmpty::<T>();
             {
                 let enumerator: Rc<dyn Interfaces::IEnumerator_1<T>> =
-                    xs.clone().GetEnumerator();
+                    xs.GetEnumerator();
                 {
                     let try_result =
                         while enumerator.MoveNext() {
@@ -961,7 +961,7 @@ pub mod Seq {
                 Rc::from(MutCell::from(List::empty::<T>()));
             {
                 let enumerator: Rc<dyn Interfaces::IEnumerator_1<T>> =
-                    xs.clone().GetEnumerator();
+                    xs.GetEnumerator();
                 {
                     let try_result =
                         while enumerator.MoveNext() {
@@ -1008,11 +1008,11 @@ pub mod Seq {
                                                        &e2.Current()));
                                     }
                                     acc.get().clone()
-                                };
+                                }.clone();
                             if false { e2.Dispose(); }
                             try_result_1
                         }.clone()
-                    };
+                    }.clone();
                 if false { e1.Dispose(); }
                 try_result
             }.clone()
@@ -1166,7 +1166,7 @@ pub mod Seq {
                                 if i.get() >= 0i32 {
                                     None::<T>
                                 } else { Some(e.Current().clone()) }
-                            };
+                            }.clone();
                         if false { e.Dispose(); }
                         try_result
                     }.clone()
@@ -1300,14 +1300,14 @@ pub mod Seq {
                                     move
                                         |e:
                                              &Rc<dyn Interfaces::IEnumerator_1<T>>|
-                                        if e.clone().MoveNext() {
+                                        if e.MoveNext() {
                                             Some(mapping(&e.Current()))
                                         } else { None::<U> }
                                 }),
                       &Rc::from(move
                                     |e_1:
                                          &Rc<dyn Interfaces::IEnumerator_1<T>>|
-                                    e_1.clone().Dispose()))
+                                    e_1.Dispose()))
     }
     pub fn mapIndexed<T: Clone + 'static, U: Clone +
                       'static>(mapping:
@@ -1324,7 +1324,7 @@ pub mod Seq {
                                                |i: &i32,
                                                 e:
                                                     &Rc<dyn Interfaces::IEnumerator_1<T>>|
-                                               if e.clone().MoveNext() {
+                                               if e.MoveNext() {
                                                    Some(mapping(i,
                                                                 &e.Current()))
                                                } else { None::<U> }
@@ -1332,7 +1332,7 @@ pub mod Seq {
                              &Rc::from(move
                                            |e_1:
                                                 &Rc<dyn Interfaces::IEnumerator_1<T>>|
-                                           e_1.clone().Dispose()))
+                                           e_1.Dispose()))
     }
     pub fn indexed<T: Clone +
                    'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
@@ -1642,7 +1642,7 @@ pub mod Seq {
                             res.set(chooser(&e.Current()));
                         }
                         res.get().clone()
-                    };
+                    }.clone();
                 if false { e.Dispose(); }
                 try_result
             }.clone()
@@ -1836,8 +1836,7 @@ pub mod Seq {
                                                     &Rc<dyn Interfaces::IEnumerator_1<T>>|
                                                if i.clone() < count {
                                                    {
-                                                       if !e.clone().MoveNext()
-                                                          {
+                                                       if !e.MoveNext() {
                                                            panic!("{}",
                                                                   Rc::from((Rc::from(Seq::SR::notEnoughElements().to_string() +
                        &Native::string(&"\nParameter name: ")) as
@@ -1850,7 +1849,7 @@ pub mod Seq {
                              &Rc::from(move
                                            |e_1:
                                                 &Rc<dyn Interfaces::IEnumerator_1<T>>|
-                                           e_1.clone().Dispose()))
+                                           e_1.Dispose()))
     }
     pub fn takeWhile<T: Clone +
                      'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
@@ -1865,7 +1864,7 @@ pub mod Seq {
                                     move
                                         |e:
                                              &Rc<dyn Interfaces::IEnumerator_1<T>>|
-                                        if if e.clone().MoveNext() {
+                                        if if e.MoveNext() {
                                                predicate(&e.Current())
                                            } else { false } {
                                             Some(e.Current().clone())
@@ -1874,7 +1873,7 @@ pub mod Seq {
                       &Rc::from(move
                                     |e_1:
                                          &Rc<dyn Interfaces::IEnumerator_1<T>>|
-                                    e_1.clone().Dispose()))
+                                    e_1.Dispose()))
     }
     pub fn truncate<T: Clone +
                     'static>(count: &i32,
@@ -1891,7 +1890,7 @@ pub mod Seq {
                                                 e:
                                                     &Rc<dyn Interfaces::IEnumerator_1<T>>|
                                                if if i.clone() < count {
-                                                      e.clone().MoveNext()
+                                                      e.MoveNext()
                                                   } else { false } {
                                                    Some(e.Current().clone())
                                                } else { None::<T> }
@@ -1899,7 +1898,7 @@ pub mod Seq {
                              &Rc::from(move
                                            |e_1:
                                                 &Rc<dyn Interfaces::IEnumerator_1<T>>|
-                                           e_1.clone().Dispose()))
+                                           e_1.Dispose()))
     }
     pub fn zip<T1: Clone + 'static, T2: Clone +
                'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T1>>,

@@ -7,6 +7,7 @@
 #![allow(unused_variables)]
 #![allow(unused_attributes)]
 use crate::import_3bd9ae6a::*;
+use crate::import_8d7d6be8::*;
 use crate::import_f222008f::*;
 use crate::import_c6216f2::*;
 pub mod List {
@@ -296,32 +297,22 @@ pub mod List {
                                    'static>, state: &State)
      -> Option<Rc<List::Node_1<T>>> {
         {
-            fn inner_loop<a_: Clone + 'static, T: Clone +
-                          'static>(gen_1:
-                                       &Rc<impl Fn(&a_) -> (Option<(T, a_)>) +
-                                           'static>, acc: &a_,
-                                   root: &Option<Rc<List::Node_1<T>>>,
-                                   xs: &Option<Rc<List::Node_1<T>>>)
-             -> Option<Rc<List::Node_1<T>>> {
-                {
-                    let matchValue: Option<(T, a_)> = gen_1(acc);
-                    match &matchValue {
-                        Some(matchValue_0_0) =>
-                        {
-                            let acc_1: a_ = matchValue_0_0.1.clone();
-                            let t: Option<Rc<List::Node_1<T>>> =
-                                List::appendConsNoTail(&matchValue_0_0.0.clone(),
-                                                       xs);
-                            inner_loop(gen_1, &acc_1,
-                                       &if List::isEmpty(root) {
-                                            t.clone()
-                                        } else { root.clone() }, &t)
-                        }.clone(),
-                        _ => root.clone(),
-                    }
-                }.clone()
+            let root: Rc<MutCell<Option<Rc<List::Node_1<T>>>>> =
+                Rc::from(MutCell::from(List::empty()));
+            let node: Rc<MutCell<Option<Rc<List::Node_1<T>>>>> =
+                Rc::from(MutCell::from(root.get().clone()));
+            let acc: Rc<MutCell<Option<(T, State)>>> =
+                Rc::from(MutCell::from(gen(state)));
+            while acc.get().is_some() {
+                let patternInput: (T, State) = Option_::getValue(&acc.get());
+                node.set(List::appendConsNoTail(&patternInput.0.clone(),
+                                                &node.get()));
+                if List::isEmpty(&root.get()) {
+                    root.set(node.get().clone());
+                }
+                acc.set(gen(&patternInput.1.clone()))
             }
-            inner_loop(gen, state, &List::empty(), &List::empty())
+            root.get().clone()
         }.clone()
     }
     pub fn iterate<T: Clone +
@@ -376,7 +367,7 @@ pub mod List {
         {
             let res: Rc<MutCell<Option<Rc<List::Node_1<T>>>>> =
                 Rc::from(MutCell::from(tail_1.clone()));
-            let len: i32 = xs.clone().len() as i32;
+            let len: i32 = xs.len() as i32;
             for i in (0i32..=len - 1i32).rev() {
                 res.set(List::cons(&xs[i].clone(), &res.get()));
             }
@@ -601,7 +592,33 @@ pub mod List {
                                     'static>,
                             xs: &Option<Rc<List::Node_1<T>>>)
      -> Option<Rc<List::Node_1<U>>> {
-        List::concat(&List::map(mapping, xs))
+        {
+            let root: Rc<MutCell<Option<Rc<List::Node_1<U>>>>> =
+                Rc::from(MutCell::from(List::empty()));
+            let node: Rc<MutCell<Option<Rc<List::Node_1<U>>>>> =
+                Rc::from(MutCell::from(root.get().clone()));
+            let xs_1: Rc<MutCell<Option<Rc<List::Node_1<T>>>>> =
+                Rc::from(MutCell::from(xs.clone()));
+            let ys: Rc<MutCell<Option<Rc<List::Node_1<U>>>>> =
+                Rc::from(MutCell::from(List::empty()));
+            while !List::isEmpty(&xs_1.get()) {
+                ys.set(mapping(&List::head(&xs_1.get())));
+                while !List::isEmpty(&ys.get()) {
+                    node.set({
+                                 let xs_2: Option<Rc<List::Node_1<U>>> =
+                                     node.get().clone();
+                                 List::appendConsNoTail(&List::head(&ys.get()),
+                                                        &xs_2)
+                             }.clone());
+                    if List::isEmpty(&root.get()) {
+                        root.set(node.get().clone());
+                    }
+                    ys.set(List::tail(&ys.get()))
+                }
+                xs_1.set(List::tail(&xs_1.get()))
+            }
+            root.get().clone()
+        }.clone()
     }
     pub fn indexed<a_: Clone + 'static>(xs: &Option<Rc<List::Node_1<a_>>>)
      -> Option<Rc<List::Node_1<(i32, a_)>>> {

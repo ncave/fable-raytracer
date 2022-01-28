@@ -51,20 +51,20 @@ pub mod Array {
     }
     pub fn create<T: Clone + 'static>(count: &i32, value: &T)
      -> Rc<MutCell<Vec<T>>> {
-        Native::arrayCreate(&count, &value)
+        Native::arrayCreate(&count.clone(), &value.clone())
     }
     pub fn zeroCreate<T: Clone + 'static>(count: &i32)
      -> Rc<MutCell<Vec<T>>> {
-        Native::arrayCreate(&count, &Native::defaultOf::<T>())
+        Native::arrayCreate(&count.clone(), &Native::defaultOf::<T>())
     }
     pub fn singleton<T: Clone + 'static>(value: &T) -> Rc<MutCell<Vec<T>>> {
-        Native::arrayCreate(&1i32, &value)
+        Native::arrayCreate(&1i32, &value.clone())
     }
     pub fn isEmpty<T: Clone + 'static>(source: &Rc<MutCell<Vec<T>>>) -> bool {
-        source.clone().is_empty()
+        source.is_empty()
     }
     pub fn length<T: Clone + 'static>(source: &Rc<MutCell<Vec<T>>>) -> i32 {
-        source.clone().len() as i32
+        source.len() as i32
     }
     pub fn item<T: Clone + 'static>(index: &i32, source: &Rc<MutCell<Vec<T>>>)
      -> T {
@@ -88,7 +88,7 @@ pub mod Array {
      -> Option<T> {
         if if index.clone() < 0i32 {
                true
-           } else { index.clone() >= source.clone().len() as i32 } {
+           } else { index.clone() >= source.len() as i32 } {
             None::<T>
         } else { Some(source[index.clone()].clone()) }
     }
@@ -106,8 +106,7 @@ pub mod Array {
         if if targetIndex.clone() < 0i32 {
                true
            } else {
-               targetIndex.clone() + count.clone() >
-                   target.clone().len() as i32
+               targetIndex.clone() + count.clone() > target.len() as i32
            } {
             panic!("{}",
                    Rc::from((Rc::from(Array::SR::indexOutOfBounds().to_string() +
@@ -115,7 +114,7 @@ pub mod Array {
               Rc<str>).to_string() + &Native::string(&"index")) as Rc<str>);
         }
         {
-            let len: i32 = target.clone().len() as i32;
+            let len: i32 = target.len() as i32;
             for i in
                 targetIndex.clone()..=targetIndex.clone() + count.clone() -
                                           1i32 {
@@ -131,8 +130,7 @@ pub mod Array {
             if if startIndex.clone() < 0i32 {
                    true
                } else {
-                   startIndex.clone() + count.clone() >
-                       source.clone().len() as i32
+                   startIndex.clone() + count.clone() > source.len() as i32
                } {
                 panic!("{}",
                        Rc::from((Rc::from(Array::SR::indexOutOfBounds().to_string() +
@@ -151,10 +149,10 @@ pub mod Array {
         }.clone()
     }
     pub fn exactlyOne<T: Clone + 'static>(source: &Rc<MutCell<Vec<T>>>) -> T {
-        if source.clone().len() as i32 == 1i32 {
+        if source.len() as i32 == 1i32 {
             source[0i32].clone()
         } else {
-            if source.clone().is_empty() {
+            if source.is_empty() {
                 panic!("{}",
                        Rc::from((Rc::from(Array::SR::inputArrayWasEmpty().to_string() +
                        &Native::string(&"\nParameter name: ")) as
@@ -169,12 +167,12 @@ pub mod Array {
     }
     pub fn tryExactlyOne<T: Clone + 'static>(source: &Rc<MutCell<Vec<T>>>)
      -> Option<T> {
-        if source.clone().len() as i32 == 1i32 {
+        if source.len() as i32 == 1i32 {
             Some(source[0i32].clone())
         } else { None::<T> }
     }
     pub fn head<T: Clone + 'static>(source: &Rc<MutCell<Vec<T>>>) -> T {
-        if source.clone().is_empty() {
+        if source.is_empty() {
             panic!("{}",
                    Rc::from((Rc::from(Array::SR::inputArrayWasEmpty().to_string() +
                        &Native::string(&"\nParameter name: ")) as
@@ -183,35 +181,32 @@ pub mod Array {
     }
     pub fn tryHead<T: Clone + 'static>(source: &Rc<MutCell<Vec<T>>>)
      -> Option<T> {
-        if source.clone().is_empty() {
-            None::<T>
-        } else { Some(source[0i32].clone()) }
+        if source.is_empty() { None::<T> } else { Some(source[0i32].clone()) }
     }
     pub fn last<T: Clone + 'static>(source: &Rc<MutCell<Vec<T>>>) -> T {
-        if source.clone().is_empty() {
+        if source.is_empty() {
             panic!("{}",
                    Rc::from((Rc::from(Array::SR::inputArrayWasEmpty().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"source")) as Rc<str>)
-        } else { source[source.clone().len() as i32 - 1i32].clone() }
+        } else { source[source.len() as i32 - 1i32].clone() }
     }
     pub fn tryLast<T: Clone + 'static>(source: &Rc<MutCell<Vec<T>>>)
      -> Option<T> {
-        if source.clone().is_empty() {
+        if source.is_empty() {
             None::<T>
-        } else { Some(source[source.clone().len() as i32 - 1i32].clone()) }
+        } else { Some(source[source.len() as i32 - 1i32].clone()) }
     }
     pub fn tail<T: Clone + 'static>(source: &Rc<MutCell<Vec<T>>>)
      -> Rc<MutCell<Vec<T>>> {
         {
-            if source.clone().is_empty() {
+            if source.is_empty() {
                 panic!("{}",
                        Rc::from((Rc::from(Array::SR::inputArrayWasTooShort().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"source")) as Rc<str>);
             }
-            Array::getSubArray(source, &1i32,
-                               &(source.clone().len() as i32 - 1i32))
+            Array::getSubArray(source, &1i32, &(source.len() as i32 - 1i32))
         }.clone()
     }
     pub fn append<T: Clone +
@@ -219,8 +214,8 @@ pub mod Array {
                            source2: &Rc<MutCell<Vec<T>>>)
      -> Rc<MutCell<Vec<T>>> {
         {
-            let len1: i32 = source1.clone().len() as i32;
-            let len2: i32 = source2.clone().len() as i32;
+            let len1: i32 = source1.len() as i32;
+            let len2: i32 = source2.len() as i32;
             let res: Rc<MutCell<Vec<T>>> =
                 Native::arrayWithCapacity::<T>(&(len1 + len2));
             for i in 0i32..=len1 - 1i32 {
@@ -238,7 +233,7 @@ pub mod Array {
      -> Rc<MutCell<Vec<U>>> {
         {
             let res: Rc<MutCell<Vec<U>>> = Native::arrayEmpty::<U>();
-            for i in 0i32..=source.clone().len() as i32 - 1i32 {
+            for i in 0i32..=source.len() as i32 - 1i32 {
                 let matchValue: Option<U> = chooser(&source[i].clone());
                 match &matchValue {
                     None => (),
@@ -256,12 +251,12 @@ pub mod Array {
                                     &Rc<impl Fn(&T, &T) -> (i32) + 'static>,
                                 source1: &Rc<MutCell<Vec<T>>>,
                                 source2: &Rc<MutCell<Vec<T>>>) -> i32 {
-        let length1: i32 = source1.clone().len() as i32;
-        let length2: i32 = source2.clone().len() as i32;
+        let length1: i32 = source1.len() as i32;
+        let length2: i32 = source2.len() as i32;
         let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
         let result: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
         if length1 < length2 {
-            while if i.get() < source1.clone().len() as i32 {
+            while if i.get() < source1.len() as i32 {
                       result.get() == 0i32
                   } else { false } {
                 result.set(comparer(&source1[i.get()].clone(),
@@ -269,7 +264,7 @@ pub mod Array {
                 i.set(i.get() + 1i32)
             }
         } else {
-            while if i.get() < source2.clone().len() as i32 {
+            while if i.get() < source2.len() as i32 {
                       result.get() == 0i32
                   } else { false } {
                 result.set(comparer(&source1[i.get()].clone(),
@@ -301,7 +296,7 @@ pub mod Array {
                                source: &Rc<MutCell<Vec<T>>>)
      -> Rc<MutCell<Vec<U>>> {
         {
-            let len: i32 = source.clone().len() as i32;
+            let len: i32 = source.len() as i32;
             let res: Rc<MutCell<Vec<U>>> =
                 Native::arrayWithCapacity::<U>(&len);
             for i in 0i32..=len - 1i32 {
@@ -314,7 +309,7 @@ pub mod Array {
                'static>(mapping: &Rc<impl Fn(&T) -> (U) + 'static>,
                         source: &Rc<MutCell<Vec<T>>>) -> Rc<MutCell<Vec<U>>> {
         {
-            let len: i32 = source.clone().len() as i32;
+            let len: i32 = source.len() as i32;
             let res: Rc<MutCell<Vec<U>>> =
                 Native::arrayWithCapacity::<U>(&len);
             for i in 0i32..=len - 1i32 {
@@ -331,11 +326,11 @@ pub mod Array {
                                 source2: &Rc<MutCell<Vec<T2>>>)
      -> Rc<MutCell<Vec<U>>> {
         {
-            if source1.clone().len() as i32 != source2.clone().len() as i32 {
+            if source1.len() as i32 != source2.len() as i32 {
                 panic!("{}", Array::SR::differentLengths());
             }
             {
-                let len: i32 = source1.clone().len() as i32;
+                let len: i32 = source1.len() as i32;
                 let res: Rc<MutCell<Vec<U>>> =
                     Native::arrayWithCapacity::<U>(&len);
                 for i in 0i32..=len - 1i32 {
@@ -352,11 +347,11 @@ pub mod Array {
                          source2: &Rc<MutCell<Vec<T2>>>)
      -> Rc<MutCell<Vec<U>>> {
         {
-            if source1.clone().len() as i32 != source2.clone().len() as i32 {
+            if source1.len() as i32 != source2.len() as i32 {
                 panic!("{}", Array::SR::differentLengths());
             }
             {
-                let len: i32 = source1.clone().len() as i32;
+                let len: i32 = source1.len() as i32;
                 let res: Rc<MutCell<Vec<U>>> =
                     Native::arrayWithCapacity::<U>(&len);
                 for i in 0i32..=len - 1i32 {
@@ -376,17 +371,13 @@ pub mod Array {
                          source3: &Rc<MutCell<Vec<T3>>>)
      -> Rc<MutCell<Vec<U>>> {
         {
-            if if source1.clone().len() as i32 != source2.clone().len() as i32
-                  {
+            if if source1.len() as i32 != source2.len() as i32 {
                    true
-               } else {
-                   source2.clone().len() as i32 !=
-                       source3.clone().len() as i32
-               } {
+               } else { source2.len() as i32 != source3.len() as i32 } {
                 panic!("{}", Array::SR::differentLengths());
             }
             {
-                let len: i32 = source1.clone().len() as i32;
+                let len: i32 = source1.len() as i32;
                 let res: Rc<MutCell<Vec<U>>> =
                     Native::arrayWithCapacity::<U>(&len);
                 for i in 0i32..=len - 1i32 {
@@ -405,7 +396,7 @@ pub mod Array {
                             source: &Rc<MutCell<Vec<T>>>)
      -> (Rc<MutCell<Vec<U>>>, State) {
         let acc: Rc<MutCell<State>> = Rc::from(MutCell::from(state.clone()));
-        let len: i32 = source.clone().len() as i32;
+        let len: i32 = source.len() as i32;
         let res: Rc<MutCell<Vec<U>>> = Native::arrayWithCapacity::<U>(&len);
         for i in 0i32..=len - 1i32 {
             let m: (U, State) = mapping(&acc.get(), &source[i].clone());
@@ -421,7 +412,7 @@ pub mod Array {
                                 source: &Rc<MutCell<Vec<T>>>, state: &State)
      -> (Rc<MutCell<Vec<U>>>, State) {
         let acc: Rc<MutCell<State>> = Rc::from(MutCell::from(state.clone()));
-        let len: i32 = source.clone().len() as i32;
+        let len: i32 = source.len() as i32;
         let res: Rc<MutCell<Vec<U>>> = Native::arrayWithCapacity::<U>(&len);
         for i in (0i32..=len - 1i32).rev() {
             let m: (U, State) = mapping(&source[i].clone(), &acc.get());
@@ -434,7 +425,7 @@ pub mod Array {
     pub fn indexed<T: Clone + 'static>(source: &Rc<MutCell<Vec<T>>>)
      -> Rc<MutCell<Vec<(i32, T)>>> {
         {
-            let len: i32 = source.clone().len() as i32;
+            let len: i32 = source.len() as i32;
             let res: Rc<MutCell<Vec<(i32, T)>>> =
                 Native::arrayWithCapacity::<(i32, T)>(&len);
             for i in 0i32..=len - 1i32 {
@@ -448,14 +439,14 @@ pub mod Array {
      -> Rc<MutCell<Vec<T>>> {
         {
             let len: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
-            for idx in 0i32..=sources.clone().len() as i32 - 1i32 {
+            for idx in 0i32..=sources.len() as i32 - 1i32 {
                 let arr: Rc<MutCell<Vec<T>>> = sources[idx].clone();
                 len.set(len.get() + arr.len() as i32)
             }
             {
                 let res: Rc<MutCell<Vec<T>>> =
                     Native::arrayWithCapacity::<T>(&len.get());
-                for idx_1 in 0i32..=sources.clone().len() as i32 - 1i32 {
+                for idx_1 in 0i32..=sources.len() as i32 - 1i32 {
                     let arr_1: Rc<MutCell<Vec<T>>> = sources[idx_1].clone();
                     for idx_2 in 0i32..=arr_1.len() as i32 - 1i32 {
                         let x: T = arr_1[idx_2].clone();
@@ -478,9 +469,7 @@ pub mod Array {
                            source: &Rc<MutCell<Vec<T>>>) -> bool {
         let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
         let res: Rc<MutCell<bool>> = Rc::from(MutCell::from(false));
-        while if i.get() < source.clone().len() as i32 {
-                  !res.get()
-              } else { false } {
+        while if i.get() < source.len() as i32 { !res.get() } else { false } {
             res.set(predicate(&source[i.get()].clone()));
             i.set(i.get() + 1i32)
         }
@@ -491,13 +480,13 @@ pub mod Array {
                                 &Rc<impl Fn(&T1, &T2) -> (bool) + 'static>,
                             source1: &Rc<MutCell<Vec<T1>>>,
                             source2: &Rc<MutCell<Vec<T2>>>) -> bool {
-        if source1.clone().len() as i32 != source2.clone().len() as i32 {
+        if source1.len() as i32 != source2.len() as i32 {
             panic!("{}", Array::SR::differentLengths());
         }
         {
             let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
             let res: Rc<MutCell<bool>> = Rc::from(MutCell::from(false));
-            while if i.get() < source1.clone().len() as i32 {
+            while if i.get() < source1.len() as i32 {
                       !res.get()
                   } else { false } {
                 res.set(predicate(&source1[i.get()].clone(),
@@ -521,7 +510,7 @@ pub mod Array {
      -> Rc<MutCell<Vec<T>>> {
         {
             let res: Rc<MutCell<Vec<T>>> = Native::arrayEmpty::<T>();
-            for i in 0i32..=source.clone().len() as i32 - 1i32 {
+            for i in 0i32..=source.len() as i32 - 1i32 {
                 if predicate(&source[i].clone()) {
                     res.get_mut().push(source[i].clone());
                 };
@@ -553,11 +542,11 @@ pub mod Array {
     }
     pub fn pairwise<T: Clone + 'static>(source: &Rc<MutCell<Vec<T>>>)
      -> Rc<MutCell<Vec<(T, T)>>> {
-        if (source.clone().len() as i32) < 2i32 {
+        if (source.len() as i32) < 2i32 {
             Native::arrayEmpty::<(T, T)>().clone()
         } else {
             {
-                let len: i32 = source.clone().len() as i32 - 1i32;
+                let len: i32 = source.len() as i32 - 1i32;
                 let res: Rc<MutCell<Vec<(T, T)>>> =
                     Native::arrayWithCapacity::<(T, T)>(&len);
                 for i in 0i32..=len - 1i32 {
@@ -574,7 +563,7 @@ pub mod Array {
      -> (Rc<MutCell<Vec<T>>>, Rc<MutCell<Vec<T>>>) {
         let res1: Rc<MutCell<Vec<T>>> = Native::arrayEmpty::<T>();
         let res2: Rc<MutCell<Vec<T>>> = Native::arrayEmpty::<T>();
-        for i in 0i32..=source.clone().len() as i32 - 1i32 {
+        for i in 0i32..=source.len() as i32 - 1i32 {
             if predicate(&source[i].clone()) {
                 res1.get_mut().push(source[i].clone())
             } else { res2.get_mut().push(source[i].clone()) };
@@ -585,13 +574,13 @@ pub mod Array {
                   'static>(reduction: &Rc<impl Fn(&T, &T) -> (T) + 'static>,
                            source: &Rc<MutCell<Vec<T>>>) -> T {
         {
-            if source.clone().is_empty() {
+            if source.is_empty() {
                 panic!("{}", Array::SR::inputArrayWasEmpty());
             }
             {
                 let acc_1: Rc<MutCell<T>> =
                     Rc::from(MutCell::from(source[0i32].clone()));
-                for i_1 in 0i32..=source.clone().len() as i32 - 1i32 {
+                for i_1 in 0i32..=source.len() as i32 - 1i32 {
                     acc_1.set({
                                   let x: T = source[i_1].clone();
                                   if i_1 == 0i32 {
@@ -608,11 +597,11 @@ pub mod Array {
                                    &Rc<impl Fn(&T, &T) -> (T) + 'static>,
                                source: &Rc<MutCell<Vec<T>>>) -> T {
         {
-            if source.clone().is_empty() {
+            if source.is_empty() {
                 panic!("{}", Array::SR::inputArrayWasEmpty());
             }
             {
-                let len: i32 = source.clone().len() as i32;
+                let len: i32 = source.len() as i32;
                 let acc_1: Rc<MutCell<T>> =
                     Rc::from(MutCell::from(source[len - 1i32].clone()));
                 for i_1 in 1i32..=len {
@@ -642,9 +631,9 @@ pub mod Array {
                          state: &State, source: &Rc<MutCell<Vec<T>>>)
      -> Rc<MutCell<Vec<State>>> {
         {
-            let len: i32 = source.clone().len() as i32;
+            let len: i32 = source.len() as i32;
             let res: Rc<MutCell<Vec<State>>> =
-                Native::arrayCreate(&(len + 1i32), &state);
+                Native::arrayCreate(&(len + 1i32), &state.clone());
             res.get_mut()[0i32 as usize] = state.clone();
             for i in 0i32..=len - 1i32 {
                 res.get_mut()[(i + 1i32) as usize] =
@@ -659,9 +648,9 @@ pub mod Array {
                                      'static>, source: &Rc<MutCell<Vec<T>>>,
                              state: &State) -> Rc<MutCell<Vec<State>>> {
         {
-            let len: i32 = source.clone().len() as i32;
+            let len: i32 = source.len() as i32;
             let res: Rc<MutCell<Vec<State>>> =
-                Native::arrayCreate(&(len + 1i32), &state);
+                Native::arrayCreate(&(len + 1i32), &state.clone());
             res.get_mut()[len as usize] = state.clone();
             for i in (0i32..=len - 1i32).rev() {
                 res.get_mut()[i as usize] =
@@ -673,7 +662,7 @@ pub mod Array {
     pub fn skip<T: Clone + 'static>(count: &i32, source: &Rc<MutCell<Vec<T>>>)
      -> Rc<MutCell<Vec<T>>> {
         {
-            if count.clone() > source.clone().len() as i32 {
+            if count.clone() > source.len() as i32 {
                 panic!("{}",
                        Rc::from((Rc::from(Array::SR::inputArrayWasTooShort().to_string() +
                        &Native::string(&"\nParameter name: ")) as
@@ -683,7 +672,7 @@ pub mod Array {
                 let count_1: i32 =
                     if count.clone() < 0i32 { 0i32 } else { count.clone() };
                 Array::getSubArray(source, &count_1,
-                                   &(source.clone().len() as i32 - count_1))
+                                   &(source.len() as i32 - count_1))
             }.clone()
         }.clone()
     }
@@ -693,13 +682,13 @@ pub mod Array {
      -> Rc<MutCell<Vec<T>>> {
         {
             let count: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
-            while if count.get() < source.clone().len() as i32 {
+            while if count.get() < source.len() as i32 {
                       predicate(&source[count.get()].clone())
                   } else { false } {
                 count.set(count.get() + 1i32);
             }
             Array::getSubArray(source, &count.get(),
-                               &(source.clone().len() as i32 - count.get()))
+                               &(source.len() as i32 - count.get()))
         }.clone()
     }
     pub fn take<T: Clone + 'static>(count: &i32, source: &Rc<MutCell<Vec<T>>>)
@@ -711,7 +700,7 @@ pub mod Array {
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"count")) as Rc<str>);
             }
-            if count.clone() > source.clone().len() as i32 {
+            if count.clone() > source.len() as i32 {
                 panic!("{}",
                        Rc::from((Rc::from(Array::SR::inputArrayWasTooShort().to_string() +
                        &Native::string(&"\nParameter name: ")) as
@@ -726,7 +715,7 @@ pub mod Array {
      -> Rc<MutCell<Vec<T>>> {
         {
             let count: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
-            while if count.get() < source.clone().len() as i32 {
+            while if count.get() < source.len() as i32 {
                       predicate(&source[count.get()].clone())
                   } else { false } {
                 count.set(count.get() + 1i32);
@@ -741,9 +730,8 @@ pub mod Array {
                            &if count.clone() < 0i32 {
                                 0i32
                             } else {
-                                if count.clone() > source.clone().len() as i32
-                                   {
-                                    source.clone().len() as i32
+                                if count.clone() > source.len() as i32 {
+                                    source.len() as i32
                                 } else { count.clone() }
                             })
     }
@@ -767,7 +755,7 @@ pub mod Array {
                                        &Rc<impl Fn(&T) -> (bool) + 'static>,
                                    source_1: &Rc<MutCell<Vec<T>>>)
              -> Option<T> {
-                if i.clone() >= source_1.clone().len() as i32 {
+                if i.clone() >= source_1.len() as i32 {
                     None::<T>
                 } else {
                     if predicate_1(&source_1[i.clone()].clone()) {
@@ -803,7 +791,7 @@ pub mod Array {
                                        &Rc<impl Fn(&T) -> (bool) + 'static>,
                                    source_1: &Rc<MutCell<Vec<T>>>)
              -> Option<i32> {
-                if i.clone() >= source_1.clone().len() as i32 {
+                if i.clone() >= source_1.len() as i32 {
                     None::<i32>
                 } else {
                     if predicate_1(&source_1[i.clone()].clone()) {
@@ -859,8 +847,7 @@ pub mod Array {
                     }
                 }
             }
-            inner_loop(&(source.clone().len() as i32 - 1i32), predicate,
-                       source)
+            inner_loop(&(source.len() as i32 - 1i32), predicate, source)
         }.clone()
     }
     pub fn findBack<T: Clone +
@@ -896,8 +883,7 @@ pub mod Array {
                     }
                 }
             }
-            inner_loop(&(source.clone().len() as i32 - 1i32), predicate,
-                       source)
+            inner_loop(&(source.len() as i32 - 1i32), predicate, source)
         }.clone()
     }
     pub fn findIndexBack<T: Clone +
@@ -934,7 +920,7 @@ pub mod Array {
                                            'static>,
                                    source_1: &Rc<MutCell<Vec<T>>>)
              -> Option<U> {
-                if i.clone() >= source_1.clone().len() as i32 {
+                if i.clone() >= source_1.len() as i32 {
                     None::<U>
                 } else {
                     {
@@ -969,7 +955,7 @@ pub mod Array {
         {
             let acc: Rc<MutCell<State>> =
                 Rc::from(MutCell::from(state.clone()));
-            for i in 0i32..=source.clone().len() as i32 - 1i32 {
+            for i in 0i32..=source.len() as i32 - 1i32 {
                 acc.set(folder(&acc.get(), &source[i].clone()));
             }
             acc.get().clone()
@@ -983,7 +969,7 @@ pub mod Array {
         {
             let acc: Rc<MutCell<State>> =
                 Rc::from(MutCell::from(state.clone()));
-            let len: i32 = source.clone().len() as i32;
+            let len: i32 = source.len() as i32;
             for i in 1i32..=len {
                 acc.set(folder(&source[len - i].clone(), &acc.get()));
             }
@@ -999,10 +985,10 @@ pub mod Array {
         {
             let acc: Rc<MutCell<State>> =
                 Rc::from(MutCell::from(state.clone()));
-            if source1.clone().len() as i32 != source2.clone().len() as i32 {
+            if source1.len() as i32 != source2.len() as i32 {
                 panic!("{}", Array::SR::differentLengths());
             }
-            for i in 0i32..=source1.clone().len() as i32 - 1i32 {
+            for i in 0i32..=source1.len() as i32 - 1i32 {
                 acc.set(folder(&acc.get(), &source1[i].clone(),
                                &source2[i].clone()));
             }
@@ -1019,11 +1005,11 @@ pub mod Array {
         {
             let acc: Rc<MutCell<State>> =
                 Rc::from(MutCell::from(state.clone()));
-            if source1.clone().len() as i32 != source2.clone().len() as i32 {
+            if source1.len() as i32 != source2.len() as i32 {
                 panic!("{}", Array::SR::differentLengths());
             }
             {
-                let len: i32 = source1.clone().len() as i32;
+                let len: i32 = source1.len() as i32;
                 for i in 1i32..=len {
                     acc.set(folder(&source1[len - i].clone(),
                                    &source2[len - i].clone(), &acc.get()));
@@ -1037,9 +1023,7 @@ pub mod Array {
                            source: &Rc<MutCell<Vec<T>>>) -> bool {
         let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
         let res: Rc<MutCell<bool>> = Rc::from(MutCell::from(true));
-        while if i.get() < source.clone().len() as i32 {
-                  res.get()
-              } else { false } {
+        while if i.get() < source.len() as i32 { res.get() } else { false } {
             res.set(predicate(&source[i.get()].clone()));
             i.set(i.get() + 1i32)
         }
@@ -1050,13 +1034,13 @@ pub mod Array {
                                 &Rc<impl Fn(&T1, &T2) -> (bool) + 'static>,
                             source1: &Rc<MutCell<Vec<T1>>>,
                             source2: &Rc<MutCell<Vec<T2>>>) -> bool {
-        if source1.clone().len() as i32 != source2.clone().len() as i32 {
+        if source1.len() as i32 != source2.len() as i32 {
             panic!("{}", Array::SR::differentLengths());
         }
         {
             let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
             let res: Rc<MutCell<bool>> = Rc::from(MutCell::from(true));
-            while if i.get() < source1.clone().len() as i32 {
+            while if i.get() < source1.len() as i32 {
                       res.get()
                   } else { false } {
                 res.set(predicate(&source1[i.get()].clone(),
@@ -1069,14 +1053,14 @@ pub mod Array {
     pub fn iterate<T: Clone +
                    'static>(action: &Rc<impl Fn(&T) + 'static>,
                             source: &Rc<MutCell<Vec<T>>>) {
-        for i in 0i32..=source.clone().len() as i32 - 1i32 {
+        for i in 0i32..=source.len() as i32 - 1i32 {
             action(&source[i].clone());
         };
     }
     pub fn iterateIndexed<T: Clone +
                           'static>(action: &Rc<impl Fn(&i32, &T) + 'static>,
                                    source: &Rc<MutCell<Vec<T>>>) {
-        for i in 0i32..=source.clone().len() as i32 - 1i32 {
+        for i in 0i32..=source.len() as i32 - 1i32 {
             action(&i, &source[i].clone());
         };
     }
@@ -1084,10 +1068,10 @@ pub mod Array {
                     'static>(action: &Rc<impl Fn(&T, &T) + 'static>,
                              source1: &Rc<MutCell<Vec<T>>>,
                              source2: &Rc<MutCell<Vec<T>>>) {
-        if source1.clone().len() as i32 != source2.clone().len() as i32 {
+        if source1.len() as i32 != source2.len() as i32 {
             panic!("{}", Array::SR::differentLengths());
         }
-        for i in 0i32..=source1.clone().len() as i32 - 1i32 {
+        for i in 0i32..=source1.len() as i32 - 1i32 {
             action(&source1[i].clone(), &source2[i].clone());
         }
     }
@@ -1096,10 +1080,10 @@ pub mod Array {
                                         &Rc<impl Fn(&i32, &T, &T) + 'static>,
                                     source1: &Rc<MutCell<Vec<T>>>,
                                     source2: &Rc<MutCell<Vec<T>>>) {
-        if source1.clone().len() as i32 != source2.clone().len() as i32 {
+        if source1.len() as i32 != source2.len() as i32 {
             panic!("{}", Array::SR::differentLengths());
         }
-        for i in 0i32..=source1.clone().len() as i32 - 1i32 {
+        for i in 0i32..=source1.len() as i32 - 1i32 {
             action(&i, &source1[i].clone(), &source2[i].clone());
         }
     }
@@ -1108,7 +1092,7 @@ pub mod Array {
                             source: &Rc<MutCell<Vec<T>>>)
      -> Rc<MutCell<Vec<T>>> {
         {
-            let len: i32 = source.clone().len() as i32;
+            let len: i32 = source.len() as i32;
             let res: Rc<MutCell<Vec<T>>> = Native::arrayCopy(source);
             let checkFlags: Rc<MutCell<Vec<i32>>> =
                 Native::arrayCreate(&len, &0i32);
@@ -1233,8 +1217,8 @@ pub mod Array {
                              ys: &Rc<MutCell<Vec<T2>>>)
      -> Rc<MutCell<Vec<(T1, T2)>>> {
         {
-            let len1: i32 = xs.clone().len() as i32;
-            let len2: i32 = ys.clone().len() as i32;
+            let len1: i32 = xs.len() as i32;
+            let len2: i32 = ys.len() as i32;
             let res: Rc<MutCell<Vec<(T1, T2)>>> =
                 Native::arrayWithCapacity::<(T1, T2)>(&(len1 * len2));
             for i in 0i32..=len1 - 1i32 {
@@ -1275,7 +1259,7 @@ pub mod Array {
     pub fn unzip<T1: Clone + 'static, T2: Clone +
                  'static>(source: &Rc<MutCell<Vec<(T1, T2)>>>)
      -> (Rc<MutCell<Vec<T1>>>, Rc<MutCell<Vec<T2>>>) {
-        let len: i32 = source.clone().len() as i32;
+        let len: i32 = source.len() as i32;
         let res1: Rc<MutCell<Vec<T1>>> =
             Native::arrayWithCapacity::<T1>(&len);
         let res2: Rc<MutCell<Vec<T2>>> =
@@ -1296,7 +1280,7 @@ pub mod Array {
     pub fn unzip3<T1: Clone + 'static, T2: Clone + 'static, T3: Clone +
                   'static>(source: &Rc<MutCell<Vec<(T1, T2, T3)>>>)
      -> (Rc<MutCell<Vec<T1>>>, Rc<MutCell<Vec<T2>>>, Rc<MutCell<Vec<T3>>>) {
-        let len: i32 = source.clone().len() as i32;
+        let len: i32 = source.len() as i32;
         let res1: Rc<MutCell<Vec<T1>>> =
             Native::arrayWithCapacity::<T1>(&len);
         let res2: Rc<MutCell<Vec<T2>>> =
@@ -1345,7 +1329,7 @@ pub mod Array {
               Rc<str>).to_string() + &Native::string(&"size")) as Rc<str>);
             }
             {
-                let len: i32 = source.clone().len() as i32;
+                let len: i32 = source.len() as i32;
                 let chunkCount: i32 = (len - 1i32) / chunkSize.clone() + 1i32;
                 let res: Rc<MutCell<Vec<Rc<MutCell<Vec<T>>>>>> =
                     Native::arrayWithCapacity::<Rc<MutCell<Vec<T>>>>(&chunkCount);
@@ -1366,7 +1350,7 @@ pub mod Array {
      -> (Rc<MutCell<Vec<T>>>, Rc<MutCell<Vec<T>>>) {
         if if index.clone() < 0i32 {
                true
-           } else { index.clone() > source.clone().len() as i32 } {
+           } else { index.clone() > source.len() as i32 } {
             panic!("{}",
                    Rc::from((Rc::from(Array::SR::indexOutOfBounds().to_string() +
                        &Native::string(&"\nParameter name: ")) as
@@ -1374,14 +1358,14 @@ pub mod Array {
         }
         (Array::getSubArray(source, &0i32, index),
          Array::getSubArray(source, index,
-                            &(source.clone().len() as i32 - index.clone())))
+                            &(source.len() as i32 - index.clone())))
     }
     pub fn sum<T: core::ops::Add<Output = T> + Default + Clone +
                'static>(source: &Rc<MutCell<Vec<T>>>) -> T {
         {
             let acc: Rc<MutCell<T>> =
                 Rc::from(MutCell::from(Native::getZero::<T>()));
-            for i in 0i32..=source.clone().len() as i32 - 1i32 {
+            for i in 0i32..=source.len() as i32 - 1i32 {
                 acc.set(acc.get().clone() + source[i].clone());
             }
             acc.get().clone()
@@ -1394,7 +1378,7 @@ pub mod Array {
         {
             let acc: Rc<MutCell<U>> =
                 Rc::from(MutCell::from(Native::getZero::<U>()));
-            for i in 0i32..=source.clone().len() as i32 - 1i32 {
+            for i in 0i32..=source.len() as i32 - 1i32 {
                 acc.set(acc.get().clone() + projection(&source[i].clone()));
             }
             acc.get().clone()
@@ -1449,11 +1433,10 @@ pub mod Array {
             {
                 let total: Rc<MutCell<T>> =
                     Rc::from(MutCell::from(Native::getZero::<T>()));
-                for i in 0i32..=source.clone().len() as i32 - 1i32 {
+                for i in 0i32..=source.len() as i32 - 1i32 {
                     total.set(total.get().clone() + source[i].clone());
                 }
-                total.get().clone() /
-                    T::from(source.clone().len() as i32).clone()
+                total.get().clone() / T::from(source.len() as i32).clone()
             }.clone()
         }.clone()
     }
@@ -1463,7 +1446,7 @@ pub mod Array {
                      'static>(projection: &Rc<impl Fn(&T) -> (U) + 'static>,
                               source: &Rc<MutCell<Vec<T>>>) -> U {
         {
-            if source.clone().is_empty() {
+            if source.is_empty() {
                 panic!("{}",
                        Rc::from((Rc::from(Array::SR::inputArrayWasEmpty().to_string() +
                        &Native::string(&"\nParameter name: ")) as
@@ -1472,12 +1455,11 @@ pub mod Array {
             {
                 let total: Rc<MutCell<U>> =
                     Rc::from(MutCell::from(Native::getZero::<U>()));
-                for i in 0i32..=source.clone().len() as i32 - 1i32 {
+                for i in 0i32..=source.len() as i32 - 1i32 {
                     total.set(total.get().clone() +
                                   projection(&source[i].clone()));
                 }
-                total.get().clone() /
-                    U::from(source.clone().len() as i32).clone()
+                total.get().clone() / U::from(source.len() as i32).clone()
             }.clone()
         }.clone()
     }
@@ -1506,8 +1488,7 @@ pub mod Array {
             }
             {
                 let len: i32 =
-                    0i32.max(source.clone().len() as i32 - windowSize.clone()
-                                 + 1i32);
+                    0i32.max(source.len() as i32 - windowSize.clone() + 1i32);
                 let res: Rc<MutCell<Vec<Rc<MutCell<Vec<T>>>>>> =
                     Native::arrayWithCapacity::<Rc<MutCell<Vec<T>>>>(&len);
                 for i in 0i32..=len - 1i32 {
@@ -1529,18 +1510,17 @@ pub mod Array {
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"chunks")) as Rc<str>);
             }
-            if source.clone().is_empty() {
+            if source.is_empty() {
                 Native::arrayEmpty::<Rc<MutCell<Vec<T>>>>().clone()
             } else {
                 {
                     let res: Rc<MutCell<Vec<Rc<MutCell<Vec<T>>>>>> =
                         Native::arrayWithCapacity::<Rc<MutCell<Vec<T>>>>(chunks);
                     let chunks_1: i32 =
-                        chunks.clone().min(source.clone().len() as i32);
-                    let minChunkSize: i32 =
-                        source.clone().len() as i32 / chunks_1;
+                        chunks.clone().min(source.len() as i32);
+                    let minChunkSize: i32 = source.len() as i32 / chunks_1;
                     let chunksWithExtraItem: i32 =
-                        source.clone().len() as i32 % chunks_1;
+                        source.len() as i32 % chunks_1;
                     for i in 0i32..=chunks_1 - 1i32 {
                         let chunkSize: i32 =
                             if i < chunksWithExtraItem {
@@ -1565,12 +1545,12 @@ pub mod Array {
             Native::arrayEmpty::<Rc<MutCell<Vec<T>>>>().clone()
         } else {
             {
-                let len: i32 = arrays.clone().len() as i32;
+                let len: i32 = arrays.len() as i32;
                 let firstArray: Rc<MutCell<Vec<T>>> = arrays[0i32].clone();
                 let innerLen: i32 = firstArray.len() as i32;
                 if !Array::forAll(&Rc::from(move |a_2: &Rc<MutCell<Vec<T>>>|
-                                                a_2.clone().len() as i32 ==
-                                                    innerLen), arrays) {
+                                                a_2.len() as i32 == innerLen),
+                                  arrays) {
                     panic!("{}", Array::SR::differentLengths());
                 }
                 {
