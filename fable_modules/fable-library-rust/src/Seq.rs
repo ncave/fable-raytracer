@@ -183,15 +183,15 @@ pub mod Seq {
                                                             let it =
                                                                 it.clone();
                                                             move ||
-                                                                if !List::isEmpty(&it.get())
+                                                                if !List_::isEmpty(&it.get())
                                                                    {
                                                                     {
                                                                         let tail_1:
                                                                                 List_1<T> =
-                                                                            List::tail(&it.get()).clone();
+                                                                            List_::tail(&it.get()).clone();
                                                                         let head_1:
                                                                                 T =
-                                                                            List::head(&it.get()).clone();
+                                                                            List_::head(&it.get()).clone();
                                                                         it.set(tail_1);
                                                                         Some(head_1)
                                                                     }.clone()
@@ -958,7 +958,7 @@ pub mod Seq {
      -> List_1<T> {
         {
             let acc: Rc<MutCell<List_1<T>>> =
-                Rc::from(MutCell::from(List::empty::<T>()));
+                Rc::from(MutCell::from(List_::empty::<T>()));
             {
                 let enumerator: Rc<dyn Interfaces::IEnumerator_1<T>> =
                     xs.GetEnumerator();
@@ -966,20 +966,20 @@ pub mod Seq {
                     let try_result =
                         while enumerator.MoveNext() {
                             let x: T = enumerator.Current().clone();
-                            acc.set(List::cons(&x, &acc.get()))
+                            acc.set(List_::cons(&x, &acc.get()))
                         };
                     if false { enumerator.Dispose(); }
                     try_result
                 }
             }
-            List::reverse(&acc.get())
+            List_::reverse(&acc.get())
         }.clone()
     }
     pub fn foldBack<T: Clone + 'static, a_: Clone +
                     'static>(folder: &Rc<impl Fn(&T, &a_) -> (a_) + 'static>,
                              xs: &Rc<dyn Interfaces::IEnumerable_1<T>>,
                              state: &a_) -> a_ {
-        Array::foldBack(folder, &Seq::toArray(xs), state)
+        Array_::foldBack(folder, &Seq::toArray(xs), state)
     }
     pub fn fold2<State: Clone + 'static, T1: Clone + 'static, T2: Clone +
                  'static>(folder:
@@ -1025,7 +1025,7 @@ pub mod Seq {
                               xs: &Rc<dyn Interfaces::IEnumerable_1<T1>>,
                               ys: &Rc<dyn Interfaces::IEnumerable_1<T2>>,
                               state: &State) -> State {
-        Array::foldBack2(folder, &Seq::toArray(xs), &Seq::toArray(ys), state)
+        Array_::foldBack2(folder, &Seq::toArray(xs), &Seq::toArray(ys), state)
     }
     pub fn forAll<T: Clone +
                   'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
@@ -1052,7 +1052,7 @@ pub mod Seq {
                                     &Rc<impl Fn(&T) -> (bool) + 'static>,
                                 xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Option<T> {
-        Array::tryFindBack(predicate, &Seq::toArray(xs))
+        Array_::tryFindBack(predicate, &Seq::toArray(xs))
     }
     pub fn findBack<T: Clone +
                     'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
@@ -1071,7 +1071,7 @@ pub mod Seq {
                                      xs:
                                          &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Option<i32> {
-        Array::tryFindIndexBack(predicate, &Seq::toArray(xs))
+        Array_::tryFindIndexBack(predicate, &Seq::toArray(xs))
     }
     pub fn findIndexBack<T: Clone +
                          'static>(predicate:
@@ -1503,7 +1503,7 @@ pub mod Seq {
                             xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> (Rc<dyn Interfaces::IEnumerable_1<U>>, State) {
         let patternInput: (Rc<MutCell<Vec<U>>>, State) =
-            Array::mapFold(mapping, state, &Seq::toArray(xs));
+            Array_::mapFold(mapping, state, &Seq::toArray(xs));
         (Seq::readOnly(&Seq::ofArray(&patternInput.0.clone())),
          patternInput.1.clone())
     }
@@ -1515,7 +1515,7 @@ pub mod Seq {
                                 state: &State)
      -> (Rc<dyn Interfaces::IEnumerable_1<U>>, State) {
         let patternInput: (Rc<MutCell<Vec<U>>>, State) =
-            Array::mapFoldBack(mapping, &Seq::toArray(xs), state);
+            Array_::mapFoldBack(mapping, &Seq::toArray(xs), state);
         (Seq::readOnly(&Seq::ofArray(&patternInput.0.clone())),
          patternInput.1.clone())
     }
@@ -1688,7 +1688,7 @@ pub mod Seq {
         {
             let arr: Rc<MutCell<Vec<T>>> = Seq::toArray(xs);
             if arr.len() as i32 > 0i32 {
-                Array::reduceBack(folder, &arr)
+                Array_::reduceBack(folder, &arr)
             } else { panic!("{}", Seq::SR::inputSequenceEmpty()) }
         }.clone()
     }
@@ -1706,7 +1706,7 @@ pub mod Seq {
         Seq::delay(&Rc::from({
                                  let xs = xs.clone();
                                  move ||
-                                     Seq::ofArray(&Array::reverse(&Seq::toArray(&xs)))
+                                     Seq::ofArray(&Array_::reverse(&Seq::toArray(&xs)))
                              }))
     }
     pub fn scan<State: Clone + 'static, T: Clone +
@@ -1756,9 +1756,9 @@ pub mod Seq {
                                  let state = state.clone();
                                  let xs = xs.clone();
                                  move ||
-                                     Seq::ofArray(&Array::scanBack(&folder,
-                                                                   &Seq::toArray(&xs),
-                                                                   &state))
+                                     Seq::ofArray(&Array_::scanBack(&folder,
+                                                                    &Seq::toArray(&xs),
+                                                                    &state))
                              }))
     }
     pub fn skip<T: Clone +
@@ -1922,7 +1922,7 @@ pub mod Seq {
         Seq::delay(&Rc::from({
                                  let xs = xs.clone();
                                  move ||
-                                     Seq::ofArray(&Array::pairwise(&Seq::toArray(&xs)))
+                                     Seq::ofArray(&Array_::pairwise(&Seq::toArray(&xs)))
                              }))
     }
     pub fn splitInto<T: Clone +
@@ -1933,8 +1933,8 @@ pub mod Seq {
                                  let chunks = chunks.clone();
                                  let xs = xs.clone();
                                  move ||
-                                     Seq::ofArray(&Array::splitInto(&chunks,
-                                                                    &Seq::toArray(&xs)))
+                                     Seq::ofArray(&Array_::splitInto(&chunks,
+                                                                     &Seq::toArray(&xs)))
                              }))
     }
     pub fn r#where<T: Clone +
@@ -1951,8 +1951,8 @@ pub mod Seq {
                                  let windowSize = windowSize.clone();
                                  let xs = xs.clone();
                                  move ||
-                                     Seq::ofArray(&Array::windowed(&windowSize,
-                                                                   &Seq::toArray(&xs)))
+                                     Seq::ofArray(&Array_::windowed(&windowSize,
+                                                                    &Seq::toArray(&xs)))
                              }))
     }
     pub fn sortWith<T: Clone +
@@ -1967,8 +1967,8 @@ pub mod Seq {
                                      {
                                          let arr: Rc<MutCell<Vec<T>>> =
                                              Seq::toArray(&xs);
-                                         Array::sortInPlaceWith(&comparer,
-                                                                &arr);
+                                         Array_::sortInPlaceWith(&comparer,
+                                                                 &arr);
                                          Seq::ofArray(&arr)
                                      }.clone()
                              }))
@@ -2112,8 +2112,8 @@ pub mod Seq {
                                  let f = f.clone();
                                  let xs = xs.clone();
                                  move ||
-                                     Seq::ofArray(&Array::permute(&f,
-                                                                  &Seq::toArray(&xs)))
+                                     Seq::ofArray(&Array_::permute(&f,
+                                                                   &Seq::toArray(&xs)))
                              }))
     }
     pub fn chunkBySize<T: Clone +
@@ -2124,8 +2124,8 @@ pub mod Seq {
                                  let chunkSize = chunkSize.clone();
                                  let xs = xs.clone();
                                  move ||
-                                     Seq::ofArray(&Array::chunkBySize(&chunkSize,
-                                                                      &Seq::toArray(&xs)))
+                                     Seq::ofArray(&Array_::chunkBySize(&chunkSize,
+                                                                       &Seq::toArray(&xs)))
                              }))
     }
 }

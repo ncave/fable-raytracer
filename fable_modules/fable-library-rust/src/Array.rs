@@ -8,7 +8,7 @@
 #![allow(unused_attributes)]
 use crate::import_3bd9ae6a::*;
 use crate::import_f222008f::*;
-pub mod Array {
+pub mod Array_ {
     use super::*;
     pub mod SR {
         use super::*;
@@ -41,10 +41,10 @@ pub mod Array {
         }
     }
     pub fn indexNotFound<a_: Clone + 'static>() -> a_ {
-        panic!("{}", Array::SR::keyNotFoundAlt())
+        panic!("{}", Array_::SR::keyNotFoundAlt())
     }
     pub fn differentLengths<a_: Clone + 'static>() -> a_ {
-        panic!("{}", Array::SR::differentLengths())
+        panic!("{}", Array_::SR::differentLengths())
     }
     pub fn empty<T: Clone + 'static>() -> Rc<MutCell<Vec<T>>> {
         Native::arrayCreate(&0i32, &Native::defaultOf::<T>())
@@ -109,7 +109,7 @@ pub mod Array {
                targetIndex.clone() + count.clone() > target.len() as i32
            } {
             panic!("{}",
-                   Rc::from((Rc::from(Array::SR::indexOutOfBounds().to_string() +
+                   Rc::from((Rc::from(Array_::SR::indexOutOfBounds().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"index")) as Rc<str>);
         }
@@ -133,7 +133,7 @@ pub mod Array {
                    startIndex.clone() + count.clone() > source.len() as i32
                } {
                 panic!("{}",
-                       Rc::from((Rc::from(Array::SR::indexOutOfBounds().to_string() +
+                       Rc::from((Rc::from(Array_::SR::indexOutOfBounds().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"index")) as Rc<str>);
             }
@@ -154,12 +154,12 @@ pub mod Array {
         } else {
             if source.is_empty() {
                 panic!("{}",
-                       Rc::from((Rc::from(Array::SR::inputArrayWasEmpty().to_string() +
+                       Rc::from((Rc::from(Array_::SR::inputArrayWasEmpty().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"source")) as Rc<str>)
             } else {
                 panic!("{}",
-                       Rc::from((Rc::from(Array::SR::inputArrayWasTooLong().to_string() +
+                       Rc::from((Rc::from(Array_::SR::inputArrayWasTooLong().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"source")) as Rc<str>)
             }
@@ -174,7 +174,7 @@ pub mod Array {
     pub fn head<T: Clone + 'static>(source: &Rc<MutCell<Vec<T>>>) -> T {
         if source.is_empty() {
             panic!("{}",
-                   Rc::from((Rc::from(Array::SR::inputArrayWasEmpty().to_string() +
+                   Rc::from((Rc::from(Array_::SR::inputArrayWasEmpty().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"source")) as Rc<str>)
         } else { source[0i32].clone() }
@@ -186,7 +186,7 @@ pub mod Array {
     pub fn last<T: Clone + 'static>(source: &Rc<MutCell<Vec<T>>>) -> T {
         if source.is_empty() {
             panic!("{}",
-                   Rc::from((Rc::from(Array::SR::inputArrayWasEmpty().to_string() +
+                   Rc::from((Rc::from(Array_::SR::inputArrayWasEmpty().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"source")) as Rc<str>)
         } else { source[source.len() as i32 - 1i32].clone() }
@@ -202,11 +202,11 @@ pub mod Array {
         {
             if source.is_empty() {
                 panic!("{}",
-                       Rc::from((Rc::from(Array::SR::inputArrayWasTooShort().to_string() +
+                       Rc::from((Rc::from(Array_::SR::inputArrayWasTooShort().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"source")) as Rc<str>);
             }
-            Array::getSubArray(source, &1i32, &(source.len() as i32 - 1i32))
+            Array_::getSubArray(source, &1i32, &(source.len() as i32 - 1i32))
         }.clone()
     }
     pub fn append<T: Clone +
@@ -327,7 +327,7 @@ pub mod Array {
      -> Rc<MutCell<Vec<U>>> {
         {
             if source1.len() as i32 != source2.len() as i32 {
-                panic!("{}", Array::SR::differentLengths());
+                panic!("{}", Array_::SR::differentLengths());
             }
             {
                 let len: i32 = source1.len() as i32;
@@ -348,7 +348,7 @@ pub mod Array {
      -> Rc<MutCell<Vec<U>>> {
         {
             if source1.len() as i32 != source2.len() as i32 {
-                panic!("{}", Array::SR::differentLengths());
+                panic!("{}", Array_::SR::differentLengths());
             }
             {
                 let len: i32 = source1.len() as i32;
@@ -374,7 +374,7 @@ pub mod Array {
             if if source1.len() as i32 != source2.len() as i32 {
                    true
                } else { source2.len() as i32 != source3.len() as i32 } {
-                panic!("{}", Array::SR::differentLengths());
+                panic!("{}", Array_::SR::differentLengths());
             }
             {
                 let len: i32 = source1.len() as i32;
@@ -462,7 +462,7 @@ pub mod Array {
                                 &Rc<impl Fn(&T) -> (Rc<MutCell<Vec<U>>>) +
                                     'static>, source: &Rc<MutCell<Vec<T>>>)
      -> Rc<MutCell<Vec<U>>> {
-        Array::concat(&Array::map(mapping, source))
+        Array_::concat(&Array_::map(mapping, source))
     }
     pub fn exists<T: Clone +
                   'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
@@ -481,7 +481,7 @@ pub mod Array {
                             source1: &Rc<MutCell<Vec<T1>>>,
                             source2: &Rc<MutCell<Vec<T2>>>) -> bool {
         if source1.len() as i32 != source2.len() as i32 {
-            panic!("{}", Array::SR::differentLengths());
+            panic!("{}", Array_::SR::differentLengths());
         }
         {
             let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
@@ -499,10 +499,10 @@ pub mod Array {
     pub fn contains<T: Eq + core::hash::Hash + Clone +
                     'static>(value: &T, source: &Rc<MutCell<Vec<T>>>)
      -> bool {
-        Array::exists(&Rc::from({
-                                    let value = value.clone();
-                                    move |x: &T| x.clone() == value.clone()
-                                }), source)
+        Array_::exists(&Rc::from({
+                                     let value = value.clone();
+                                     move |x: &T| x.clone() == value.clone()
+                                 }), source)
     }
     pub fn filter<T: Clone +
                   'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
@@ -526,7 +526,7 @@ pub mod Array {
         {
             if count.clone() < 0i32 {
                 panic!("{}",
-                       Rc::from((Rc::from(Array::SR::inputMustBeNonNegative().to_string() +
+                       Rc::from((Rc::from(Array_::SR::inputMustBeNonNegative().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"count")) as Rc<str>);
             }
@@ -575,7 +575,7 @@ pub mod Array {
                            source: &Rc<MutCell<Vec<T>>>) -> T {
         {
             if source.is_empty() {
-                panic!("{}", Array::SR::inputArrayWasEmpty());
+                panic!("{}", Array_::SR::inputArrayWasEmpty());
             }
             {
                 let acc_1: Rc<MutCell<T>> =
@@ -598,7 +598,7 @@ pub mod Array {
                                source: &Rc<MutCell<Vec<T>>>) -> T {
         {
             if source.is_empty() {
-                panic!("{}", Array::SR::inputArrayWasEmpty());
+                panic!("{}", Array_::SR::inputArrayWasEmpty());
             }
             {
                 let len: i32 = source.len() as i32;
@@ -619,11 +619,11 @@ pub mod Array {
     }
     pub fn replicate<T: Clone + 'static>(count: &i32, initial: &T)
      -> Rc<MutCell<Vec<T>>> {
-        Array::initialize(count,
-                          &Rc::from({
-                                        let initial = initial.clone();
-                                        move |_arg1: &i32| initial.clone()
-                                    }))
+        Array_::initialize(count,
+                           &Rc::from({
+                                         let initial = initial.clone();
+                                         move |_arg1: &i32| initial.clone()
+                                     }))
     }
     pub fn scan<State: Clone + 'static, T: Clone +
                 'static>(folder:
@@ -664,15 +664,15 @@ pub mod Array {
         {
             if count.clone() > source.len() as i32 {
                 panic!("{}",
-                       Rc::from((Rc::from(Array::SR::inputArrayWasTooShort().to_string() +
+                       Rc::from((Rc::from(Array_::SR::inputArrayWasTooShort().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"source")) as Rc<str>);
             }
             {
                 let count_1: i32 =
                     if count.clone() < 0i32 { 0i32 } else { count.clone() };
-                Array::getSubArray(source, &count_1,
-                                   &(source.len() as i32 - count_1))
+                Array_::getSubArray(source, &count_1,
+                                    &(source.len() as i32 - count_1))
             }.clone()
         }.clone()
     }
@@ -687,8 +687,8 @@ pub mod Array {
                   } else { false } {
                 count.set(count.get() + 1i32);
             }
-            Array::getSubArray(source, &count.get(),
-                               &(source.len() as i32 - count.get()))
+            Array_::getSubArray(source, &count.get(),
+                                &(source.len() as i32 - count.get()))
         }.clone()
     }
     pub fn take<T: Clone + 'static>(count: &i32, source: &Rc<MutCell<Vec<T>>>)
@@ -696,17 +696,17 @@ pub mod Array {
         {
             if count.clone() < 0i32 {
                 panic!("{}",
-                       Rc::from((Rc::from(Array::SR::inputMustBeNonNegative().to_string() +
+                       Rc::from((Rc::from(Array_::SR::inputMustBeNonNegative().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"count")) as Rc<str>);
             }
             if count.clone() > source.len() as i32 {
                 panic!("{}",
-                       Rc::from((Rc::from(Array::SR::inputArrayWasTooShort().to_string() +
+                       Rc::from((Rc::from(Array_::SR::inputArrayWasTooShort().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"source")) as Rc<str>);
             }
-            Array::getSubArray(source, &0i32, count)
+            Array_::getSubArray(source, &0i32, count)
         }.clone()
     }
     pub fn takeWhile<T: Clone +
@@ -720,20 +720,20 @@ pub mod Array {
                   } else { false } {
                 count.set(count.get() + 1i32);
             }
-            Array::getSubArray(source, &0i32, &count.get())
+            Array_::getSubArray(source, &0i32, &count.get())
         }.clone()
     }
     pub fn truncate<T: Clone +
                     'static>(count: &i32, source: &Rc<MutCell<Vec<T>>>)
      -> Rc<MutCell<Vec<T>>> {
-        Array::getSubArray(source, &0i32,
-                           &if count.clone() < 0i32 {
-                                0i32
-                            } else {
-                                if count.clone() > source.len() as i32 {
-                                    source.len() as i32
-                                } else { count.clone() }
-                            })
+        Array_::getSubArray(source, &0i32,
+                            &if count.clone() < 0i32 {
+                                 0i32
+                             } else {
+                                 if count.clone() > source.len() as i32 {
+                                     source.len() as i32
+                                 } else { count.clone() }
+                             })
     }
     pub fn copyTo<T: Clone +
                   'static>(source: &Rc<MutCell<Vec<T>>>, sourceIndex: &i32,
@@ -772,9 +772,9 @@ pub mod Array {
                 'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
                          source: &Rc<MutCell<Vec<T>>>) -> T {
         {
-            let matchValue: Option<T> = Array::tryFind(predicate, source);
+            let matchValue: Option<T> = Array_::tryFind(predicate, source);
             match &matchValue {
-                None => panic!("{}", Array::SR::keyNotFoundAlt()),
+                None => panic!("{}", Array_::SR::keyNotFoundAlt()),
                 Some(matchValue_0_0) => matchValue_0_0.clone(),
             }
         }.clone()
@@ -807,20 +807,20 @@ pub mod Array {
     pub fn findIndex<T: Clone +
                      'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
                               source: &Rc<MutCell<Vec<T>>>) -> i32 {
-        let matchValue: Option<i32> = Array::tryFindIndex(predicate, source);
+        let matchValue: Option<i32> = Array_::tryFindIndex(predicate, source);
         match &matchValue {
-            None => panic!("{}", Array::SR::keyNotFoundAlt()),
+            None => panic!("{}", Array_::SR::keyNotFoundAlt()),
             Some(matchValue_0_0) => matchValue_0_0.clone(),
         }
     }
     pub fn indexOf<T: Eq + core::hash::Hash + Clone +
                    'static>(source: &Rc<MutCell<Vec<T>>>, item: &T) -> i32 {
         let matchValue: Option<i32> =
-            Array::tryFindIndex(&Rc::from({
-                                              let item = item.clone();
-                                              move |x: &T|
-                                                  x.clone() == item.clone()
-                                          }), source);
+            Array_::tryFindIndex(&Rc::from({
+                                               let item = item.clone();
+                                               move |x: &T|
+                                                   x.clone() == item.clone()
+                                           }), source);
         match &matchValue {
             None => -1i32,
             Some(matchValue_0_0) => matchValue_0_0.clone(),
@@ -854,9 +854,10 @@ pub mod Array {
                     'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
                              source: &Rc<MutCell<Vec<T>>>) -> T {
         {
-            let matchValue: Option<T> = Array::tryFindBack(predicate, source);
+            let matchValue: Option<T> =
+                Array_::tryFindBack(predicate, source);
             match &matchValue {
-                None => panic!("{}", Array::SR::keyNotFoundAlt()),
+                None => panic!("{}", Array_::SR::keyNotFoundAlt()),
                 Some(matchValue_0_0) => matchValue_0_0.clone(),
             }
         }.clone()
@@ -891,9 +892,9 @@ pub mod Array {
                                       &Rc<impl Fn(&T) -> (bool) + 'static>,
                                   source: &Rc<MutCell<Vec<T>>>) -> i32 {
         let matchValue: Option<i32> =
-            Array::tryFindIndexBack(predicate, source);
+            Array_::tryFindIndexBack(predicate, source);
         match &matchValue {
-            None => panic!("{}", Array::SR::keyNotFoundAlt()),
+            None => panic!("{}", Array_::SR::keyNotFoundAlt()),
             Some(matchValue_0_0) => matchValue_0_0.clone(),
         }
     }
@@ -902,7 +903,7 @@ pub mod Array {
                                       &Rc<impl Fn(&T) -> (bool) + 'static>,
                                   source: &Rc<MutCell<Vec<T>>>) -> i32 {
         let matchValue: Option<i32> =
-            Array::tryFindIndexBack(predicate, source);
+            Array_::tryFindIndexBack(predicate, source);
         match &matchValue {
             None => -1i32,
             Some(matchValue_0_0) => matchValue_0_0.clone(),
@@ -940,9 +941,9 @@ pub mod Array {
                 'static>(chooser: &Rc<impl Fn(&T) -> (Option<U>) + 'static>,
                          source: &Rc<MutCell<Vec<T>>>) -> U {
         {
-            let matchValue: Option<U> = Array::tryPick(chooser, source);
+            let matchValue: Option<U> = Array_::tryPick(chooser, source);
             match &matchValue {
-                None => panic!("{}", Array::SR::keyNotFoundAlt()),
+                None => panic!("{}", Array_::SR::keyNotFoundAlt()),
                 Some(matchValue_0_0) => matchValue_0_0.clone(),
             }
         }.clone()
@@ -986,7 +987,7 @@ pub mod Array {
             let acc: Rc<MutCell<State>> =
                 Rc::from(MutCell::from(state.clone()));
             if source1.len() as i32 != source2.len() as i32 {
-                panic!("{}", Array::SR::differentLengths());
+                panic!("{}", Array_::SR::differentLengths());
             }
             for i in 0i32..=source1.len() as i32 - 1i32 {
                 acc.set(folder(&acc.get(), &source1[i].clone(),
@@ -1006,7 +1007,7 @@ pub mod Array {
             let acc: Rc<MutCell<State>> =
                 Rc::from(MutCell::from(state.clone()));
             if source1.len() as i32 != source2.len() as i32 {
-                panic!("{}", Array::SR::differentLengths());
+                panic!("{}", Array_::SR::differentLengths());
             }
             {
                 let len: i32 = source1.len() as i32;
@@ -1035,7 +1036,7 @@ pub mod Array {
                             source1: &Rc<MutCell<Vec<T1>>>,
                             source2: &Rc<MutCell<Vec<T2>>>) -> bool {
         if source1.len() as i32 != source2.len() as i32 {
-            panic!("{}", Array::SR::differentLengths());
+            panic!("{}", Array_::SR::differentLengths());
         }
         {
             let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
@@ -1069,7 +1070,7 @@ pub mod Array {
                              source1: &Rc<MutCell<Vec<T>>>,
                              source2: &Rc<MutCell<Vec<T>>>) {
         if source1.len() as i32 != source2.len() as i32 {
-            panic!("{}", Array::SR::differentLengths());
+            panic!("{}", Array_::SR::differentLengths());
         }
         for i in 0i32..=source1.len() as i32 - 1i32 {
             action(&source1[i].clone(), &source2[i].clone());
@@ -1081,7 +1082,7 @@ pub mod Array {
                                     source1: &Rc<MutCell<Vec<T>>>,
                                     source2: &Rc<MutCell<Vec<T>>>) {
         if source1.len() as i32 != source2.len() as i32 {
-            panic!("{}", Array::SR::differentLengths());
+            panic!("{}", Array_::SR::differentLengths());
         }
         for i in 0i32..=source1.len() as i32 - 1i32 {
             action(&i, &source1[i].clone(), &source2[i].clone());
@@ -1096,35 +1097,36 @@ pub mod Array {
             let res: Rc<MutCell<Vec<T>>> = Native::arrayCopy(source);
             let checkFlags: Rc<MutCell<Vec<i32>>> =
                 Native::arrayCreate(&len, &0i32);
-            Array::iterateIndexed(&Rc::from({
-                                                let checkFlags =
-                                                    checkFlags.clone();
-                                                let indexMap =
-                                                    indexMap.clone();
-                                                let res = res.clone();
-                                                move |i: &i32, x: &T|
-                                                    {
-                                                        let j: i32 =
-                                                            indexMap(i);
-                                                        if if j < 0i32 {
-                                                               true
-                                                           } else { j >= len }
-                                                           {
-                                                            panic!("{}",
-                                                                   Array::SR::invalidPermutation());
-                                                        }
-                                                        res.get_mut()[j as
-                                                                          usize]
-                                                            = x.clone();
-                                                        checkFlags.get_mut()[j
-                                                                                 as
-                                                                                 usize]
-                                                            = 1i32
-                                                    }
-                                            }), source);
-            if !Array::forAll(&Rc::from(move |y: &i32| 1i32 == y.clone()),
-                              &checkFlags) {
-                panic!("{}", Array::SR::invalidPermutation());
+            Array_::iterateIndexed(&Rc::from({
+                                                 let checkFlags =
+                                                     checkFlags.clone();
+                                                 let indexMap =
+                                                     indexMap.clone();
+                                                 let res = res.clone();
+                                                 move |i: &i32, x: &T|
+                                                     {
+                                                         let j: i32 =
+                                                             indexMap(i);
+                                                         if if j < 0i32 {
+                                                                true
+                                                            } else {
+                                                                j >= len
+                                                            } {
+                                                             panic!("{}",
+                                                                    Array_::SR::invalidPermutation());
+                                                         }
+                                                         res.get_mut()[j as
+                                                                           usize]
+                                                             = x.clone();
+                                                         checkFlags.get_mut()[j
+                                                                                  as
+                                                                                  usize]
+                                                             = 1i32
+                                                     }
+                                             }), source);
+            if !Array_::forAll(&Rc::from(move |y: &i32| 1i32 == y.clone()),
+                               &checkFlags) {
+                panic!("{}", Array_::SR::invalidPermutation());
             }
             res.clone()
         }.clone()
@@ -1149,26 +1151,26 @@ pub mod Array {
     }
     pub fn sortInPlace<T: PartialOrd + Clone +
                        'static>(source: &Rc<MutCell<Vec<T>>>) {
-        Array::sortInPlaceWith(&Rc::from(move |e1: &T, e2: &T|
-                                             Util::compare(e1, e2)), source);
+        Array_::sortInPlaceWith(&Rc::from(move |e1: &T, e2: &T|
+                                              Util::compare(e1, e2)), source);
     }
     pub fn sortInPlaceBy<T: Clone + 'static, U: PartialOrd + Clone +
                          'static>(projection:
                                       &Rc<impl Fn(&T) -> (U) + 'static>,
                                   source: &Rc<MutCell<Vec<T>>>) {
-        Array::sortInPlaceWith(&Rc::from({
-                                             let projection =
-                                                 projection.clone();
-                                             move |x: &T, y: &T|
-                                                 Util::compare(&projection(x),
-                                                               &projection(y))
-                                         }), source);
+        Array_::sortInPlaceWith(&Rc::from({
+                                              let projection =
+                                                  projection.clone();
+                                              move |x: &T, y: &T|
+                                                  Util::compare(&projection(x),
+                                                                &projection(y))
+                                          }), source);
     }
     pub fn sort<T: PartialOrd + Clone + 'static>(source: &Rc<MutCell<Vec<T>>>)
      -> Rc<MutCell<Vec<T>>> {
         {
             let res: Rc<MutCell<Vec<T>>> = Native::arrayCopy(source);
-            Array::sortInPlace(&res);
+            Array_::sortInPlace(&res);
             res.clone()
         }.clone()
     }
@@ -1178,7 +1180,7 @@ pub mod Array {
      -> Rc<MutCell<Vec<T>>> {
         {
             let res: Rc<MutCell<Vec<T>>> = Native::arrayCopy(source);
-            Array::sortInPlaceBy(projection, &res);
+            Array_::sortInPlaceBy(projection, &res);
             res.clone()
         }.clone()
     }
@@ -1189,28 +1191,28 @@ pub mod Array {
      -> Rc<MutCell<Vec<T>>> {
         {
             let res: Rc<MutCell<Vec<T>>> = Native::arrayCopy(source);
-            Array::sortInPlaceWith(comparer, &res);
+            Array_::sortInPlaceWith(comparer, &res);
             res.clone()
         }.clone()
     }
     pub fn sortDescending<T: PartialOrd + Clone +
                           'static>(source: &Rc<MutCell<Vec<T>>>)
      -> Rc<MutCell<Vec<T>>> {
-        Array::sortWith(&Rc::from(move |x: &T, y: &T|
-                                      Util::compare(x, y) * -1i32), source)
+        Array_::sortWith(&Rc::from(move |x: &T, y: &T|
+                                       Util::compare(x, y) * -1i32), source)
     }
     pub fn sortByDescending<T: Clone + 'static, U: PartialOrd + Clone +
                             'static>(projection:
                                          &Rc<impl Fn(&T) -> (U) + 'static>,
                                      source: &Rc<MutCell<Vec<T>>>)
      -> Rc<MutCell<Vec<T>>> {
-        Array::sortWith(&Rc::from({
-                                      let projection = projection.clone();
-                                      move |x: &T, y: &T|
-                                          Util::compare(&projection(x),
-                                                        &projection(y)) *
-                                              -1i32
-                                  }), source)
+        Array_::sortWith(&Rc::from({
+                                       let projection = projection.clone();
+                                       move |x: &T, y: &T|
+                                           Util::compare(&projection(x),
+                                                         &projection(y)) *
+                                               -1i32
+                                   }), source)
     }
     pub fn allPairs<T1: Clone + 'static, T2: Clone +
                     'static>(xs: &Rc<MutCell<Vec<T1>>>,
@@ -1264,17 +1266,17 @@ pub mod Array {
             Native::arrayWithCapacity::<T1>(&len);
         let res2: Rc<MutCell<Vec<T2>>> =
             Native::arrayWithCapacity::<T2>(&len);
-        Array::iterateIndexed(&Rc::from({
-                                            let res1 = res1.clone();
-                                            let res2 = res2.clone();
-                                            move
-                                                |i: &i32,
-                                                 tupledArg: &(T1, T2)|
-                                                {
-                                                    res1.get_mut().push(tupledArg.0.clone());
-                                                    res2.get_mut().push(tupledArg.1.clone())
-                                                }
-                                        }), source);
+        Array_::iterateIndexed(&Rc::from({
+                                             let res1 = res1.clone();
+                                             let res2 = res2.clone();
+                                             move
+                                                 |i: &i32,
+                                                  tupledArg: &(T1, T2)|
+                                                 {
+                                                     res1.get_mut().push(tupledArg.0.clone());
+                                                     res2.get_mut().push(tupledArg.1.clone())
+                                                 }
+                                         }), source);
         (res1.clone(), res2.clone())
     }
     pub fn unzip3<T1: Clone + 'static, T2: Clone + 'static, T3: Clone +
@@ -1287,36 +1289,36 @@ pub mod Array {
             Native::arrayWithCapacity::<T2>(&len);
         let res3: Rc<MutCell<Vec<T3>>> =
             Native::arrayWithCapacity::<T3>(&len);
-        Array::iterateIndexed(&Rc::from({
-                                            let res1 = res1.clone();
-                                            let res2 = res2.clone();
-                                            let res3 = res3.clone();
-                                            move
-                                                |i: &i32,
-                                                 tupledArg: &(T1, T2, T3)|
-                                                {
-                                                    res1.get_mut().push(tupledArg.0.clone());
-                                                    res2.get_mut().push(tupledArg.1.clone());
-                                                    res3.get_mut().push(tupledArg.2.clone())
-                                                }
-                                        }), source);
+        Array_::iterateIndexed(&Rc::from({
+                                             let res1 = res1.clone();
+                                             let res2 = res2.clone();
+                                             let res3 = res3.clone();
+                                             move
+                                                 |i: &i32,
+                                                  tupledArg: &(T1, T2, T3)|
+                                                 {
+                                                     res1.get_mut().push(tupledArg.0.clone());
+                                                     res2.get_mut().push(tupledArg.1.clone());
+                                                     res3.get_mut().push(tupledArg.2.clone())
+                                                 }
+                                         }), source);
         (res1.clone(), res2.clone(), res3.clone())
     }
     pub fn zip<T1: Clone + 'static, T2: Clone +
                'static>(source1: &Rc<MutCell<Vec<T1>>>,
                         source2: &Rc<MutCell<Vec<T2>>>)
      -> Rc<MutCell<Vec<(T1, T2)>>> {
-        Array::map2(&Rc::from(move |x: &T1, y: &T2| (x.clone(), y.clone())),
-                    source1, source2)
+        Array_::map2(&Rc::from(move |x: &T1, y: &T2| (x.clone(), y.clone())),
+                     source1, source2)
     }
     pub fn zip3<T1: Clone + 'static, T2: Clone + 'static, T3: Clone +
                 'static>(source1: &Rc<MutCell<Vec<T1>>>,
                          source2: &Rc<MutCell<Vec<T2>>>,
                          source3: &Rc<MutCell<Vec<T3>>>)
      -> Rc<MutCell<Vec<(T1, T2, T3)>>> {
-        Array::map3(&Rc::from(move |x: &T1, y: &T2, z: &T3|
-                                  (x.clone(), y.clone(), z.clone())), source1,
-                    source2, source3)
+        Array_::map3(&Rc::from(move |x: &T1, y: &T2, z: &T3|
+                                   (x.clone(), y.clone(), z.clone())),
+                     source1, source2, source3)
     }
     pub fn chunkBySize<T: Clone +
                        'static>(chunkSize: &i32, source: &Rc<MutCell<Vec<T>>>)
@@ -1324,7 +1326,7 @@ pub mod Array {
         {
             if chunkSize.clone() <= 0i32 {
                 panic!("{}",
-                       Rc::from((Rc::from(Array::SR::inputMustBePositive().to_string() +
+                       Rc::from((Rc::from(Array_::SR::inputMustBePositive().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"size")) as Rc<str>);
             }
@@ -1336,9 +1338,9 @@ pub mod Array {
                 for i in 0i32..=chunkCount - 1i32 {
                     let start: i32 = i * chunkSize.clone();
                     let slice: Rc<MutCell<Vec<T>>> =
-                        Array::getSubArray(source, &start,
-                                           &chunkSize.clone().min(len -
-                                                                      start));
+                        Array_::getSubArray(source, &start,
+                                            &chunkSize.clone().min(len -
+                                                                       start));
                     res.get_mut().push(slice)
                 }
                 res.clone()
@@ -1352,13 +1354,13 @@ pub mod Array {
                true
            } else { index.clone() > source.len() as i32 } {
             panic!("{}",
-                   Rc::from((Rc::from(Array::SR::indexOutOfBounds().to_string() +
+                   Rc::from((Rc::from(Array_::SR::indexOutOfBounds().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"index")) as Rc<str>);
         }
-        (Array::getSubArray(source, &0i32, index),
-         Array::getSubArray(source, index,
-                            &(source.len() as i32 - index.clone())))
+        (Array_::getSubArray(source, &0i32, index),
+         Array_::getSubArray(source, index,
+                             &(source.len() as i32 - index.clone())))
     }
     pub fn sum<T: core::ops::Add<Output = T> + Default + Clone +
                'static>(source: &Rc<MutCell<Vec<T>>>) -> T {
@@ -1387,38 +1389,38 @@ pub mod Array {
     pub fn maxBy<T: Clone + 'static, U: PartialOrd + Clone +
                  'static>(projection: &Rc<impl Fn(&T) -> (U) + 'static>,
                           xs: &Rc<MutCell<Vec<T>>>) -> T {
-        Array::reduce(&Rc::from({
-                                    let projection = projection.clone();
-                                    move |x: &T, y: &T|
-                                        if projection(x) > projection(y) {
-                                            x.clone()
-                                        } else { y.clone() }
-                                }), xs)
+        Array_::reduce(&Rc::from({
+                                     let projection = projection.clone();
+                                     move |x: &T, y: &T|
+                                         if projection(x) > projection(y) {
+                                             x.clone()
+                                         } else { y.clone() }
+                                 }), xs)
     }
     pub fn max<T: PartialOrd + Clone + 'static>(xs: &Rc<MutCell<Vec<T>>>)
      -> T {
-        Array::reduce(&Rc::from(move |x: &T, y: &T|
-                                    if x.clone() > y.clone() {
-                                        x.clone()
-                                    } else { y.clone() }), xs)
+        Array_::reduce(&Rc::from(move |x: &T, y: &T|
+                                     if x.clone() > y.clone() {
+                                         x.clone()
+                                     } else { y.clone() }), xs)
     }
     pub fn minBy<T: Clone + 'static, U: PartialOrd + Clone +
                  'static>(projection: &Rc<impl Fn(&T) -> (U) + 'static>,
                           xs: &Rc<MutCell<Vec<T>>>) -> T {
-        Array::reduce(&Rc::from({
-                                    let projection = projection.clone();
-                                    move |x: &T, y: &T|
-                                        if projection(x) < projection(y) {
-                                            x.clone()
-                                        } else { y.clone() }
-                                }), xs)
+        Array_::reduce(&Rc::from({
+                                     let projection = projection.clone();
+                                     move |x: &T, y: &T|
+                                         if projection(x) < projection(y) {
+                                             x.clone()
+                                         } else { y.clone() }
+                                 }), xs)
     }
     pub fn min<T: PartialOrd + Clone + 'static>(xs: &Rc<MutCell<Vec<T>>>)
      -> T {
-        Array::reduce(&Rc::from(move |x: &T, y: &T|
-                                    if x.clone() < y.clone() {
-                                        x.clone()
-                                    } else { y.clone() }), xs)
+        Array_::reduce(&Rc::from(move |x: &T, y: &T|
+                                     if x.clone() < y.clone() {
+                                         x.clone()
+                                     } else { y.clone() }), xs)
     }
     pub fn average<T: core::ops::Add<Output = T> +
                    core::ops::Div<Output = T> + From<i32> + Default + Clone +
@@ -1426,7 +1428,7 @@ pub mod Array {
         {
             if source.clone().is_empty() {
                 panic!("{}",
-                       Rc::from((Rc::from(Array::SR::inputArrayWasEmpty().to_string() +
+                       Rc::from((Rc::from(Array_::SR::inputArrayWasEmpty().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"source")) as Rc<str>);
             }
@@ -1448,7 +1450,7 @@ pub mod Array {
         {
             if source.is_empty() {
                 panic!("{}",
-                       Rc::from((Rc::from(Array::SR::inputArrayWasEmpty().to_string() +
+                       Rc::from((Rc::from(Array_::SR::inputArrayWasEmpty().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"source")) as Rc<str>);
             }
@@ -1474,7 +1476,7 @@ pub mod Array {
                    'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
                             source: &Rc<MutCell<Vec<T>>>)
      -> Rc<MutCell<Vec<T>>> {
-        Array::filter(predicate, source)
+        Array_::filter(predicate, source)
     }
     pub fn windowed<T: Clone +
                     'static>(windowSize: &i32, source: &Rc<MutCell<Vec<T>>>)
@@ -1482,7 +1484,7 @@ pub mod Array {
         {
             if windowSize.clone() <= 0i32 {
                 panic!("{}",
-                       Rc::from((Rc::from(Array::SR::inputMustBePositive().to_string() +
+                       Rc::from((Rc::from(Array_::SR::inputMustBePositive().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"size")) as Rc<str>);
             }
@@ -1493,7 +1495,7 @@ pub mod Array {
                     Native::arrayWithCapacity::<Rc<MutCell<Vec<T>>>>(&len);
                 for i in 0i32..=len - 1i32 {
                     let slice: Rc<MutCell<Vec<T>>> =
-                        Array::getSubArray(source, &i, windowSize);
+                        Array_::getSubArray(source, &i, windowSize);
                     res.get_mut().push(slice)
                 }
                 res.clone()
@@ -1506,7 +1508,7 @@ pub mod Array {
         {
             if chunks.clone() <= 0i32 {
                 panic!("{}",
-                       Rc::from((Rc::from(Array::SR::inputMustBePositive().to_string() +
+                       Rc::from((Rc::from(Array_::SR::inputMustBePositive().to_string() +
                        &Native::string(&"\nParameter name: ")) as
               Rc<str>).to_string() + &Native::string(&"chunks")) as Rc<str>);
             }
@@ -1527,10 +1529,10 @@ pub mod Array {
                                 minChunkSize + 1i32
                             } else { minChunkSize };
                         let slice: Rc<MutCell<Vec<T>>> =
-                            Array::getSubArray(source,
-                                               &(i * minChunkSize +
-                                                     chunksWithExtraItem.min(i)),
-                                               &chunkSize);
+                            Array_::getSubArray(source,
+                                                &(i * minChunkSize +
+                                                      chunksWithExtraItem.min(i)),
+                                                &chunkSize);
                         res.get_mut().push(slice)
                     }
                     res.clone()
@@ -1548,10 +1550,10 @@ pub mod Array {
                 let len: i32 = arrays.len() as i32;
                 let firstArray: Rc<MutCell<Vec<T>>> = arrays[0i32].clone();
                 let innerLen: i32 = firstArray.len() as i32;
-                if !Array::forAll(&Rc::from(move |a_2: &Rc<MutCell<Vec<T>>>|
-                                                a_2.len() as i32 == innerLen),
-                                  arrays) {
-                    panic!("{}", Array::SR::differentLengths());
+                if !Array_::forAll(&Rc::from(move |a_2: &Rc<MutCell<Vec<T>>>|
+                                                 a_2.len() as i32 ==
+                                                     innerLen), arrays) {
+                    panic!("{}", Array_::SR::differentLengths());
                 }
                 {
                     let res: Rc<MutCell<Vec<Rc<MutCell<Vec<T>>>>>> =
