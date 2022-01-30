@@ -257,12 +257,6 @@ pub mod RayTracerDemo {
             fn Roughness(&self)
             -> f64;
         }
-        #[derive(Clone)]
-        pub struct Intersection {
-            pub Thing: Rc<dyn RayTracerDemo::RayTracer::SceneObject>,
-            pub Ray: RayTracerDemo::RayTracer::Ray,
-            pub Dist: f64,
-        }
         pub trait SceneObject {
             fn Intersect(&self, arg0: &RayTracerDemo::RayTracer::Ray)
             -> f64;
@@ -270,6 +264,12 @@ pub mod RayTracerDemo {
             -> RayTracerDemo::Vector;
             fn Surface(&self)
             -> Rc<dyn RayTracerDemo::RayTracer::Surface>;
+        }
+        #[derive(Clone)]
+        pub struct Intersection {
+            pub Thing: Rc<dyn RayTracerDemo::RayTracer::SceneObject>,
+            pub Ray: RayTracerDemo::RayTracer::Ray,
+            pub Dist: f64,
         }
         #[derive(Clone, Debug, Default, PartialEq, PartialOrd)]
         pub struct Light {

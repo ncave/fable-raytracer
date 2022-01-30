@@ -67,17 +67,16 @@ module RayTracer =
         abstract Reflect: Vector -> float
         abstract Roughness: float
 
-    [<Struct>]
+    type SceneObject =
+        abstract Surface: Surface
+        abstract Intersect: Ray -> float
+        abstract Normal: Vector -> Vector
+
     type Intersection = {
         Thing: SceneObject
         Ray: Ray
         Dist: float
     }
-
-    and SceneObject =
-        abstract Surface: Surface
-        abstract Intersect: Ray -> float
-        abstract Normal: Vector -> Vector
 
     type Light = {
         Pos: Vector
