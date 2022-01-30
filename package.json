@@ -20,7 +20,8 @@
     "test-native": "bin/Release/net6.0/linux-x64/native/fable-raytracer",
 
     "trace": "dotnet trace collect --format speedscope -- dotnet bin/Release/net6.0/fable-raytracer.dll",
-    "perf": "perf record -q -e cpu-clock -F 997 -g -- target/release/fable-raytracer",
+    "perf": "perf record -q -e cpu-clock -F 997 -g -- target/release/fable_raytracer",
+    "perf-stat": "perf stat -- target/release/fable_raytracer",
     "perf-report": "perf report -n --stdio -g srcline -s dso,sym,srcline --inline | rustfilt > perf-report.log",
     "perf-flamegraph": "perf script | rustfilt | ../FlameGraph/stackcollapse-perf.pl | ../FlameGraph/flamegraph.pl > perf.svg",
     "flamegraph": "cargo flamegraph -c \"record -e cpu-clock -F 997 -g\""
