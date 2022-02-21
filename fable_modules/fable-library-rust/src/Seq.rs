@@ -6,6 +6,7 @@
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 #![allow(unused_attributes)]
+use crate::import_eae1ac5e::*;
 use crate::import_3bd9ae6a::*;
 #[path = "./Interfaces.rs"]
 pub(crate) mod import_971078fd;
@@ -19,25 +20,53 @@ pub mod Seq {
     pub mod SR {
         use super::*;
         pub fn enumerationAlreadyFinished() -> Rc<str> {
-            Native::string(&"Enumeration already finished.")
+            thread_local! {
+                static enumerationAlreadyFinished: Rc<str> =
+    String_::string(&"Enumeration already finished.");
+            };
+            enumerationAlreadyFinished.with(|value| value.clone())
         }
         pub fn enumerationNotStarted() -> Rc<str> {
-            Native::string(&"Enumeration has not started. Call MoveNext.")
+            thread_local! {
+                static enumerationNotStarted: Rc<str> =
+    String_::string(&"Enumeration has not started. Call MoveNext.");
+            };
+            enumerationNotStarted.with(|value| value.clone())
         }
         pub fn inputSequenceEmpty() -> Rc<str> {
-            Native::string(&"The input sequence was empty.")
+            thread_local! {
+                static inputSequenceEmpty: Rc<str> =
+    String_::string(&"The input sequence was empty.");
+            };
+            inputSequenceEmpty.with(|value| value.clone())
         }
         pub fn inputSequenceTooLong() -> Rc<str> {
-            Native::string(&"The input sequence contains more than one element.")
+            thread_local! {
+                static inputSequenceTooLong: Rc<str> =
+    String_::string(&"The input sequence contains more than one element.");
+            };
+            inputSequenceTooLong.with(|value| value.clone())
         }
         pub fn keyNotFoundAlt() -> Rc<str> {
-            Native::string(&"An index satisfying the predicate was not found in the collection.")
+            thread_local! {
+                static keyNotFoundAlt: Rc<str> =
+    String_::string(&"An index satisfying the predicate was not found in the collection.");
+            };
+            keyNotFoundAlt.with(|value| value.clone())
         }
         pub fn notEnoughElements() -> Rc<str> {
-            Native::string(&"The input sequence has an insufficient number of elements.")
+            thread_local! {
+                static notEnoughElements: Rc<str> =
+    String_::string(&"The input sequence has an insufficient number of elements.");
+            };
+            notEnoughElements.with(|value| value.clone())
         }
         pub fn resetNotSupported() -> Rc<str> {
-            Native::string(&"Reset is not supported on this enumerator.")
+            thread_local! {
+                static resetNotSupported: Rc<str> =
+    String_::string(&"Reset is not supported on this enumerator.");
+            };
+            resetNotSupported.with(|value| value.clone())
         }
     }
     pub fn indexNotFound<a_: Clone + 'static>() -> a_ {
@@ -60,19 +89,17 @@ pub mod Seq {
                   'static>,
         }
         impl <T: Clone + 'static> Seq::Enumerable::Enumerable_1<T> {
-            pub fn new(f:
-                           &Rc<impl Fn()
-                               -> (Rc<dyn Interfaces::IEnumerator_1<T>>) +
-                               'static>)
+            pub fn _ctor__Z32F335EB(f:
+                                        &Rc<impl Fn()
+                                            ->
+                                                (Rc<dyn Interfaces::IEnumerator_1<T>>) +
+                                            'static>)
              -> Rc<Seq::Enumerable::Enumerable_1<T>> {
-                {
-                    let f_1;
-                    ();
-                    f_1 = f.clone();
-                    ();
-                    Rc::from(Seq::Enumerable::Enumerable_1::<T>{f:
-                                                                    f_1.clone(),})
-                }.clone()
+                let f_1;
+                ();
+                f_1 = f.clone();
+                ();
+                Rc::from(Seq::Enumerable::Enumerable_1::<T>{f: f_1.clone(),})
             }
         }
         impl <T: Clone + 'static> Interfaces::IEnumerable_1<T> for
@@ -87,20 +114,20 @@ pub mod Seq {
             curr: MutCell<Option<T>>,
         }
         impl <T: Clone + 'static> Seq::Enumerable::Enumerator<T> {
-            pub fn new(next: &Rc<impl Fn() -> (Option<T>) + 'static>)
+            pub fn _ctor__29DEF9BC(next:
+                                       &Rc<impl Fn() -> (Option<T>) +
+                                           'static>)
              -> Rc<Seq::Enumerable::Enumerator<T>> {
-                {
-                    let next_1;
-                    let curr: Option<T>;
-                    ();
-                    next_1 = next.clone();
-                    curr = None::<T>;
-                    ();
-                    Rc::from(Seq::Enumerable::Enumerator::<T>{next:
-                                                                  next_1.clone(),
-                                                              curr:
-                                                                  MutCell::from(curr.clone()),})
-                }.clone()
+                let next_1;
+                let curr: Option<T>;
+                ();
+                next_1 = next.clone();
+                curr = None::<T>;
+                ();
+                Rc::from(Seq::Enumerable::Enumerator::<T>{next:
+                                                              next_1.clone(),
+                                                          curr:
+                                                              MutCell::from(curr.clone()),})
             }
         }
         impl <T: Clone + 'static> Interfaces::IEnumerator_1<T> for
@@ -119,8 +146,8 @@ pub mod Seq {
                                          &Rc<impl Fn() -> (Option<T>) +
                                              'static>)
          -> Rc<dyn Interfaces::IEnumerator_1<T>> {
-            (Seq::Enumerable::Enumerator::new(next).clone() as
-                 Rc<dyn Interfaces::IEnumerator_1<T>>).clone()
+            Seq::Enumerable::Enumerator::_ctor__29DEF9BC(next).clone() as
+                Rc<dyn Interfaces::IEnumerator_1<T>>
         }
         pub fn empty<T: Clone + 'static>()
          -> Rc<dyn Interfaces::IEnumerator_1<T>> {
@@ -128,254 +155,229 @@ pub mod Seq {
         }
         pub fn singleton<T: Clone + 'static>(x: &T)
          -> Rc<dyn Interfaces::IEnumerator_1<T>> {
-            {
-                let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
-                Seq::Enumerable::fromFunction(&Rc::from({
-                                                            let i = i.clone();
-                                                            let x = x.clone();
-                                                            move ||
-                                                                if i.get() <
-                                                                       1i32 {
-                                                                    {
-                                                                        i.set(i.get()
-                                                                                  +
-                                                                                  1i32);
-                                                                        Some(x.clone())
-                                                                    }.clone()
-                                                                } else {
-                                                                    None::<T>
-                                                                }
-                                                        }))
-            }.clone()
+            let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
+            Seq::Enumerable::fromFunction(&Rc::from({
+                                                        let i = i.clone();
+                                                        let x = x.clone();
+                                                        move ||
+                                                            if i.get() < 1i32
+                                                               {
+                                                                i.set(i.get()
+                                                                          +
+                                                                          1i32);
+                                                                Some(x.clone())
+                                                            } else {
+                                                                None::<T>
+                                                            }
+                                                    }))
         }
         pub fn ofArray<T: Clone + 'static>(arr: &Rc<MutCell<Vec<T>>>)
          -> Rc<dyn Interfaces::IEnumerator_1<T>> {
-            {
-                let len: i32 = arr.len() as i32;
-                let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
-                Seq::Enumerable::fromFunction(&Rc::from({
-                                                            let arr =
-                                                                arr.clone();
-                                                            let i = i.clone();
-                                                            move ||
-                                                                if i.get() <
-                                                                       len {
-                                                                    {
-                                                                        i.set(i.get()
-                                                                                  +
-                                                                                  1i32);
-                                                                        Some(arr[i.get()
-                                                                                     -
-                                                                                     1i32].clone())
-                                                                    }.clone()
-                                                                } else {
-                                                                    None::<T>
-                                                                }
-                                                        }))
-            }.clone()
+            let len: i32 = arr.len() as i32;
+            let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
+            Seq::Enumerable::fromFunction(&Rc::from({
+                                                        let arr = arr.clone();
+                                                        let i = i.clone();
+                                                        move ||
+                                                            if i.get() < len {
+                                                                i.set(i.get()
+                                                                          +
+                                                                          1i32);
+                                                                Some(arr[i.get()
+                                                                             -
+                                                                             1i32].clone())
+                                                            } else {
+                                                                None::<T>
+                                                            }
+                                                    }))
         }
         pub fn ofList<T: Clone + 'static>(xs: &List_1<T>)
          -> Rc<dyn Interfaces::IEnumerator_1<T>> {
-            {
-                let it: Rc<MutCell<List_1<T>>> =
-                    Rc::from(MutCell::from(xs.clone()));
-                Seq::Enumerable::fromFunction(&Rc::from({
-                                                            let it =
-                                                                it.clone();
-                                                            move ||
-                                                                if !List_::isEmpty(&it.get())
-                                                                   {
-                                                                    {
-                                                                        let tail_1:
-                                                                                List_1<T> =
-                                                                            List_::tail(&it.get()).clone();
-                                                                        let head_1:
-                                                                                T =
-                                                                            List_::head(&it.get()).clone();
-                                                                        it.set(tail_1);
-                                                                        Some(head_1)
-                                                                    }.clone()
-                                                                } else {
-                                                                    None::<T>
-                                                                }
-                                                        }))
-            }.clone()
+            let it: Rc<MutCell<List_1<T>>> =
+                Rc::from(MutCell::from(xs.clone()));
+            Seq::Enumerable::fromFunction(&Rc::from({
+                                                        let it = it.clone();
+                                                        move ||
+                                                            if !List_::isEmpty(&it.get())
+                                                               {
+                                                                let tail_1:
+                                                                        List_1<T> =
+                                                                    List_::tail(&it.get()).clone();
+                                                                let head_1:
+                                                                        T =
+                                                                    List_::head(&it.get()).clone();
+                                                                it.set(tail_1);
+                                                                Some(head_1)
+                                                            } else {
+                                                                None::<T>
+                                                            }
+                                                    }))
         }
         pub fn append<T: Clone +
                       'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>,
                                ys: &Rc<dyn Interfaces::IEnumerable_1<T>>)
          -> Rc<dyn Interfaces::IEnumerator_1<T>> {
-            {
-                let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(-1i32));
-                let innerOpt:
-                        Rc<MutCell<Option<Rc<dyn Interfaces::IEnumerator_1<T>>>>> =
-                    Rc::from(MutCell::from(None::<Rc<dyn Interfaces::IEnumerator_1<T>>>));
-                let finished: Rc<MutCell<bool>> =
-                    Rc::from(MutCell::from(false));
-                Seq::Enumerable::fromFunction(&Rc::from({
-                                                            let finished =
-                                                                finished.clone();
-                                                            let i = i.clone();
-                                                            let innerOpt =
-                                                                innerOpt.clone();
-                                                            let xs =
-                                                                xs.clone();
-                                                            let ys =
-                                                                ys.clone();
-                                                            move ||
-                                                                {
-                                                                    let moveNext:
-                                                                            Rc<MutCell<bool>> =
-                                                                        Rc::from(MutCell::from(false));
-                                                                    while if !finished.get()
-                                                                             {
-                                                                              !moveNext.get()
-                                                                          } else {
-                                                                              false
-                                                                          } {
-                                                                        match &innerOpt.get()
+            let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(-1i32));
+            let innerOpt:
+                    Rc<MutCell<Option<Rc<dyn Interfaces::IEnumerator_1<T>>>>> =
+                Rc::from(MutCell::from(None::<Rc<dyn Interfaces::IEnumerator_1<T>>>));
+            let finished: Rc<MutCell<bool>> = Rc::from(MutCell::from(false));
+            Seq::Enumerable::fromFunction(&Rc::from({
+                                                        let finished =
+                                                            finished.clone();
+                                                        let i = i.clone();
+                                                        let innerOpt =
+                                                            innerOpt.clone();
+                                                        let xs = xs.clone();
+                                                        let ys = ys.clone();
+                                                        move ||
+                                                            {
+                                                                let moveNext:
+                                                                        Rc<MutCell<bool>> =
+                                                                    Rc::from(MutCell::from(false));
+                                                                while if !finished.get()
+                                                                         {
+                                                                          !moveNext.get()
+                                                                      } else {
+                                                                          false
+                                                                      } {
+                                                                    match &innerOpt.get()
+                                                                        {
+                                                                        None
+                                                                        =>
+                                                                        if i.get()
+                                                                               <
+                                                                               1i32
+                                                                           {
+                                                                            i.set(i.get()
+                                                                                      +
+                                                                                      1i32);
                                                                             {
-                                                                            None
-                                                                            =>
-                                                                            if i.get()
-                                                                                   <
-                                                                                   1i32
-                                                                               {
-                                                                                i.set(i.get()
-                                                                                          +
-                                                                                          1i32);
-                                                                                {
-                                                                                    let it:
-                                                                                            Rc<dyn Interfaces::IEnumerable_1<T>> =
-                                                                                        if i.get()
-                                                                                               ==
-                                                                                               0i32
-                                                                                           {
-                                                                                            xs.clone()
-                                                                                        } else {
-                                                                                            ys.clone()
-                                                                                        };
-                                                                                    innerOpt.set(Some(it.GetEnumerator()))
-                                                                                }
-                                                                            } else {
-                                                                                finished.set(true)
-                                                                            },
-                                                                            Some(innerOpt_0_0)
-                                                                            =>
-                                                                            {
-                                                                                let inner:
-                                                                                        Rc<dyn Interfaces::IEnumerator_1<T>> =
-                                                                                    innerOpt_0_0.clone();
-                                                                                if inner.MoveNext()
-                                                                                   {
-                                                                                    moveNext.set(true)
-                                                                                } else {
-                                                                                    innerOpt.set(None::<Rc<dyn Interfaces::IEnumerator_1<T>>>)
-                                                                                }
+                                                                                let it:
+                                                                                        Rc<dyn Interfaces::IEnumerable_1<T>> =
+                                                                                    if i.get()
+                                                                                           ==
+                                                                                           0i32
+                                                                                       {
+                                                                                        xs.clone()
+                                                                                    } else {
+                                                                                        ys.clone()
+                                                                                    };
+                                                                                innerOpt.set(Some(it.GetEnumerator()))
                                                                             }
-                                                                        };
-                                                                    }
-                                                                    if if !finished.get()
-                                                                          {
-                                                                           moveNext.get()
-                                                                       } else {
-                                                                           false
-                                                                       } {
-                                                                        Some(Option_::getValue(&innerOpt.get()).Current().clone())
-                                                                    } else {
-                                                                        None::<T>
-                                                                    }
-                                                                }.clone()
-                                                        }))
-            }.clone()
+                                                                        } else {
+                                                                            finished.set(true)
+                                                                        },
+                                                                        Some(innerOpt_0_0)
+                                                                        => {
+                                                                            let inner:
+                                                                                    Rc<dyn Interfaces::IEnumerator_1<T>> =
+                                                                                innerOpt_0_0.clone();
+                                                                            if inner.MoveNext()
+                                                                               {
+                                                                                moveNext.set(true)
+                                                                            } else {
+                                                                                innerOpt.set(None::<Rc<dyn Interfaces::IEnumerator_1<T>>>)
+                                                                            }
+                                                                        }
+                                                                    };
+                                                                }
+                                                                if if !finished.get()
+                                                                      {
+                                                                       moveNext.get()
+                                                                   } else {
+                                                                       false
+                                                                   } {
+                                                                    Some(Option_::getValue(&innerOpt.get()).Current().clone())
+                                                                } else {
+                                                                    None::<T>
+                                                                }
+                                                            }
+                                                    }))
         }
         pub fn concat<T: Clone +
                       'static>(sources:
                                    &Rc<dyn Interfaces::IEnumerable_1<Rc<dyn Interfaces::IEnumerable_1<T>>>>)
          -> Rc<dyn Interfaces::IEnumerator_1<T>> {
-            {
-                let outerOpt:
-                        Rc<MutCell<Option<Rc<dyn Interfaces::IEnumerator_1<Rc<dyn Interfaces::IEnumerable_1<T>>>>>>> =
-                    Rc::from(MutCell::from(None::<Rc<dyn Interfaces::IEnumerator_1<Rc<dyn Interfaces::IEnumerable_1<T>>>>>));
-                let innerOpt:
-                        Rc<MutCell<Option<Rc<dyn Interfaces::IEnumerator_1<T>>>>> =
-                    Rc::from(MutCell::from(None::<Rc<dyn Interfaces::IEnumerator_1<T>>>));
-                let finished: Rc<MutCell<bool>> =
-                    Rc::from(MutCell::from(false));
-                Seq::Enumerable::fromFunction(&Rc::from({
-                                                            let finished =
-                                                                finished.clone();
-                                                            let innerOpt =
-                                                                innerOpt.clone();
-                                                            let outerOpt =
-                                                                outerOpt.clone();
-                                                            let sources =
-                                                                sources.clone();
-                                                            move ||
-                                                                {
-                                                                    let moveNext:
-                                                                            Rc<MutCell<bool>> =
-                                                                        Rc::from(MutCell::from(false));
-                                                                    while if !finished.get()
-                                                                             {
-                                                                              !moveNext.get()
-                                                                          } else {
-                                                                              false
-                                                                          } {
-                                                                        match &outerOpt.get()
-                                                                            {
-                                                                            None
-                                                                            =>
-                                                                            outerOpt.set(Some(sources.GetEnumerator())),
-                                                                            Some(outerOpt_0_0)
-                                                                            =>
-                                                                            {
-                                                                                let outer:
-                                                                                        Rc<dyn Interfaces::IEnumerator_1<Rc<dyn Interfaces::IEnumerable_1<T>>>> =
-                                                                                    outerOpt_0_0.clone();
-                                                                                match &innerOpt.get()
-                                                                                    {
-                                                                                    None
-                                                                                    =>
-                                                                                    if outer.MoveNext()
+            let outerOpt:
+                    Rc<MutCell<Option<Rc<dyn Interfaces::IEnumerator_1<Rc<dyn Interfaces::IEnumerable_1<T>>>>>>> =
+                Rc::from(MutCell::from(None::<Rc<dyn Interfaces::IEnumerator_1<Rc<dyn Interfaces::IEnumerable_1<T>>>>>));
+            let innerOpt:
+                    Rc<MutCell<Option<Rc<dyn Interfaces::IEnumerator_1<T>>>>> =
+                Rc::from(MutCell::from(None::<Rc<dyn Interfaces::IEnumerator_1<T>>>));
+            let finished: Rc<MutCell<bool>> = Rc::from(MutCell::from(false));
+            Seq::Enumerable::fromFunction(&Rc::from({
+                                                        let finished =
+                                                            finished.clone();
+                                                        let innerOpt =
+                                                            innerOpt.clone();
+                                                        let outerOpt =
+                                                            outerOpt.clone();
+                                                        let sources =
+                                                            sources.clone();
+                                                        move ||
+                                                            {
+                                                                let moveNext:
+                                                                        Rc<MutCell<bool>> =
+                                                                    Rc::from(MutCell::from(false));
+                                                                while if !finished.get()
+                                                                         {
+                                                                          !moveNext.get()
+                                                                      } else {
+                                                                          false
+                                                                      } {
+                                                                    match &outerOpt.get()
+                                                                        {
+                                                                        None
+                                                                        =>
+                                                                        outerOpt.set(Some(sources.GetEnumerator())),
+                                                                        Some(outerOpt_0_0)
+                                                                        => {
+                                                                            let outer:
+                                                                                    Rc<dyn Interfaces::IEnumerator_1<Rc<dyn Interfaces::IEnumerable_1<T>>>> =
+                                                                                outerOpt_0_0.clone();
+                                                                            match &innerOpt.get()
+                                                                                {
+                                                                                None
+                                                                                =>
+                                                                                if outer.MoveNext()
+                                                                                   {
+                                                                                    let it:
+                                                                                            Rc<dyn Interfaces::IEnumerable_1<T>> =
+                                                                                        outer.Current().clone();
+                                                                                    innerOpt.set(Some(it.GetEnumerator()))
+                                                                                } else {
+                                                                                    finished.set(true)
+                                                                                },
+                                                                                Some(innerOpt_0_0)
+                                                                                =>
+                                                                                {
+                                                                                    let inner:
+                                                                                            Rc<dyn Interfaces::IEnumerator_1<T>> =
+                                                                                        innerOpt_0_0.clone();
+                                                                                    if inner.MoveNext()
                                                                                        {
-                                                                                        let it:
-                                                                                                Rc<dyn Interfaces::IEnumerable_1<T>> =
-                                                                                            outer.Current().clone();
-                                                                                        innerOpt.set(Some(it.GetEnumerator()))
+                                                                                        moveNext.set(true)
                                                                                     } else {
-                                                                                        finished.set(true)
-                                                                                    },
-                                                                                    Some(innerOpt_0_0)
-                                                                                    =>
-                                                                                    {
-                                                                                        let inner:
-                                                                                                Rc<dyn Interfaces::IEnumerator_1<T>> =
-                                                                                            innerOpt_0_0.clone();
-                                                                                        if inner.MoveNext()
-                                                                                           {
-                                                                                            moveNext.set(true)
-                                                                                        } else {
-                                                                                            innerOpt.set(None::<Rc<dyn Interfaces::IEnumerator_1<T>>>)
-                                                                                        }
+                                                                                        innerOpt.set(None::<Rc<dyn Interfaces::IEnumerator_1<T>>>)
                                                                                     }
                                                                                 }
                                                                             }
-                                                                        };
-                                                                    }
-                                                                    if if !finished.get()
-                                                                          {
-                                                                           moveNext.get()
-                                                                       } else {
-                                                                           false
-                                                                       } {
-                                                                        Some(Option_::getValue(&innerOpt.get()).Current().clone())
-                                                                    } else {
-                                                                        None::<T>
-                                                                    }
-                                                                }.clone()
-                                                        }))
-            }.clone()
+                                                                        }
+                                                                    };
+                                                                }
+                                                                if if !finished.get()
+                                                                      {
+                                                                       moveNext.get()
+                                                                   } else {
+                                                                       false
+                                                                   } {
+                                                                    Some(Option_::getValue(&innerOpt.get()).Current().clone())
+                                                                } else {
+                                                                    None::<T>
+                                                                }
+                                                            }
+                                                    }))
         }
         pub fn generateWhileSome<T: Clone + 'static, U: Clone +
                                  'static>(openf:
@@ -385,65 +387,60 @@ pub mod Seq {
                                                   'static>,
                                           closef: &Rc<impl Fn(&T) + 'static>)
          -> Rc<dyn Interfaces::IEnumerator_1<U>> {
-            {
-                let finished: Rc<MutCell<bool>> =
-                    Rc::from(MutCell::from(false));
-                let state: Rc<MutCell<Option<T>>> =
-                    Rc::from(MutCell::from(None::<T>));
-                Seq::Enumerable::fromFunction(&Rc::from({
-                                                            let closef =
-                                                                closef.clone();
-                                                            let compute =
-                                                                compute.clone();
-                                                            let finished =
-                                                                finished.clone();
-                                                            let openf =
-                                                                openf.clone();
-                                                            let state =
-                                                                state.clone();
-                                                            move ||
-                                                                if finished.get()
+            let finished: Rc<MutCell<bool>> = Rc::from(MutCell::from(false));
+            let state: Rc<MutCell<Option<T>>> =
+                Rc::from(MutCell::from(None::<T>));
+            Seq::Enumerable::fromFunction(&Rc::from({
+                                                        let closef =
+                                                            closef.clone();
+                                                        let compute =
+                                                            compute.clone();
+                                                        let finished =
+                                                            finished.clone();
+                                                        let openf =
+                                                            openf.clone();
+                                                        let state =
+                                                            state.clone();
+                                                        move ||
+                                                            if finished.get()
+                                                               {
+                                                                None::<U>
+                                                            } else {
+                                                                if state.get().is_none()
                                                                    {
-                                                                    None::<U>
-                                                                } else {
-                                                                    {
-                                                                        if state.get().is_none()
-                                                                           {
-                                                                            state.set(Some(openf()));
-                                                                        }
-                                                                        {
-                                                                            let res:
-                                                                                    Option<U> =
-                                                                                compute(&Option_::getValue(&state.get()));
-                                                                            if res.is_none()
-                                                                               {
-                                                                                finished.set(true);
-                                                                                match &state.get()
-                                                                                    {
-                                                                                    Some(state_0_0)
-                                                                                    =>
-                                                                                    {
-                                                                                        let x:
-                                                                                                T =
-                                                                                            state_0_0.clone();
-                                                                                        {
-                                                                                            let try_result =
-                                                                                                closef(&x);
-                                                                                            state.set(None::<T>);
-                                                                                            try_result
-                                                                                        }
-                                                                                    }
-                                                                                    _
-                                                                                    =>
-                                                                                    (),
+                                                                    state.set(Some(openf()));
+                                                                }
+                                                                {
+                                                                    let res:
+                                                                            Option<U> =
+                                                                        compute(&Option_::getValue(&state.get()));
+                                                                    if res.is_none()
+                                                                       {
+                                                                        finished.set(true);
+                                                                        match &state.get()
+                                                                            {
+                                                                            Some(state_0_0)
+                                                                            =>
+                                                                            {
+                                                                                let x:
+                                                                                        T =
+                                                                                    state_0_0.clone();
+                                                                                {
+                                                                                    let try_result =
+                                                                                        closef(&x);
+                                                                                    state.set(None::<T>);
+                                                                                    try_result
                                                                                 }
                                                                             }
-                                                                            res.clone()
-                                                                        }.clone()
-                                                                    }.clone()
+                                                                            _
+                                                                            =>
+                                                                            (),
+                                                                        }
+                                                                    }
+                                                                    res.clone()
                                                                 }
-                                                        }))
-            }.clone()
+                                                            }
+                                                    }))
         }
         pub fn unfold<State: Clone + 'static, T: Clone +
                       'static>(f:
@@ -451,40 +448,35 @@ pub mod Seq {
                                        -> (Option<(T, State)>) + 'static>,
                                state: &State)
          -> Rc<dyn Interfaces::IEnumerator_1<T>> {
-            {
-                let acc: Rc<MutCell<State>> =
-                    Rc::from(MutCell::from(state.clone()));
-                Seq::Enumerable::fromFunction(&Rc::from({
-                                                            let acc =
-                                                                acc.clone();
-                                                            let f = f.clone();
-                                                            move ||
-                                                                {
-                                                                    let matchValue:
-                                                                            Option<(T,
-                                                                                    State)> =
-                                                                        f(&acc.get());
-                                                                    match &matchValue
-                                                                        {
-                                                                        None
-                                                                        =>
-                                                                        None::<T>,
-                                                                        Some(matchValue_0_0)
-                                                                        =>
-                                                                        {
-                                                                            let x:
-                                                                                    T =
-                                                                                matchValue_0_0.0.clone();
-                                                                            let st:
-                                                                                    State =
-                                                                                matchValue_0_0.1.clone();
-                                                                            acc.set(st);
-                                                                            Some(x)
-                                                                        }.clone(),
+            let acc: Rc<MutCell<State>> =
+                Rc::from(MutCell::from(state.clone()));
+            Seq::Enumerable::fromFunction(&Rc::from({
+                                                        let acc = acc.clone();
+                                                        let f = f.clone();
+                                                        move ||
+                                                            {
+                                                                let matchValue:
+                                                                        Option<(T,
+                                                                                State)> =
+                                                                    f(&acc.get());
+                                                                match &matchValue
+                                                                    {
+                                                                    None =>
+                                                                    None::<T>,
+                                                                    Some(matchValue_0_0)
+                                                                    => {
+                                                                        let x:
+                                                                                T =
+                                                                            matchValue_0_0.0.clone();
+                                                                        let st:
+                                                                                State =
+                                                                            matchValue_0_0.1.clone();
+                                                                        acc.set(st);
+                                                                        Some(x)
                                                                     }
-                                                                }.clone()
-                                                        }))
-            }.clone()
+                                                                }
+                                                            }
+                                                    }))
         }
     }
     pub fn mkSeq<T: Clone +
@@ -493,8 +485,8 @@ pub mod Seq {
                                   -> (Rc<dyn Interfaces::IEnumerator_1<T>>) +
                                   'static>)
      -> Rc<dyn Interfaces::IEnumerable_1<T>> {
-        (Seq::Enumerable::Enumerable_1::new(f).clone() as
-             Rc<dyn Interfaces::IEnumerable_1<T>>).clone()
+        Seq::Enumerable::Enumerable_1::_ctor__Z32F335EB(f).clone() as
+            Rc<dyn Interfaces::IEnumerable_1<T>>
     }
     pub fn ofSeq<T: Clone +
                  'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
@@ -607,10 +599,10 @@ pub mod Seq {
                                                                                                             1i32);
                                                                                                   compute(&i.get(),
                                                                                                           x)
-                                                                                              }.clone()
+                                                                                              }
                                                                                       }),
                                                                             &dispose)
-                                     }.clone()
+                                     }
                              }))
     }
     pub fn append<T: Clone +
@@ -645,7 +637,7 @@ pub mod Seq {
                                                 curr.set(chooser(&e.Current()));
                                             }
                                             curr.get().clone()
-                                        }.clone()
+                                        }
                                 }),
                       &Rc::from(move
                                     |e_1:
@@ -719,48 +711,40 @@ pub mod Seq {
     pub fn exactlyOne<T: Clone +
                       'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> T {
+        let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
         {
-            let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
-            {
-                let try_result =
+            let try_result =
+                if e.MoveNext() {
+                    let v: T = e.Current().clone();
                     if e.MoveNext() {
-                        {
-                            let v: T = e.Current().clone();
-                            if e.MoveNext() {
-                                panic!("{}",
-                                       Rc::from((Rc::from(Seq::SR::inputSequenceTooLong().to_string() +
-                       &Native::string(&"\nParameter name: ")) as
-              Rc<str>).to_string() + &Native::string(&"source")) as Rc<str>)
-                            } else { v }
-                        }.clone()
-                    } else {
                         panic!("{}",
-                               Rc::from((Rc::from(Seq::SR::inputSequenceEmpty().to_string() +
-                       &Native::string(&"\nParameter name: ")) as
-              Rc<str>).to_string() + &Native::string(&"source")) as Rc<str>)
-                    };
-                if false { e.Dispose(); }
-                try_result
-            }.clone()
-        }.clone()
+                               Rc::from((Rc::from(Seq::SR::inputSequenceTooLong().to_string() +
+                       &String_::string(&"\\nParameter name: ")) as
+              Rc<str>).to_string() + &String_::string(&"source")) as Rc<str>)
+                    } else { v }
+                } else {
+                    panic!("{}",
+                           Rc::from((Rc::from(Seq::SR::inputSequenceEmpty().to_string() +
+                       &String_::string(&"\\nParameter name: ")) as
+              Rc<str>).to_string() + &String_::string(&"source")) as Rc<str>)
+                };
+            if false { e.Dispose(); }
+            try_result
+        }
     }
     pub fn tryExactlyOne<T: Clone +
                          'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Option<T> {
+        let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
         {
-            let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
-            {
-                let try_result =
-                    if e.MoveNext() {
-                        {
-                            let v: T = e.Current().clone();
-                            if e.MoveNext() { None::<T> } else { Some(v) }
-                        }.clone()
-                    } else { None::<T> };
-                if false { e.Dispose(); }
-                try_result
-            }.clone()
-        }.clone()
+            let try_result =
+                if e.MoveNext() {
+                    let v: T = e.Current().clone();
+                    if e.MoveNext() { None::<T> } else { Some(v) }
+                } else { None::<T> };
+            if false { e.Dispose(); }
+            try_result
+        }
     }
     pub fn exists<T: Clone +
                   'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
@@ -841,62 +825,74 @@ pub mod Seq {
                    'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
                             xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Option<T> {
+        let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
         {
-            let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
-            {
-                let try_result =
-                    {
-                        let res: Rc<MutCell<Option<T>>> =
-                            Rc::from(MutCell::from(None::<T>));
-                        while if res.get().is_none() {
-                                  e.MoveNext()
-                              } else { false } {
-                            let c: T = e.Current().clone();
-                            if predicate(&c) { res.set(Some(c.clone())); }
-                        }
-                        res.get().clone()
-                    }.clone();
-                if false { e.Dispose(); }
-                try_result
-            }.clone()
-        }.clone()
+            let try_result =
+                {
+                    let res: Rc<MutCell<Option<T>>> =
+                        Rc::from(MutCell::from(None::<T>));
+                    while if res.get().is_none() {
+                              e.MoveNext()
+                          } else { false } {
+                        let c: T = e.Current().clone();
+                        if predicate(&c) { res.set(Some(c.clone())); }
+                    }
+                    res.get().clone()
+                };
+            if false { e.Dispose(); }
+            try_result
+        }
     }
     pub fn find<T: Clone +
                 'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
                          xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> T {
-        {
-            let matchValue: Option<T> = Seq::tryFind(predicate, xs);
-            match &matchValue {
-                None => panic!("{}", Seq::SR::keyNotFoundAlt()),
-                Some(matchValue_0_0) => matchValue_0_0.clone(),
-            }
-        }.clone()
+        let matchValue: Option<T> = Seq::tryFind(predicate, xs);
+        match &matchValue {
+            None => panic!("{}", Seq::SR::keyNotFoundAlt()),
+            Some(matchValue_0_0) => matchValue_0_0.clone(),
+        }
     }
     pub fn tryFindIndex<T: Clone +
                         'static>(predicate:
                                      &Rc<impl Fn(&T) -> (bool) + 'static>,
                                  xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Option<i32> {
+        fn inner_loop<T: Clone +
+                      'static>(i: &i32,
+                               predicate_1:
+                                   &Rc<impl Fn(&T) -> (bool) + 'static>,
+                               e: &Rc<dyn Interfaces::IEnumerator_1<T>>)
+         -> Option<i32> {
+            let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(i.clone()));
+            let predicate_1 = Rc::from(MutCell::from(predicate_1.clone()));
+            let e: Rc<MutCell<Rc<dyn Interfaces::IEnumerator_1<T>>>> =
+                Rc::from(MutCell::from(e.clone()));
+            '_inner_loop:
+                loop  {
+                    break '_inner_loop
+                        (if e.get().MoveNext() {
+                             if predicate_1.get()(&e.Current()) {
+                                 Some(i.get())
+                             } else {
+                                 let i_temp: i32 = i.get() + 1i32;
+                                 let predicate_1_temp = predicate_1.get();
+                                 let e_temp:
+                                         Rc<dyn Interfaces::IEnumerator_1<T>> =
+                                     e.get();
+                                 i.set(i_temp);
+                                 predicate_1.set(predicate_1_temp);
+                                 e.set(e_temp);
+                                 continue '_inner_loop
+                             }
+                         } else { None::<i32> }) ;
+                }
+        }
+        let e_1: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
         {
-            fn inner_loop<T: Clone +
-                          'static>(i: &i32,
-                                   predicate_1:
-                                       &Rc<impl Fn(&T) -> (bool) + 'static>,
-                                   e: &Rc<dyn Interfaces::IEnumerator_1<T>>)
-             -> Option<i32> {
-                if e.MoveNext() {
-                    if predicate_1(&e.Current()) {
-                        Some(i.clone())
-                    } else { inner_loop(&(i.clone() + 1i32), predicate_1, e) }
-                } else { None::<i32> }
-            }
-            let e_1: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
-            {
-                let try_result = inner_loop(&0i32, predicate, &e_1);
-                if false { e_1.Dispose(); }
-                try_result
-            }.clone()
-        }.clone()
+            let try_result = inner_loop(&0i32, predicate, &e_1);
+            if false { e_1.Dispose(); }
+            try_result
+        }
     }
     pub fn findIndex<T: Clone +
                      'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
@@ -913,67 +909,60 @@ pub mod Seq {
                              &Rc<impl Fn(&State, &T) -> (State) + 'static>,
                          state: &State,
                          xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> State {
+        let acc: Rc<MutCell<State>> = Rc::from(MutCell::from(state.clone()));
         {
-            let acc: Rc<MutCell<State>> =
-                Rc::from(MutCell::from(state.clone()));
+            let enumerator: Rc<dyn Interfaces::IEnumerator_1<T>> =
+                xs.GetEnumerator();
             {
-                let enumerator: Rc<dyn Interfaces::IEnumerator_1<T>> =
-                    xs.GetEnumerator();
-                {
-                    let try_result =
-                        while enumerator.MoveNext() {
-                            let x: T = enumerator.Current().clone();
-                            acc.set(folder(&acc.get(), &x))
-                        };
-                    if false { enumerator.Dispose(); }
-                    try_result
-                }
+                let try_result =
+                    while enumerator.MoveNext() {
+                        let x: T = enumerator.Current().clone();
+                        acc.set(folder(&acc.get(), &x))
+                    };
+                if false { enumerator.Dispose(); }
+                try_result
             }
-            acc.get().clone()
-        }.clone()
+        }
+        acc.get().clone()
     }
     pub fn toArray<T: Clone +
                    'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Rc<MutCell<Vec<T>>> {
+        let res: Rc<MutCell<Vec<T>>> = Native::arrayEmpty::<T>();
         {
-            let res: Rc<MutCell<Vec<T>>> = Native::arrayEmpty::<T>();
+            let enumerator: Rc<dyn Interfaces::IEnumerator_1<T>> =
+                xs.GetEnumerator();
             {
-                let enumerator: Rc<dyn Interfaces::IEnumerator_1<T>> =
-                    xs.GetEnumerator();
-                {
-                    let try_result =
-                        while enumerator.MoveNext() {
-                            let x: T = enumerator.Current().clone();
-                            res.get_mut().push(x)
-                        };
-                    if false { enumerator.Dispose(); }
-                    try_result
-                }
+                let try_result =
+                    while enumerator.MoveNext() {
+                        let x: T = enumerator.Current().clone();
+                        res.get_mut().push(x)
+                    };
+                if false { enumerator.Dispose(); }
+                try_result
             }
-            res.clone()
-        }.clone()
+        }
+        res
     }
     pub fn toList<T: Clone +
                   'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> List_1<T> {
+        let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
         {
-            let acc: Rc<MutCell<List_1<T>>> =
-                Rc::from(MutCell::from(List_::empty::<T>()));
-            {
-                let enumerator: Rc<dyn Interfaces::IEnumerator_1<T>> =
-                    xs.GetEnumerator();
-                {
-                    let try_result =
-                        while enumerator.MoveNext() {
-                            let x: T = enumerator.Current().clone();
-                            acc.set(List_::cons(&x, &acc.get()))
-                        };
-                    if false { enumerator.Dispose(); }
-                    try_result
-                }
-            }
-            List_::reverse(&acc.get())
-        }.clone()
+            let try_result =
+                List_::unfold(&Rc::from(move
+                                            |e_1:
+                                                 &Rc<dyn Interfaces::IEnumerator_1<T>>|
+                                            if e_1.MoveNext() {
+                                                Some((e_1.Current().clone(),
+                                                      e_1.clone()))
+                                            } else {
+                                                None::<(T,
+                                                        Rc<dyn Interfaces::IEnumerator_1<T>>)>
+                                            }), &e);
+            if false { e.Dispose(); }
+            try_result
+        }
     }
     pub fn foldBack<T: Clone + 'static, a_: Clone +
                     'static>(folder: &Rc<impl Fn(&T, &a_) -> (a_) + 'static>,
@@ -988,35 +977,32 @@ pub mod Seq {
                           xs: &Rc<dyn Interfaces::IEnumerable_1<T1>>,
                           ys: &Rc<dyn Interfaces::IEnumerable_1<T2>>)
      -> State {
+        let e1: Rc<dyn Interfaces::IEnumerator_1<T1>> = Seq::ofSeq(xs);
         {
-            let e1: Rc<dyn Interfaces::IEnumerator_1<T1>> = Seq::ofSeq(xs);
-            {
-                let try_result =
+            let try_result =
+                {
+                    let e2: Rc<dyn Interfaces::IEnumerator_1<T2>> =
+                        Seq::ofSeq(ys);
                     {
-                        let e2: Rc<dyn Interfaces::IEnumerator_1<T2>> =
-                            Seq::ofSeq(ys);
-                        {
-                            let try_result_1 =
-                                {
-                                    let acc: Rc<MutCell<State>> =
-                                        Rc::from(MutCell::from(state.clone()));
-                                    while if e1.MoveNext() {
-                                              e2.MoveNext()
-                                          } else { false } {
-                                        acc.set(folder(&acc.get(),
-                                                       &e1.Current(),
-                                                       &e2.Current()));
-                                    }
-                                    acc.get().clone()
-                                }.clone();
-                            if false { e2.Dispose(); }
-                            try_result_1
-                        }.clone()
-                    }.clone();
-                if false { e1.Dispose(); }
-                try_result
-            }.clone()
-        }.clone()
+                        let try_result_1 =
+                            {
+                                let acc: Rc<MutCell<State>> =
+                                    Rc::from(MutCell::from(state.clone()));
+                                while if e1.MoveNext() {
+                                          e2.MoveNext()
+                                      } else { false } {
+                                    acc.set(folder(&acc.get(), &e1.Current(),
+                                                   &e2.Current()));
+                                }
+                                acc.get().clone()
+                            };
+                        if false { e2.Dispose(); }
+                        try_result_1
+                    }
+                };
+            if false { e1.Dispose(); }
+            try_result
+        }
     }
     pub fn foldBack2<T1: Clone + 'static, T2: Clone + 'static, State: Clone +
                      'static>(folder:
@@ -1057,13 +1043,11 @@ pub mod Seq {
     pub fn findBack<T: Clone +
                     'static>(predicate: &Rc<impl Fn(&T) -> (bool) + 'static>,
                              xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> T {
-        {
-            let matchValue: Option<T> = Seq::tryFindBack(predicate, xs);
-            match &matchValue {
-                None => panic!("{}", Seq::SR::keyNotFoundAlt()),
-                Some(matchValue_0_0) => matchValue_0_0.clone(),
-            }
-        }.clone()
+        let matchValue: Option<T> = Seq::tryFindBack(predicate, xs);
+        match &matchValue {
+            None => panic!("{}", Seq::SR::keyNotFoundAlt()),
+            Some(matchValue_0_0) => matchValue_0_0.clone(),
+        }
     }
     pub fn tryFindIndexBack<T: Clone +
                             'static>(predicate:
@@ -1087,31 +1071,27 @@ pub mod Seq {
     pub fn tryHead<T: Clone +
                    'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Option<T> {
+        let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
         {
-            let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
-            {
-                let try_result =
-                    if e.MoveNext() {
-                        Some(e.Current().clone())
-                    } else { None::<T> };
-                if false { e.Dispose(); }
-                try_result
-            }.clone()
-        }.clone()
+            let try_result =
+                if e.MoveNext() {
+                    Some(e.Current().clone())
+                } else { None::<T> };
+            if false { e.Dispose(); }
+            try_result
+        }
     }
     pub fn head<T: Clone + 'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> T {
-        {
-            let matchValue: Option<T> = Seq::tryHead(xs);
-            match &matchValue {
-                None =>
-                panic!("{}",
-                       Rc::from((Rc::from(Seq::SR::inputSequenceEmpty().to_string() +
-                       &Native::string(&"\nParameter name: ")) as
-              Rc<str>).to_string() + &Native::string(&"source")) as Rc<str>),
-                Some(matchValue_0_0) => matchValue_0_0.clone(),
-            }
-        }.clone()
+        let matchValue: Option<T> = Seq::tryHead(xs);
+        match &matchValue {
+            None =>
+            panic!("{}",
+                   Rc::from((Rc::from(Seq::SR::inputSequenceEmpty().to_string() +
+                       &String_::string(&"\\nParameter name: ")) as
+              Rc<str>).to_string() + &String_::string(&"source")) as Rc<str>),
+            Some(matchValue_0_0) => matchValue_0_0.clone(),
+        }
     }
     pub fn initialize<a_: Clone +
                       'static>(count: &i32,
@@ -1147,47 +1127,40 @@ pub mod Seq {
                    'static>(index: &i32,
                             xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Option<T> {
-        {
-            let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(index.clone()));
-            if i.get() < 0i32 {
-                None::<T>
-            } else {
-                {
-                    let e: Rc<dyn Interfaces::IEnumerator_1<T>> =
-                        Seq::ofSeq(xs);
+        let i: Rc<MutCell<i32>> = Rc::from(MutCell::from(index.clone()));
+        if i.get() < 0i32 {
+            None::<T>
+        } else {
+            let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
+            {
+                let try_result =
                     {
-                        let try_result =
-                            {
-                                while if i.get() >= 0i32 {
-                                          e.MoveNext()
-                                      } else { false } {
-                                    i.set(i.get() - 1i32);
-                                }
-                                if i.get() >= 0i32 {
-                                    None::<T>
-                                } else { Some(e.Current().clone()) }
-                            }.clone();
-                        if false { e.Dispose(); }
-                        try_result
-                    }.clone()
-                }.clone()
+                        while if i.get() >= 0i32 {
+                                  e.MoveNext()
+                              } else { false } {
+                            i.set(i.get() - 1i32);
+                        }
+                        if i.get() >= 0i32 {
+                            None::<T>
+                        } else { Some(e.Current().clone()) }
+                    };
+                if false { e.Dispose(); }
+                try_result
             }
-        }.clone()
+        }
     }
     pub fn item<T: Clone +
                 'static>(index: &i32,
                          xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> T {
-        {
-            let matchValue: Option<T> = Seq::tryItem(index, xs);
-            match &matchValue {
-                None =>
-                panic!("{}",
-                       Rc::from((Rc::from(Seq::SR::notEnoughElements().to_string() +
-                       &Native::string(&"\nParameter name: ")) as
-              Rc<str>).to_string() + &Native::string(&"index")) as Rc<str>),
-                Some(matchValue_0_0) => matchValue_0_0.clone(),
-            }
-        }.clone()
+        let matchValue: Option<T> = Seq::tryItem(index, xs);
+        match &matchValue {
+            None =>
+            panic!("{}",
+                   Rc::from((Rc::from(Seq::SR::notEnoughElements().to_string() +
+                       &String_::string(&"\\nParameter name: ")) as
+              Rc<str>).to_string() + &String_::string(&"index")) as Rc<str>),
+            Some(matchValue_0_0) => matchValue_0_0.clone(),
+        }
     }
     pub fn iterate<T: Clone +
                    'static>(action: &Rc<impl Fn(&T) + 'static>,
@@ -1240,38 +1213,30 @@ pub mod Seq {
     pub fn tryLast<T: Clone +
                    'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Option<T> {
+        let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
         {
-            let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
-            {
-                let try_result =
-                    if e.MoveNext() {
-                        {
-                            let acc: Rc<MutCell<T>> =
-                                Rc::from(MutCell::from(e.Current().clone()));
-                            while e.MoveNext() {
-                                acc.set(e.Current().clone());
-                            }
-                            Some(acc.get().clone())
-                        }.clone()
-                    } else { None::<T> };
-                if false { e.Dispose(); }
-                try_result
-            }.clone()
-        }.clone()
+            let try_result =
+                if e.MoveNext() {
+                    let acc: Rc<MutCell<T>> =
+                        Rc::from(MutCell::from(e.Current().clone()));
+                    while e.MoveNext() { acc.set(e.Current().clone()); }
+                    Some(acc.get().clone())
+                } else { None::<T> };
+            if false { e.Dispose(); }
+            try_result
+        }
     }
     pub fn last<T: Clone + 'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> T {
-        {
-            let matchValue: Option<T> = Seq::tryLast(xs);
-            match &matchValue {
-                None =>
-                panic!("{}",
-                       Rc::from((Rc::from(Seq::SR::notEnoughElements().to_string() +
-                       &Native::string(&"\nParameter name: ")) as
-              Rc<str>).to_string() + &Native::string(&"source")) as Rc<str>),
-                Some(matchValue_0_0) => matchValue_0_0.clone(),
-            }
-        }.clone()
+        let matchValue: Option<T> = Seq::tryLast(xs);
+        match &matchValue {
+            None =>
+            panic!("{}",
+                   Rc::from((Rc::from(Seq::SR::notEnoughElements().to_string() +
+                       &String_::string(&"\\nParameter name: ")) as
+              Rc<str>).to_string() + &String_::string(&"source")) as Rc<str>),
+            Some(matchValue_0_0) => matchValue_0_0.clone(),
+        }
     }
     pub fn length<T: Clone +
                   'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> i32 {
@@ -1369,7 +1334,7 @@ pub mod Seq {
                                                 Some(mapping(&e1.Current(),
                                                              &e2.Current()))
                                             } else { None::<U> }
-                                        }.clone()
+                                        }
                                 }),
                       &Rc::from(move
                                     |tupledArg_1:
@@ -1417,7 +1382,7 @@ pub mod Seq {
                                                                     &e1.Current(),
                                                                     &e2.Current()))
                                                    } else { None::<U> }
-                                               }.clone()
+                                               }
                                        }),
                              &Rc::from(move
                                            |tupledArg_1:
@@ -1472,7 +1437,7 @@ pub mod Seq {
                                                              &e2.Current(),
                                                              &e3.Current()))
                                             } else { None::<U> }
-                                        }.clone()
+                                        }
                                 }),
                       &Rc::from(move
                                     |tupledArg_1:
@@ -1536,161 +1501,134 @@ pub mod Seq {
     pub fn cache<T: Clone +
                  'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Rc<dyn Interfaces::IEnumerable_1<T>> {
-        {
-            let prefix: Rc<MutCell<Vec<T>>> = Native::arrayEmpty::<T>();
-            let enumOpt:
-                    Rc<MutCell<Option<Rc<dyn Interfaces::IEnumerator_1<T>>>>> =
-                Rc::from(MutCell::from(None::<Rc<dyn Interfaces::IEnumerator_1<T>>>));
-            let finished: Rc<MutCell<bool>> = Rc::from(MutCell::from(false));
-            Seq::unfold(&Rc::from({
-                                      let enumOpt = enumOpt.clone();
-                                      let finished = finished.clone();
-                                      let prefix = prefix.clone();
-                                      let xs = xs.clone();
-                                      move |i: &i32|
-                                          if i.clone() < prefix.len() as i32 {
-                                              Some((prefix[i.clone()].clone(),
-                                                    i.clone() + 1i32))
-                                          } else {
-                                              {
-                                                  if enumOpt.get().is_none() {
-                                                      enumOpt.set(Some(xs.GetEnumerator()));
-                                                  }
-                                                  if enumOpt.get().is_some() {
-                                                      if {
-                                                             let e:
-                                                                     Rc<dyn Interfaces::IEnumerator_1<T>> =
-                                                                 Option_::getValue(&enumOpt.get()).clone();
-                                                             !finished.get()
-                                                         } {
-                                                          let e_1:
-                                                                  Rc<dyn Interfaces::IEnumerator_1<T>> =
-                                                              Option_::getValue(&enumOpt.get()).clone();
-                                                          if e_1.MoveNext() {
-                                                              {
-                                                                  prefix.get_mut().push(e_1.Current().clone());
-                                                                  Some((e_1.Current().clone(),
-                                                                        i.clone()
-                                                                            +
-                                                                            1i32))
-                                                              }.clone()
-                                                          } else {
-                                                              {
-                                                                  finished.set(true);
-                                                                  None::<(T,
-                                                                          i32)>
-                                                              }.clone()
-                                                          }
-                                                      } else {
-                                                          None::<(T, i32)>
-                                                      }
-                                                  } else { None::<(T, i32)> }
-                                              }.clone()
+        let prefix: Rc<MutCell<Vec<T>>> = Native::arrayEmpty::<T>();
+        let enumOpt:
+                Rc<MutCell<Option<Rc<dyn Interfaces::IEnumerator_1<T>>>>> =
+            Rc::from(MutCell::from(None::<Rc<dyn Interfaces::IEnumerator_1<T>>>));
+        let finished: Rc<MutCell<bool>> = Rc::from(MutCell::from(false));
+        Seq::unfold(&Rc::from({
+                                  let enumOpt = enumOpt.clone();
+                                  let finished = finished.clone();
+                                  let prefix = prefix.clone();
+                                  let xs = xs.clone();
+                                  move |i: &i32|
+                                      if i.clone() < prefix.len() as i32 {
+                                          Some((prefix[i.clone()].clone(),
+                                                i.clone() + 1i32))
+                                      } else {
+                                          if enumOpt.get().is_none() {
+                                              enumOpt.set(Some(xs.GetEnumerator()));
                                           }
-                                  }), &0i32)
-        }.clone()
+                                          if enumOpt.get().is_some() {
+                                              if {
+                                                     let e:
+                                                             Rc<dyn Interfaces::IEnumerator_1<T>> =
+                                                         Option_::getValue(&enumOpt.get()).clone();
+                                                     !finished.get()
+                                                 } {
+                                                  let e_1:
+                                                          Rc<dyn Interfaces::IEnumerator_1<T>> =
+                                                      Option_::getValue(&enumOpt.get()).clone();
+                                                  if e_1.MoveNext() {
+                                                      prefix.get_mut().push(e_1.Current().clone());
+                                                      Some((e_1.Current().clone(),
+                                                            i.clone() + 1i32))
+                                                  } else {
+                                                      finished.set(true);
+                                                      None::<(T, i32)>
+                                                  }
+                                              } else { None::<(T, i32)> }
+                                          } else { None::<(T, i32)> }
+                                      }
+                              }), &0i32)
     }
     pub fn allPairs<T1: Clone + 'static, T2: Clone +
                     'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T1>>,
                              ys: &Rc<dyn Interfaces::IEnumerable_1<T2>>)
      -> Rc<dyn Interfaces::IEnumerable_1<(T1, T2)>> {
-        {
-            let ysCache: Rc<dyn Interfaces::IEnumerable_1<T2>> =
-                Seq::cache(ys);
-            Seq::delay(&Rc::from({
-                                     let xs = xs.clone();
-                                     let ysCache = ysCache.clone();
-                                     move ||
-                                         Seq::concat(&Seq::map(&Rc::from({
-                                                                             let ysCache
-                                                                                 =
-                                                                                 ysCache.clone();
-                                                                             move
-                                                                                 |x:
-                                                                                      &T1|
-                                                                                 Seq::map(&Rc::from({
-                                                                                                        let x
-                                                                                                            =
-                                                                                                            x.clone();
-                                                                                                        move
-                                                                                                            |y:
-                                                                                                                 &T2|
-                                                                                                            (x.clone(),
-                                                                                                             y.clone())
-                                                                                                    }),
-                                                                                          &ysCache)
-                                                                         }),
-                                                               &xs))
-                                 }))
-        }.clone()
+        let ysCache: Rc<dyn Interfaces::IEnumerable_1<T2>> = Seq::cache(ys);
+        Seq::delay(&Rc::from({
+                                 let xs = xs.clone();
+                                 let ysCache = ysCache.clone();
+                                 move ||
+                                     Seq::concat(&Seq::map(&Rc::from({
+                                                                         let ysCache
+                                                                             =
+                                                                             ysCache.clone();
+                                                                         move
+                                                                             |x:
+                                                                                  &T1|
+                                                                             Seq::map(&Rc::from({
+                                                                                                    let x
+                                                                                                        =
+                                                                                                        x.clone();
+                                                                                                    move
+                                                                                                        |y:
+                                                                                                             &T2|
+                                                                                                        (x.clone(),
+                                                                                                         y.clone())
+                                                                                                }),
+                                                                                      &ysCache)
+                                                                     }), &xs))
+                             }))
     }
     pub fn tryPick<T: Clone + 'static, a_: Clone +
                    'static>(chooser:
                                 &Rc<impl Fn(&T) -> (Option<a_>) + 'static>,
                             xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> Option<a_> {
+        let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
         {
-            let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
-            {
-                let try_result =
-                    {
-                        let res: Rc<MutCell<Option<a_>>> =
-                            Rc::from(MutCell::from(None::<a_>));
-                        while if res.get().is_none() {
-                                  e.MoveNext()
-                              } else { false } {
-                            res.set(chooser(&e.Current()));
-                        }
-                        res.get().clone()
-                    }.clone();
-                if false { e.Dispose(); }
-                try_result
-            }.clone()
-        }.clone()
+            let try_result =
+                {
+                    let res: Rc<MutCell<Option<a_>>> =
+                        Rc::from(MutCell::from(None::<a_>));
+                    while if res.get().is_none() {
+                              e.MoveNext()
+                          } else { false } {
+                        res.set(chooser(&e.Current()));
+                    }
+                    res.get().clone()
+                };
+            if false { e.Dispose(); }
+            try_result
+        }
     }
     pub fn pick<T: Clone + 'static, a_: Clone +
                 'static>(chooser: &Rc<impl Fn(&T) -> (Option<a_>) + 'static>,
                          xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> a_ {
-        {
-            let matchValue: Option<a_> = Seq::tryPick(chooser, xs);
-            match &matchValue {
-                None => panic!("{}", Seq::SR::keyNotFoundAlt()),
-                Some(matchValue_0_0) => matchValue_0_0.clone(),
-            }
-        }.clone()
+        let matchValue: Option<a_> = Seq::tryPick(chooser, xs);
+        match &matchValue {
+            None => panic!("{}", Seq::SR::keyNotFoundAlt()),
+            Some(matchValue_0_0) => matchValue_0_0.clone(),
+        }
     }
     pub fn reduce<T: Clone +
                   'static>(folder: &Rc<impl Fn(&T, &T) -> (T) + 'static>,
                            xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> T {
+        let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
         {
-            let e: Rc<dyn Interfaces::IEnumerator_1<T>> = Seq::ofSeq(xs);
-            {
-                let try_result =
-                    if e.MoveNext() {
-                        {
-                            let acc: Rc<MutCell<T>> =
-                                Rc::from(MutCell::from(e.Current().clone()));
-                            while e.MoveNext() {
-                                acc.set(folder(&acc.get(), &e.Current()));
-                            }
-                            acc.get().clone()
-                        }.clone()
-                    } else { panic!("{}", Seq::SR::inputSequenceEmpty()) };
-                if false { e.Dispose(); }
-                try_result
-            }.clone()
-        }.clone()
+            let try_result =
+                if e.MoveNext() {
+                    let acc: Rc<MutCell<T>> =
+                        Rc::from(MutCell::from(e.Current().clone()));
+                    while e.MoveNext() {
+                        acc.set(folder(&acc.get(), &e.Current()));
+                    }
+                    acc.get().clone()
+                } else { panic!("{}", Seq::SR::inputSequenceEmpty()) };
+            if false { e.Dispose(); }
+            try_result
+        }
     }
     pub fn reduceBack<T: Clone +
                       'static>(folder: &Rc<impl Fn(&T, &T) -> (T) + 'static>,
                                xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> T {
-        {
-            let arr: Rc<MutCell<Vec<T>>> = Seq::toArray(xs);
-            if arr.len() as i32 > 0i32 {
-                Array_::reduceBack(folder, &arr)
-            } else { panic!("{}", Seq::SR::inputSequenceEmpty()) }
-        }.clone()
+        let arr: Rc<MutCell<Vec<T>>> = Seq::toArray(xs);
+        if arr.len() as i32 > 0i32 {
+            Array_::reduceBack(folder, &arr)
+        } else { panic!("{}", Seq::SR::inputSequenceEmpty()) }
     }
     pub fn replicate<a_: Clone + 'static>(n: &i32, x: &a_)
      -> Rc<dyn Interfaces::IEnumerable_1<a_>> {
@@ -1738,10 +1676,10 @@ pub mod Seq {
                                                                                      acc.set(folder(&acc.get(),
                                                                                                     x));
                                                                                      acc.get().clone()
-                                                                                 }.clone()
+                                                                                 }
                                                                          }),
                                                                &xs))
-                                     }.clone()
+                                     }
                              }))
     }
     pub fn scanBack<T: Clone + 'static, State: Clone +
@@ -1777,12 +1715,12 @@ pub mod Seq {
                                              if !e.MoveNext() {
                                                  panic!("{}",
                                                         Rc::from((Rc::from(Seq::SR::notEnoughElements().to_string() +
-                       &Native::string(&"\nParameter name: ")) as
-              Rc<str>).to_string() + &Native::string(&"source")) as Rc<str>);
+                       &String_::string(&"\\nParameter name: ")) as
+              Rc<str>).to_string() + &String_::string(&"source")) as Rc<str>);
                                              };
                                          }
                                          e.clone()
-                                     }.clone()
+                                     }
                              }))
     }
     pub fn skipWhile<T: Clone +
@@ -1813,7 +1751,7 @@ pub mod Seq {
                                                                            !skipped.get()
                                                                        }
                                                                }), &xs)
-                                     }.clone()
+                                     }
                              }))
     }
     pub fn tail<T: Clone + 'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
@@ -1835,15 +1773,13 @@ pub mod Seq {
                                                 e:
                                                     &Rc<dyn Interfaces::IEnumerator_1<T>>|
                                                if i.clone() < count {
-                                                   {
-                                                       if !e.MoveNext() {
-                                                           panic!("{}",
-                                                                  Rc::from((Rc::from(Seq::SR::notEnoughElements().to_string() +
-                       &Native::string(&"\nParameter name: ")) as
-              Rc<str>).to_string() + &Native::string(&"source")) as Rc<str>);
-                                                       }
-                                                       Some(e.Current().clone())
-                                                   }.clone()
+                                                   if !e.MoveNext() {
+                                                       panic!("{}",
+                                                              Rc::from((Rc::from(Seq::SR::notEnoughElements().to_string() +
+                       &String_::string(&"\\nParameter name: ")) as
+              Rc<str>).to_string() + &String_::string(&"source")) as Rc<str>);
+                                                   }
+                                                   Some(e.Current().clone())
                                                } else { None::<T> }
                                        }),
                              &Rc::from(move
@@ -1970,7 +1906,7 @@ pub mod Seq {
                                          Array_::sortInPlaceWith(&comparer,
                                                                  &arr);
                                          Seq::ofArray(&arr)
-                                     }.clone()
+                                     }
                              }))
     }
     pub fn sort<T: PartialOrd + Clone +
@@ -2063,22 +1999,20 @@ pub mod Seq {
     pub fn average<T: core::ops::Add<Output = T> +
                    core::ops::Div<Output = T> + From<i32> + Default + Clone +
                    'static>(xs: &Rc<dyn Interfaces::IEnumerable_1<T>>) -> T {
-        {
-            let count: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
-            let total: T =
-                Seq::fold(&Rc::from({
-                                        let count = count.clone();
-                                        move |acc: &T, x: &T|
-                                            {
-                                                count.set(count.get() + 1i32);
-                                                acc.clone() + x.clone()
-                                            }.clone()
-                                    }), &Native::getZero::<T>(), xs);
-            if count.get() == 0i32 {
-                panic!("{}", Seq::SR::inputSequenceEmpty());
-            }
-            total / T::from(count.get()).clone()
-        }.clone()
+        let count: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
+        let total: T =
+            Seq::fold(&Rc::from({
+                                    let count = count.clone();
+                                    move |acc: &T, x: &T|
+                                        {
+                                            count.set(count.get() + 1i32);
+                                            acc.clone() + x.clone()
+                                        }
+                                }), &Native::getZero::<T>(), xs);
+        if count.get() == 0i32 {
+            panic!("{}", Seq::SR::inputSequenceEmpty());
+        }
+        total / T::from(count.get())
     }
     pub fn averageBy<T: Clone + 'static, U: core::ops::Add<Output = U> +
                      core::ops::Div<Output = U> + From<i32> + Default +
@@ -2086,23 +2020,21 @@ pub mod Seq {
                      'static>(projection: &Rc<impl Fn(&T) -> (U) + 'static>,
                               xs: &Rc<dyn Interfaces::IEnumerable_1<T>>)
      -> U {
-        {
-            let count: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
-            let total: U =
-                Seq::fold(&Rc::from({
-                                        let count = count.clone();
-                                        let projection = projection.clone();
-                                        move |acc: &U, x: &T|
-                                            {
-                                                count.set(count.get() + 1i32);
-                                                acc.clone() + projection(x)
-                                            }.clone()
-                                    }), &Native::getZero::<U>(), xs);
-            if count.get() == 0i32 {
-                panic!("{}", Seq::SR::inputSequenceEmpty());
-            }
-            total / U::from(count.get()).clone()
-        }.clone()
+        let count: Rc<MutCell<i32>> = Rc::from(MutCell::from(0i32));
+        let total: U =
+            Seq::fold(&Rc::from({
+                                    let count = count.clone();
+                                    let projection = projection.clone();
+                                    move |acc: &U, x: &T|
+                                        {
+                                            count.set(count.get() + 1i32);
+                                            acc.clone() + projection(x)
+                                        }
+                                }), &Native::getZero::<U>(), xs);
+        if count.get() == 0i32 {
+            panic!("{}", Seq::SR::inputSequenceEmpty());
+        }
+        total / U::from(count.get())
     }
     pub fn permute<T: Clone +
                    'static>(f: &Rc<impl Fn(&i32) -> (i32) + 'static>,

@@ -21,3 +21,6 @@ target
 .ionide
 out
 .fake
+
+# perf output
+perf*

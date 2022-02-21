@@ -7,6 +7,7 @@
 #![allow(unused_variables)]
 #![allow(unused_attributes)]
 use crate::import_3bd9ae6a::*;
+use crate::import_eae1ac5e::*;
 pub mod Option_ {
     use super::*;
     pub fn bind<T: Clone + 'static, U: Clone +
@@ -83,7 +84,7 @@ pub mod Option_ {
     }
     pub fn getValue<T: Clone + 'static>(opt: &Option<T>) -> T {
         match opt {
-            None => panic!("{}", Native::string(&"Option has no value")),
+            None => panic!("{}", String_::string(&"Option has no value")),
             Some(opt_0_0) => opt_0_0.clone(),
         }
     }
@@ -104,14 +105,13 @@ pub mod Option_ {
                 'static>(mapping: &Rc<impl Fn(&T1, &T2) -> (U) + 'static>,
                          opt1: &Option<T1>, opt2: &Option<T2>) -> Option<U> {
         match opt1 {
-            Some(opt1_0_0) =>
-            {
+            Some(opt1_0_0) => {
                 let x: T1 = opt1_0_0.clone();
                 match opt2 {
                     Some(opt2_0_0) => Some(mapping(&x, opt2_0_0)),
                     _ => None::<U>,
                 }
-            }.clone(),
+            }
             _ => None::<U>,
         }
     }
@@ -122,21 +122,19 @@ pub mod Option_ {
                          opt1: &Option<T1>, opt2: &Option<T2>,
                          opt3: &Option<T3>) -> Option<U> {
         match opt1 {
-            Some(opt1_0_0) =>
-            {
+            Some(opt1_0_0) => {
                 let x: T1 = opt1_0_0.clone();
                 match opt2 {
-                    Some(opt2_0_0) =>
-                    {
+                    Some(opt2_0_0) => {
                         let y: T2 = opt2_0_0.clone();
                         match opt3 {
                             Some(opt3_0_0) => Some(mapping(&x, &y, opt3_0_0)),
                             _ => None::<U>,
                         }
-                    }.clone(),
+                    }
                     _ => None::<U>,
                 }
-            }.clone(),
+            }
             _ => None::<U>,
         }
     }

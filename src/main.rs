@@ -22,7 +22,7 @@ pub mod TestApp {
         let h: i32 = patternInput.3.clone();
         let data: Rc<MutCell<Vec<u8>>> =
             Native::arrayCreate(&(w * h * 4i32), &0u8);
-        println!("{0}", &Native::string(&"Raytracer running..."));
+        println!("{0}", &String_::string(&"Raytracer running..."));
         {
             let patternInput_1: ((), f64) =
                 Platform::measureTime(&Rc::from({
@@ -35,9 +35,7 @@ pub mod TestApp {
                                                                                    &h,
                                                                                    &0.0f64)
                                                 }));
-            println!("Ray tracing done:
- - rendered image size: ({0}x{1})
- - elapsed: {2} ms",
+            println!("Ray tracing done:\n - rendered image size: ({0}x{1})\n - elapsed: {2} ms",
                      &w, &h, &patternInput_1.1.clone());
             0i32
         }
@@ -45,6 +43,6 @@ pub mod TestApp {
 }
 pub fn main() {
     let args: Vec<String> = std::env::args().collect();
-    let args: Vec<Rc<str>> = args[1..].iter().map(|s| Native::string(s)).collect();
+    let args: Vec<Rc<str>> = args[1..].iter().map(|s| String_::string(s)).collect();
     TestApp::main(&Native::arrayFrom(&args));
 }

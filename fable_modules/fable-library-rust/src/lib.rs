@@ -6,10 +6,11 @@
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 #![allow(unused_attributes)]
-use crate::import_3bd9ae6a::*;
 #[path = "./Func.rs"]
 pub(crate) mod import_346734d5;
 pub use import_346734d5::*;
+use crate::import_3bd9ae6a::*;
+use crate::import_eae1ac5e::*;
 use crate::import_971078fd::*;
 use crate::import_8d7d6be8::*;
 use crate::import_c6216f2::*;
@@ -34,7 +35,11 @@ pub use import_3b6ba757::*;
 pub mod Fable_Library_Rust {
     use super::*;
     pub fn imports() -> Rc<MutCell<Vec<()>>> {
-        Native::arrayFrom(&[(), (), (), (), (), (), (), (), (), (), (), (),
-                            ()])
+        thread_local! {
+            static imports: Rc<MutCell<Vec<()>>> =
+    Native::arrayFrom(&[(), (), (), (), (), (), (), (), (), (), (), (), (),
+                        ()]);
+        };
+        imports.with(|value| value.clone())
     }
 }

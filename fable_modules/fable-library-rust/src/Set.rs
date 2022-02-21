@@ -6,24 +6,43 @@
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 #![allow(unused_attributes)]
+use crate::import_eae1ac5e::*;
 use crate::import_3bd9ae6a::*;
-use crate::import_8d7d6be8::*;
+#[path = "./Option.rs"]
+pub(crate) mod import_8d7d6be8;
+pub use import_8d7d6be8::*;
 use crate::import_f222008f::*;
 use crate::import_52af85ec::*;
-use crate::import_ec6ee4e9::*;
-use crate::import_c6216f2::*;
+#[path = "./List.rs"]
+pub(crate) mod import_ec6ee4e9;
+pub use import_ec6ee4e9::*;
+#[path = "./Array.rs"]
+pub(crate) mod import_c6216f2;
+pub use import_c6216f2::*;
 pub mod Set_ {
     use super::*;
     pub mod SR {
         use super::*;
         pub fn setContainsNoElements() -> Rc<str> {
-            Native::string(&"Set contains no elements.")
+            thread_local! {
+                static setContainsNoElements: Rc<str> =
+    String_::string(&"Set contains no elements.");
+            };
+            setContainsNoElements.with(|value| value.clone())
         }
         pub fn enumerationNotStarted() -> Rc<str> {
-            Native::string(&"Enumeration has not started. Call MoveNext.")
+            thread_local! {
+                static enumerationNotStarted: Rc<str> =
+    String_::string(&"Enumeration has not started. Call MoveNext.");
+            };
+            enumerationNotStarted.with(|value| value.clone())
         }
         pub fn enumerationAlreadyFinished() -> Rc<str> {
-            Native::string(&"Enumeration already finished.")
+            thread_local! {
+                static enumerationAlreadyFinished: Rc<str> =
+    String_::string(&"Enumeration already finished.");
+            };
+            enumerationAlreadyFinished.with(|value| value.clone())
         }
     }
     #[derive(Clone, Debug, Default, Hash)]
@@ -91,98 +110,76 @@ pub mod Set_ {
               'static>(l: &Option<Rc<Set_::SetTree_1<T>>>, k: &T,
                        r: &Option<Rc<Set_::SetTree_1<T>>>)
      -> Option<Rc<Set_::SetTree_1<T>>> {
-        {
-            let hl: i32 =
-                {
-                    let s: Option<Rc<Set_::SetTree_1<T>>> = l.clone();
-                    match &s { Some(s_0_0) => s_0_0.Height, _ => 0i32, }
-                };
-            let hr: i32 =
-                {
-                    let s_1: Option<Rc<Set_::SetTree_1<T>>> = r.clone();
-                    match &s_1 { Some(s_1_0_0) => s_1_0_0.Height, _ => 0i32, }
-                };
-            let m: i32 = if hl < hr { hr } else { hl };
-            if m == 0i32 {
-                Set_::mkSetTreeLeaf(k)
-            } else { Set_::mkSetTreeNode(k, l, r, &(m + 1i32)) }
-        }.clone()
+        let hl: i32 =
+            {
+                let s: Option<Rc<Set_::SetTree_1<T>>> = l.clone();
+                match &s { Some(s_0_0) => s_0_0.Height, _ => 0i32, }
+            };
+        let hr: i32 =
+            {
+                let s_1: Option<Rc<Set_::SetTree_1<T>>> = r.clone();
+                match &s_1 { Some(s_1_0_0) => s_1_0_0.Height, _ => 0i32, }
+            };
+        let m: i32 = if hl < hr { hr } else { hl };
+        if m == 0i32 {
+            Set_::mkSetTreeLeaf(k)
+        } else { Set_::mkSetTreeNode(k, l, r, &(m + 1i32)) }
     }
     pub fn rebalance<T: Clone +
                      'static>(t1: &Option<Rc<Set_::SetTree_1<T>>>, v: &T,
                               t2: &Option<Rc<Set_::SetTree_1<T>>>)
      -> Option<Rc<Set_::SetTree_1<T>>> {
-        {
-            let t1h: i32 =
-                {
-                    let s: Option<Rc<Set_::SetTree_1<T>>> = t1.clone();
-                    match &s { Some(s_0_0) => s_0_0.Height, _ => 0i32, }
-                };
-            let t2h: i32 =
-                {
-                    let s_1: Option<Rc<Set_::SetTree_1<T>>> = t2.clone();
-                    match &s_1 { Some(s_1_0_0) => s_1_0_0.Height, _ => 0i32, }
-                };
-            if t2h > t1h + 2i32 {
-                {
-                    let t2_0027: Rc<Set_::SetTree_1<T>> =
-                        Option_::getValue(t2).clone();
-                    if {
-                           let s_2: Option<Rc<Set_::SetTree_1<T>>> =
-                               t2_0027.Left.clone();
-                           match &s_2 {
-                               Some(s_2_0_0) => s_2_0_0.Height,
-                               _ => 0i32,
-                           }
-                       } > t1h + 1i32 {
-                        {
-                            let t2l: Rc<Set_::SetTree_1<T>> =
-                                Option_::getValue(&t2_0027.Left).clone();
-                            Set_::mk(&Set_::mk(t1, v, &t2l.Left), &t2l.Key,
-                                     &Set_::mk(&t2l.Right, &t2_0027.Key,
-                                               &t2_0027.Right))
-                        }.clone()
-                    } else {
-                        Set_::mk(&Set_::mk(t1, v, &t2_0027.Left),
-                                 &t2_0027.Key, &t2_0027.Right)
-                    }
-                }.clone()
+        let t1h: i32 =
+            {
+                let s: Option<Rc<Set_::SetTree_1<T>>> = t1.clone();
+                match &s { Some(s_0_0) => s_0_0.Height, _ => 0i32, }
+            };
+        let t2h: i32 =
+            {
+                let s_1: Option<Rc<Set_::SetTree_1<T>>> = t2.clone();
+                match &s_1 { Some(s_1_0_0) => s_1_0_0.Height, _ => 0i32, }
+            };
+        if t2h > t1h + 2i32 {
+            let t2_: Rc<Set_::SetTree_1<T>> = Option_::getValue(t2).clone();
+            if {
+                   let s_2: Option<Rc<Set_::SetTree_1<T>>> = t2_.Left.clone();
+                   match &s_2 { Some(s_2_0_0) => s_2_0_0.Height, _ => 0i32, }
+               } > t1h + 1i32 {
+                let t2l: Rc<Set_::SetTree_1<T>> =
+                    Option_::getValue(&t2_.Left).clone();
+                Set_::mk(&Set_::mk(t1, v, &t2l.Left), &t2l.Key,
+                         &Set_::mk(&t2l.Right, &t2_.Key, &t2_.Right))
             } else {
-                if t1h > t2h + 2i32 {
-                    {
-                        let t1_0027: Rc<Set_::SetTree_1<T>> =
-                            Option_::getValue(t1).clone();
-                        if {
-                               let s_3: Option<Rc<Set_::SetTree_1<T>>> =
-                                   t1_0027.Right.clone();
-                               match &s_3 {
-                                   Some(s_3_0_0) => s_3_0_0.Height,
-                                   _ => 0i32,
-                               }
-                           } > t2h + 1i32 {
-                            {
-                                let t1r: Rc<Set_::SetTree_1<T>> =
-                                    Option_::getValue(&t1_0027.Right).clone();
-                                Set_::mk(&Set_::mk(&t1_0027.Left,
-                                                   &t1_0027.Key, &t1r.Left),
-                                         &t1r.Key,
-                                         &Set_::mk(&t1r.Right, v, t2))
-                            }.clone()
-                        } else {
-                            Set_::mk(&t1_0027.Left, &t1_0027.Key,
-                                     &Set_::mk(&t1_0027.Right, v, t2))
-                        }
-                    }.clone()
-                } else { Set_::mk(t1, v, t2) }
+                Set_::mk(&Set_::mk(t1, v, &t2_.Left), &t2_.Key, &t2_.Right)
             }
-        }.clone()
+        } else {
+            if t1h > t2h + 2i32 {
+                let t1_: Rc<Set_::SetTree_1<T>> =
+                    Option_::getValue(t1).clone();
+                if {
+                       let s_3: Option<Rc<Set_::SetTree_1<T>>> =
+                           t1_.Right.clone();
+                       match &s_3 {
+                           Some(s_3_0_0) => s_3_0_0.Height,
+                           _ => 0i32,
+                       }
+                   } > t2h + 1i32 {
+                    let t1r: Rc<Set_::SetTree_1<T>> =
+                        Option_::getValue(&t1_.Right).clone();
+                    Set_::mk(&Set_::mk(&t1_.Left, &t1_.Key, &t1r.Left),
+                             &t1r.Key, &Set_::mk(&t1r.Right, v, t2))
+                } else {
+                    Set_::mk(&t1_.Left, &t1_.Key,
+                             &Set_::mk(&t1_.Right, v, t2))
+                }
+            } else { Set_::mk(t1, v, t2) }
+        }
     }
     pub fn add<T: PartialOrd + Clone +
                'static>(k: &T, s: &Option<Rc<Set_::SetTree_1<T>>>)
      -> Option<Rc<Set_::SetTree_1<T>>> {
         match s {
-            Some(s_0_0) =>
-            {
+            Some(s_0_0) => {
                 let t: Rc<Set_::SetTree_1<T>> = s_0_0.clone();
                 let c: i32 = Util::compare(k, &t.Key);
                 if t.Height == 1i32 {
@@ -208,7 +205,7 @@ pub mod Set_ {
                         }
                     }
                 }
-            }.clone(),
+            }
             _ => Set_::mkSetTreeLeaf(k),
         }
     }
@@ -217,12 +214,10 @@ pub mod Set_ {
                             s2: &Option<Rc<Set_::SetTree_1<T>>>)
      -> Option<Rc<Set_::SetTree_1<T>>> {
         match s1 {
-            Some(s1_0_0) =>
-            {
+            Some(s1_0_0) => {
                 let t1: Rc<Set_::SetTree_1<T>> = s1_0_0.clone();
                 match s2 {
-                    Some(s2_0_0) =>
-                    {
+                    Some(s2_0_0) => {
                         let t2: Rc<Set_::SetTree_1<T>> = s2_0_0.clone();
                         if t1.Height == 1i32 {
                             Set_::add(k, &Set_::add(&t1.Key, s2))
@@ -243,10 +238,10 @@ pub mod Set_ {
                                 }
                             }
                         }
-                    }.clone(),
+                    }
                     _ => Set_::add(k, s1),
                 }
-            }.clone(),
+            }
             _ => Set_::add(k, s2),
         }
     }
@@ -318,15 +313,14 @@ pub mod Set_ {
             }
             _ =>
             panic!("{}",
-                   Native::string(&"internal error: Set.spliceOutSuccessor")),
+                   String_::string(&"internal error: Set.spliceOutSuccessor")),
         }
     }
     pub fn remove<T: PartialOrd + Clone +
                   'static>(k: &T, s: &Option<Rc<Set_::SetTree_1<T>>>)
      -> Option<Rc<Set_::SetTree_1<T>>> {
         match s {
-            Some(s_0_0) =>
-            {
+            Some(s_0_0) => {
                 let t: Rc<Set_::SetTree_1<T>> = s_0_0.clone();
                 let c: i32 = Util::compare(k, &t.Key);
                 if t.Height == 1i32 {
@@ -343,15 +337,12 @@ pub mod Set_ {
                                 if t.Right.is_none() {
                                     t.Left.clone()
                                 } else {
-                                    {
-                                        let patternInput:
-                                                (T,
-                                                 Option<Rc<Set_::SetTree_1<T>>>) =
-                                            Set_::spliceOutSuccessor(&t.Right);
-                                        Set_::mk(&t.Left,
-                                                 &patternInput.0.clone(),
-                                                 &patternInput.1.clone())
-                                    }.clone()
+                                    let patternInput:
+                                            (T,
+                                             Option<Rc<Set_::SetTree_1<T>>>) =
+                                        Set_::spliceOutSuccessor(&t.Right);
+                                    Set_::mk(&t.Left, &patternInput.0.clone(),
+                                             &patternInput.1.clone())
                                 }
                             }
                         } else {
@@ -360,31 +351,52 @@ pub mod Set_ {
                         }
                     }
                 }
-            }.clone(),
+            }
             _ => s.clone(),
         }
     }
     pub fn contains<T: PartialOrd + Clone +
                     'static>(k: &T, s: &Option<Rc<Set_::SetTree_1<T>>>)
      -> bool {
-        match s {
-            Some(s_0_0) => {
-                let t: Rc<Set_::SetTree_1<T>> = s_0_0.clone();
-                let c: i32 = Util::compare(k, &t.Key);
-                if t.Height == 1i32 {
-                    c == 0i32
-                } else {
-                    if c < 0i32 {
-                        Set_::contains(k, &t.Left)
-                    } else {
-                        if c == 0i32 {
-                            true
-                        } else { Set_::contains(k, &t.Right) }
-                    }
-                }
+        let k: Rc<MutCell<T>> = Rc::from(MutCell::from(k.clone()));
+        let s: Rc<MutCell<Option<Rc<Set_::SetTree_1<T>>>>> =
+            Rc::from(MutCell::from(s.clone()));
+        '_contains:
+            loop  {
+                break '_contains
+                    (match &s.get() {
+                         Some(s_0_0) => {
+                             let t: Rc<Set_::SetTree_1<T>> = s_0_0.clone();
+                             let c: i32 = Util::compare(&k.get(), &t.Key);
+                             if t.Height == 1i32 {
+                                 c == 0i32
+                             } else {
+                                 if c < 0i32 {
+                                     let k_temp: T = k.get();
+                                     let s_temp:
+                                             Option<Rc<Set_::SetTree_1<T>>> =
+                                         t.Left.clone();
+                                     k.set(k_temp);
+                                     s.set(s_temp);
+                                     continue '_contains
+                                 } else {
+                                     if c == 0i32 {
+                                         true
+                                     } else {
+                                         let k_temp: T = k.get();
+                                         let s_temp:
+                                                 Option<Rc<Set_::SetTree_1<T>>> =
+                                             t.Right.clone();
+                                         k.set(k_temp);
+                                         s.set(s_temp);
+                                         continue '_contains
+                                     }
+                                 }
+                             }
+                         }
+                         _ => false,
+                     }) ;
             }
-            _ => false,
-        }
     }
     pub fn iterate<T: Clone +
                    'static>(f: &Rc<impl Fn(&T) + 'static>,
@@ -408,8 +420,7 @@ pub mod Set_ {
                              s: &Option<Rc<Set_::SetTree_1<T>>>, x: &a_)
      -> a_ {
         match s {
-            Some(s_0_0) =>
-            {
+            Some(s_0_0) => {
                 let t: Rc<Set_::SetTree_1<T>> = s_0_0.clone();
                 if t.Height == 1i32 {
                     f(&t.Key, x)
@@ -418,7 +429,7 @@ pub mod Set_ {
                                    &f(&t.Key,
                                       &Set_::foldBack(f, &t.Right, x)))
                 }
-            }.clone(),
+            }
             _ => x.clone(),
         }
     }
@@ -426,8 +437,7 @@ pub mod Set_ {
                 'static>(f: &Rc<impl Fn(&a_, &T) -> (a_) + 'static>, x: &a_,
                          s: &Option<Rc<Set_::SetTree_1<T>>>) -> a_ {
         match s {
-            Some(s_0_0) =>
-            {
+            Some(s_0_0) => {
                 let t: Rc<Set_::SetTree_1<T>> = s_0_0.clone();
                 if t.Height == 1i32 {
                     f(x, &t.Key)
@@ -435,7 +445,7 @@ pub mod Set_ {
                     Set_::fold(f, &f(&Set_::fold(f, x, &t.Left), &t.Key),
                                &t.Right)
                 }
-            }.clone(),
+            }
             _ => x.clone(),
         }
     }
@@ -527,8 +537,7 @@ pub mod Set_ {
                               acc: &Option<Rc<Set_::SetTree_1<T>>>)
      -> Option<Rc<Set_::SetTree_1<T>>> {
         match s {
-            Some(s_0_0) =>
-            {
+            Some(s_0_0) => {
                 let t: Rc<Set_::SetTree_1<T>> = s_0_0.clone();
                 if t.Height == 1i32 {
                     if f(&t.Key) {
@@ -542,7 +551,7 @@ pub mod Set_ {
                                                                     acc)
                                                       } else { acc.clone() }))
                 }
-            }.clone(),
+            }
             _ => acc.clone(),
         }
     }
@@ -557,12 +566,10 @@ pub mod Set_ {
                             acc: &Option<Rc<Set_::SetTree_1<T>>>)
      -> Option<Rc<Set_::SetTree_1<T>>> {
         match acc {
-            Some(acc_0_0) =>
-            {
+            Some(acc_0_0) => {
                 let _acc: Rc<Set_::SetTree_1<T>> = acc_0_0.clone();
                 match s {
-                    Some(s_0_0) =>
-                    {
+                    Some(s_0_0) => {
                         let t: Rc<Set_::SetTree_1<T>> = s_0_0.clone();
                         if t.Height == 1i32 {
                             Set_::remove(&t.Key, acc)
@@ -572,10 +579,10 @@ pub mod Set_ {
                                                          &Set_::remove(&t.Key,
                                                                        acc)))
                         }
-                    }.clone(),
+                    }
                     _ => acc.clone(),
                 }
-            }.clone(),
+            }
             _ => acc.clone(),
         }
     }
@@ -590,12 +597,10 @@ pub mod Set_ {
                             s2: &Option<Rc<Set_::SetTree_1<T>>>)
      -> Option<Rc<Set_::SetTree_1<T>>> {
         match s1 {
-            Some(s1_0_0) =>
-            {
+            Some(s1_0_0) => {
                 let t1: Rc<Set_::SetTree_1<T>> = s1_0_0.clone();
                 match s2 {
-                    Some(s2_0_0) =>
-                    {
+                    Some(s2_0_0) => {
                         let t2: Rc<Set_::SetTree_1<T>> = s2_0_0.clone();
                         if t1.Height == 1i32 {
                             Set_::add(&t1.Key, s2)
@@ -604,38 +609,34 @@ pub mod Set_ {
                                 Set_::add(&t2.Key, s1)
                             } else {
                                 if t1.Height > t2.Height {
-                                    {
-                                        let patternInput:
-                                                (Option<Rc<Set_::SetTree_1<T>>>,
-                                                 bool,
-                                                 Option<Rc<Set_::SetTree_1<T>>>) =
-                                            Set_::split(&t1.Key, s2);
-                                        Set_::balance(&Set_::r#union(&t1.Left,
-                                                                     &patternInput.0.clone()),
-                                                      &t1.Key,
-                                                      &Set_::r#union(&t1.Right,
-                                                                     &patternInput.2.clone()))
-                                    }.clone()
+                                    let patternInput:
+                                            (Option<Rc<Set_::SetTree_1<T>>>,
+                                             bool,
+                                             Option<Rc<Set_::SetTree_1<T>>>) =
+                                        Set_::split(&t1.Key, s2);
+                                    Set_::balance(&Set_::r#union(&t1.Left,
+                                                                 &patternInput.0.clone()),
+                                                  &t1.Key,
+                                                  &Set_::r#union(&t1.Right,
+                                                                 &patternInput.2.clone()))
                                 } else {
-                                    {
-                                        let patternInput_1:
-                                                (Option<Rc<Set_::SetTree_1<T>>>,
-                                                 bool,
-                                                 Option<Rc<Set_::SetTree_1<T>>>) =
-                                            Set_::split(&t2.Key, s1);
-                                        Set_::balance(&Set_::r#union(&t2.Left,
-                                                                     &patternInput_1.0.clone()),
-                                                      &t2.Key,
-                                                      &Set_::r#union(&t2.Right,
-                                                                     &patternInput_1.2.clone()))
-                                    }.clone()
+                                    let patternInput_1:
+                                            (Option<Rc<Set_::SetTree_1<T>>>,
+                                             bool,
+                                             Option<Rc<Set_::SetTree_1<T>>>) =
+                                        Set_::split(&t2.Key, s1);
+                                    Set_::balance(&Set_::r#union(&t2.Left,
+                                                                 &patternInput_1.0.clone()),
+                                                  &t2.Key,
+                                                  &Set_::r#union(&t2.Right,
+                                                                 &patternInput_1.2.clone()))
                                 }
                             }
                         }
-                    }.clone(),
+                    }
                     _ => s1.clone(),
                 }
-            }.clone(),
+            }
             _ => s2.clone(),
         }
     }
@@ -654,24 +655,21 @@ pub mod Set_ {
                                     acc: &Option<Rc<Set_::SetTree_1<T>>>)
      -> Option<Rc<Set_::SetTree_1<T>>> {
         match s {
-            Some(s_0_0) =>
-            {
+            Some(s_0_0) => {
                 let t: Rc<Set_::SetTree_1<T>> = s_0_0.clone();
                 if t.Height == 1i32 {
                     if Set_::contains(&t.Key, b) {
                         Set_::add(&t.Key, acc)
                     } else { acc.clone() }
                 } else {
-                    {
-                        let acc_1: Option<Rc<Set_::SetTree_1<T>>> =
-                            Set_::intersectionAux(b, &t.Right, acc);
-                        Set_::intersectionAux(b, &t.Left,
-                                              &if Set_::contains(&t.Key, b) {
-                                                   Set_::add(&t.Key, &acc_1)
-                                               } else { acc_1.clone() })
-                    }.clone()
+                    let acc_1: Option<Rc<Set_::SetTree_1<T>>> =
+                        Set_::intersectionAux(b, &t.Right, acc);
+                    Set_::intersectionAux(b, &t.Left,
+                                          &if Set_::contains(&t.Key, b) {
+                                               Set_::add(&t.Key, &acc_1)
+                                           } else { acc_1.clone() })
                 }
-            }.clone(),
+            }
             _ => acc.clone(),
         }
     }
@@ -744,86 +742,106 @@ pub mod Set_ {
     pub fn minimumElementAux<T: Clone +
                              'static>(s: &Option<Rc<Set_::SetTree_1<T>>>,
                                       n: &T) -> T {
-        match s {
-            Some(s_0_0) =>
-            {
-                let t: Rc<Set_::SetTree_1<T>> = s_0_0.clone();
-                if t.Height == 1i32 {
-                    t.Key.clone()
-                } else { Set_::minimumElementAux(&t.Left, &t.Key) }
-            }.clone(),
-            _ => n.clone(),
-        }
+        let s: Rc<MutCell<Option<Rc<Set_::SetTree_1<T>>>>> =
+            Rc::from(MutCell::from(s.clone()));
+        let n: Rc<MutCell<T>> = Rc::from(MutCell::from(n.clone()));
+        '_minimumElementAux:
+            loop  {
+                break '_minimumElementAux
+                    (match &s.get() {
+                         Some(s_0_0) => {
+                             let t: Rc<Set_::SetTree_1<T>> = s_0_0.clone();
+                             if t.Height == 1i32 {
+                                 t.Key.clone()
+                             } else {
+                                 let s_temp: Option<Rc<Set_::SetTree_1<T>>> =
+                                     t.Left.clone();
+                                 let n_temp: T = t.Key.clone();
+                                 s.set(s_temp);
+                                 n.set(n_temp);
+                                 continue '_minimumElementAux
+                             }
+                         }
+                         _ => n.get(),
+                     }) ;
+            }
     }
     pub fn minimumElementOpt<T: Clone +
                              'static>(s: &Option<Rc<Set_::SetTree_1<T>>>)
      -> Option<T> {
         match s {
-            Some(s_0_0) =>
-            {
+            Some(s_0_0) => {
                 let t: Rc<Set_::SetTree_1<T>> = s_0_0.clone();
                 if t.Height == 1i32 {
                     Some(t.Key.clone())
                 } else { Some(Set_::minimumElementAux(&t.Left, &t.Key)) }
-            }.clone(),
+            }
             _ => None::<T>,
         }
     }
     pub fn maximumElementAux<T: Clone +
                              'static>(s: &Option<Rc<Set_::SetTree_1<T>>>,
                                       n: &T) -> T {
-        match s {
-            Some(s_0_0) =>
-            {
-                let t: Rc<Set_::SetTree_1<T>> = s_0_0.clone();
-                if t.Height == 1i32 {
-                    t.Key.clone()
-                } else { Set_::maximumElementAux(&t.Right, &t.Key) }
-            }.clone(),
-            _ => n.clone(),
-        }
+        let s: Rc<MutCell<Option<Rc<Set_::SetTree_1<T>>>>> =
+            Rc::from(MutCell::from(s.clone()));
+        let n: Rc<MutCell<T>> = Rc::from(MutCell::from(n.clone()));
+        '_maximumElementAux:
+            loop  {
+                break '_maximumElementAux
+                    (match &s.get() {
+                         Some(s_0_0) => {
+                             let t: Rc<Set_::SetTree_1<T>> = s_0_0.clone();
+                             if t.Height == 1i32 {
+                                 t.Key.clone()
+                             } else {
+                                 let s_temp: Option<Rc<Set_::SetTree_1<T>>> =
+                                     t.Right.clone();
+                                 let n_temp: T = t.Key.clone();
+                                 s.set(s_temp);
+                                 n.set(n_temp);
+                                 continue '_maximumElementAux
+                             }
+                         }
+                         _ => n.get(),
+                     }) ;
+            }
     }
     pub fn maximumElementOpt<T: Clone +
                              'static>(s: &Option<Rc<Set_::SetTree_1<T>>>)
      -> Option<T> {
         match s {
-            Some(s_0_0) =>
-            {
+            Some(s_0_0) => {
                 let t: Rc<Set_::SetTree_1<T>> = s_0_0.clone();
                 if t.Height == 1i32 {
                     Some(t.Key.clone())
                 } else { Some(Set_::maximumElementAux(&t.Right, &t.Key)) }
-            }.clone(),
+            }
             _ => None::<T>,
         }
     }
     pub fn minElement<a_: Clone +
                       'static>(s: &Option<Rc<Set_::SetTree_1<a_>>>) -> a_ {
-        {
-            let matchValue: Option<a_> = Set_::minimumElementOpt(s);
-            match &matchValue {
-                None =>
-                panic!("{}",
-                       Rc::from((Rc::from(Set_::SR::setContainsNoElements().to_string() +
-                       &Native::string(&"\nParameter name: ")) as
-              Rc<str>).to_string() + &Native::string(&"s")) as Rc<str>),
-                Some(matchValue_0_0) => matchValue_0_0.clone(),
-            }
-        }.clone()
+        let matchValue: Option<a_> = Set_::minimumElementOpt(s);
+        match &matchValue {
+            None =>
+            panic!("{}",
+                   Rc::from((Rc::from(Set_::SR::setContainsNoElements().to_string() +
+                       &String_::string(&"\\nParameter name: ")) as
+              Rc<str>).to_string() + &String_::string(&"s")) as Rc<str>),
+            Some(matchValue_0_0) => matchValue_0_0.clone(),
+        }
     }
     pub fn maxElement<a_: Clone +
                       'static>(s: &Option<Rc<Set_::SetTree_1<a_>>>) -> a_ {
-        {
-            let matchValue: Option<a_> = Set_::maximumElementOpt(s);
-            match &matchValue {
-                None =>
-                panic!("{}",
-                       Rc::from((Rc::from(Set_::SR::setContainsNoElements().to_string() +
-                       &Native::string(&"\nParameter name: ")) as
-              Rc<str>).to_string() + &Native::string(&"s")) as Rc<str>),
-                Some(matchValue_0_0) => matchValue_0_0.clone(),
-            }
-        }.clone()
+        let matchValue: Option<a_> = Set_::maximumElementOpt(s);
+        match &matchValue {
+            None =>
+            panic!("{}",
+                   Rc::from((Rc::from(Set_::SR::setContainsNoElements().to_string() +
+                       &String_::string(&"\\nParameter name: ")) as
+              Rc<str>).to_string() + &String_::string(&"s")) as Rc<str>),
+            Some(matchValue_0_0) => matchValue_0_0.clone(),
+        }
     }
     #[derive(Clone, Debug, Default, Hash)]
     pub struct SetIterator_1<T: PartialOrd + Clone + 'static> {
@@ -834,27 +852,45 @@ pub mod Set_ {
                        'static>(stack:
                                     &List_1<Option<Rc<Set_::SetTree_1<T>>>>)
      -> List_1<Option<Rc<Set_::SetTree_1<T>>>> {
-        if !List_::isEmpty(stack) {
-            let s: Option<Rc<Set_::SetTree_1<T>>> =
-                List_::head(stack).clone();
-            let rest: List_1<Option<Rc<Set_::SetTree_1<T>>>> =
-                List_::tail(stack).clone();
-            match &s {
-                Some(s_0_0) =>
-                {
-                    let t: Rc<Set_::SetTree_1<T>> = s_0_0.clone();
-                    if t.Height == 1i32 {
-                        stack.clone()
-                    } else {
-                        Set_::collapseLHS(&List_::cons(&t.Left,
-                                                       &List_::cons(&Set_::mkSetTreeLeaf(&t.Key),
-                                                                    &List_::cons(&t.Right,
-                                                                                 &rest))))
-                    }
-                }.clone(),
-                _ => Set_::collapseLHS(&rest),
+        let stack: Rc<MutCell<List_1<Option<Rc<Set_::SetTree_1<T>>>>>> =
+            Rc::from(MutCell::from(stack.clone()));
+        '_collapseLHS:
+            loop  {
+                break '_collapseLHS
+                    (if !List_::isEmpty(&stack.get()) {
+                         let s: Option<Rc<Set_::SetTree_1<T>>> =
+                             List_::head(&stack.get()).clone();
+                         let rest: List_1<Option<Rc<Set_::SetTree_1<T>>>> =
+                             List_::tail(&stack.get()).clone();
+                         match &s {
+                             Some(s_0_0) => {
+                                 let t: Rc<Set_::SetTree_1<T>> =
+                                     s_0_0.clone();
+                                 if t.Height == 1i32 {
+                                     stack.get()
+                                 } else {
+                                     let stack_temp:
+                                             List_1<Option<Rc<Set_::SetTree_1<T>>>> =
+                                         List_::cons(&t.Left,
+                                                     &List_::cons(&Set_::mkSetTreeLeaf(&t.Key),
+                                                                  &List_::cons(&t.Right,
+                                                                               &rest)));
+                                     stack.set(stack_temp);
+                                     continue '_collapseLHS
+                                 }
+                             }
+                             _ => {
+                                 let stack_temp:
+                                         List_1<Option<Rc<Set_::SetTree_1<T>>>> =
+                                     rest.clone();
+                                 stack.set(stack_temp);
+                                 continue '_collapseLHS
+                             }
+                         }
+                     } else {
+                         List_::empty::<Option<Rc<Set_::SetTree_1<T>>>>()
+                     }) ;
             }
-        } else { List_::empty::<Option<Rc<Set_::SetTree_1<T>>>>() }
     }
     pub fn mkIterator<a_: PartialOrd + Clone +
                       'static>(s: &Option<Rc<Set_::SetTree_1<a_>>>)
@@ -872,27 +908,25 @@ pub mod Set_ {
     pub fn current<T: PartialOrd + Clone +
                    'static>(i: &Rc<Set_::SetIterator_1<T>>) -> T {
         if i.started.get() {
-            {
-                let matchValue: List_1<Option<Rc<Set_::SetTree_1<T>>>> =
-                    i.stack.get().clone();
-                if !List_::isEmpty(&matchValue) {
-                    if List_::head(&matchValue).is_some() {
-                        let k: Rc<Set_::SetTree_1<T>> =
-                            Option_::getValue(&List_::head(&matchValue)).clone();
-                        k.Key.clone()
-                    } else { Set_::alreadyFinished() }
+            let matchValue: List_1<Option<Rc<Set_::SetTree_1<T>>>> =
+                i.stack.get().clone();
+            if !List_::isEmpty(&matchValue) {
+                if List_::head(&matchValue).is_some() {
+                    let k: Rc<Set_::SetTree_1<T>> =
+                        Option_::getValue(&List_::head(&matchValue)).clone();
+                    k.Key.clone()
                 } else { Set_::alreadyFinished() }
-            }.clone()
+            } else { Set_::alreadyFinished() }
         } else { Set_::notStarted() }
     }
     pub fn unexpectedStackForMoveNext<a_: Clone + 'static>() -> a_ {
         panic!("{}",
-               Native::string(&"Please report error: Set iterator, unexpected stack for moveNext"))
+               String_::string(&"Please report error: Set iterator, unexpected stack for moveNext"))
     }
     pub fn unexpectedstateInSetTreeCompareStacks<a_: Clone + 'static>()
      -> a_ {
         panic!("{}",
-               Native::string(&"unexpected state in SetTree.compareStacks"))
+               String_::string(&"unexpected state in SetTree.compareStacks"))
     }
     pub fn moveNext<T: PartialOrd + Clone +
                     'static>(i: &Rc<Set_::SetIterator_1<T>>) -> bool {
@@ -932,16 +966,13 @@ pub mod Set_ {
     }
     pub fn toArray<T: Clone + 'static>(s: &Option<Rc<Set_::SetTree_1<T>>>)
      -> Rc<MutCell<Vec<T>>> {
-        {
-            let res: Rc<MutCell<Vec<T>>> =
-                Native::arrayWithCapacity::<T>(&Set_::count(s));
-            Set_::iterate(&Rc::from({
-                                        let res = res.clone();
-                                        move |x: &T|
-                                            res.get_mut().push(x.clone())
-                                    }), s);
-            res.clone()
-        }.clone()
+        let res: Rc<MutCell<Vec<T>>> =
+            Native::arrayWithCapacity::<T>(&Set_::count(s));
+        Set_::iterate(&Rc::from({
+                                    let res = res.clone();
+                                    move |x: &T| res.get_mut().push(x.clone())
+                                }), s);
+        res
     }
     pub fn toList<T: Clone + 'static>(s: &Option<Rc<Set_::SetTree_1<T>>>)
      -> List_1<T> {

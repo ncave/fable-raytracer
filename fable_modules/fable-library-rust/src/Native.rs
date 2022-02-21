@@ -17,6 +17,7 @@ pub type Map_2<K, V> = Option<Rc<crate::Map_::MapTree_2<K, V>>>;
 
 // TODO: make public eventually
 type string = Rc<str>;
+type seq<T> = Rc<dyn crate::Interfaces::IEnumerable_1<T>>;
 type RefCell<T> = Rc<MutCell<T>>;
 type Array<T> = Rc<MutCell<Vec<T>>>;
 type HashSet_1<T> = Rc<MutCell<HashSet<T>>>;
@@ -38,8 +39,8 @@ pub mod Native {
         Default::default()
     }
 
-    pub fn compare<T>(comparer: &Rc<impl Fn(&T, &T) -> i32>) -> impl Fn(&T, &T) -> Ordering {
-        let comp = comparer.clone();
+    pub fn comparer<T>(comp: &Rc<impl Fn(&T, &T) -> i32>) -> impl Fn(&T, &T) -> Ordering {
+        let comp = comp.clone();
         move |x, y| match comp(x, y) {
             i if i < 0 => Ordering::Less,
             i if i > 0 => Ordering::Greater,
@@ -77,82 +78,6 @@ pub mod Native {
     }
 
     // -----------------------------------------------------------
-    // Strings
-    // -----------------------------------------------------------
-
-    pub fn toChar(code: &u32) -> char {
-        unsafe { core::char::from_u32_unchecked(*code) }
-    }
-
-    pub fn getCharAt(s: &string, index: &i32) -> char {
-        // O(n) because of UTF-8
-        s[(*index as usize)..].chars().next().unwrap()
-    }
-
-    pub fn string(s: &str) -> string {
-        Rc::from(s)
-    }
-
-    pub fn fromChar(c: &char, count: &i32) -> string {
-        string(&[*c].repeat(*count as usize).iter().collect::<String>())
-    }
-
-    pub fn fromChars(a: &Array<char>) -> string {
-        string(&a.iter().collect::<String>())
-    }
-
-    pub fn fromChars2(a: &Array<char>, start: &i32, length: &i32) -> string {
-        string(&a.iter().skip(*start as usize).take(*length as usize).collect::<String>())
-    }
-
-    pub fn containsChar(s: &string, c: &char) -> bool {
-        s.contains(*c)
-    }
-
-    pub fn containsStr(s: &string, v: &string) -> bool {
-        s.contains(v.as_ref())
-    }
-
-    pub fn toLowerCase(s: &string) -> string {
-        string(&s.to_lowercase())
-    }
-
-    pub fn toUpperCase(s: &string) -> string {
-        string(&s.to_uppercase())
-    }
-
-    pub fn concat(a: &Array<string>) -> string {
-        string(&a.concat())
-    }
-
-    pub fn join(sep: &string, a: &Array<string>) -> string {
-        string(&a.join(sep))
-    }
-
-    pub fn replace(s: &string, old: &string, new: &string) -> string {
-        string(&s.replace(old.as_ref(), new.as_ref()))
-    }
-
-    pub fn substring(s: &string, start: &i32) -> string {
-        let slice: &str = &s[(*start as usize)..];
-        string(slice)
-    }
-
-    pub fn substring2(s: &string, start: &i32, length: &i32) -> string {
-        let slice: &str = &s[(*start as usize)..((start + length) as usize)];
-        string(slice)
-    }
-
-    pub fn toCharArray(s: &string) -> Array<char> {
-        array(s.chars().collect())
-    }
-
-    pub fn toCharArray2(s: &string, start: &i32, length: &i32) -> Array<char> {
-        let slice: &str = &s[(*start as usize)..((start + length) as usize)];
-        array(slice.chars().collect())
-    }
-
-    // -----------------------------------------------------------
     // Arrays
     // -----------------------------------------------------------
 
@@ -174,6 +99,33 @@ pub mod Native {
 
     pub fn arrayCopy<T: Clone>(a: &Array<T>) -> Array<T> {
         array(a.to_vec())
+    }
+
+    // -----------------------------------------------------------
+    // Sequences
+    // -----------------------------------------------------------
+
+    pub fn seq_as_iter<T: Clone + 'static>(seq: &seq<T>) -> impl Iterator<Item = T> {
+        let en = seq.GetEnumerator();
+        let next = move || {
+            if en.MoveNext() {
+                Some(en.Current())
+            } else {
+                None
+            }
+        };
+        std::iter::from_fn(next)
+    }
+
+    pub fn iter_as_seq<T, I>(iter: I) -> seq<T>
+    where
+        T: Clone + 'static,
+        I: Clone + Iterator<Item = T> + 'static,
+    {
+        let iter = mkMut(iter);
+        let f = mkRef(move || iter.get_mut().next());
+        let en = crate::Seq::Enumerable::fromFunction(&f);
+        crate::Seq::mkSeq(&mkRef(move || en.clone()))
     }
 
     // -----------------------------------------------------------
