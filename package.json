@@ -4,20 +4,18 @@
   "scripts": {
     "clean": "git clean -fdX",
 
-    "build-cli": "dotnet fable fable-raytracer.fsproj --lang rust --outDir out",
+    "build-js": "dotnet fable fable-raytracer.fsproj --outDir out",
     "build-rust": "dotnet fable fable-raytracer.fsproj --lang rust --outDir .",
     "build-native": "dotnet publish -c Release -r linux-x64 --self-contained /p:RunNativeAot=True && strip bin/Release/net6.0/linux-x64/native/fable-raytracer",
-    "build-js": "dotnet fable fable-raytracer.fsproj --outDir out",
-
     "build-wasm-web": "npm run build-rust && wasm-pack build --target web",
     "build-wasm-node": "npm run build-rust && wasm-pack build --target nodejs",
 
     "test-js": "npm run build-js && node out/src/main.js",
     "test-web": "npm run build-wasm-web && npx http-server",
     "test-wasm": "npm run build-wasm-node && node src/test_wasm.js",
-    "test-rust": "npm run build-cli && cargo run --release",
+    "test-rust": "npm run build-rust && cargo run --release",
     "test-dotnet": "dotnet run -c Release",
-    "test-native": "bin/Release/net6.0/linux-x64/native/fable-raytracer",
+    "test-native": "npm run build-rust && bin/Release/net6.0/linux-x64/native/fable-raytracer",
 
     "trace": "dotnet trace collect --format speedscope -- dotnet bin/Release/net6.0/fable-raytracer.dll",
     "preperf": "RUSTFLAGS='-C force-frame-pointers=yes' cargo build --release",
