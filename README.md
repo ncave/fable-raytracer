@@ -7,6 +7,7 @@ https://ncave.github.io/fable-raytracer/
 ### Build and run:
 - install Rust
 - install `wasm-pack`
+- run `dotnet tool restore`
 - run one of the performance tests:
   - `npm run test-js` (F# to JS, Fable 3.x, Node.js)
   - `npm run test-web` (F# to Rust to webasm, Browser, localhost:8080)

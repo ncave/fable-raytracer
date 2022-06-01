@@ -1,3 +1,6 @@
+*.rs
+!lib.rs
+
 # Logs
 logs
 *.log
