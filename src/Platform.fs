@@ -14,7 +14,7 @@ module Performance =
         abstract elapsed: unit -> Duration
 
     // let inline now(): Instant = importMember "std::time::Instant"
-    [<Emit("std::time::Instant::now")>]
+    [<Emit("std::time::Instant::now()")>]
     let inline internal now(): obj = nativeOnly
 
 let measureTime (f: unit -> 'T): 'T * float =
