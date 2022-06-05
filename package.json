@@ -15,7 +15,7 @@
     "test-wasm": "npm run build-wasm-node && node src/test_wasm.js",
     "test-rust": "npm run build-rust && cargo run --release",
     "test-dotnet": "dotnet run -c Release",
-    "test-native": "npm run build-rust && bin/Release/net6.0/linux-x64/native/fable-raytracer",
+    "test-native": "npm run build-native && bin/Release/net6.0/linux-x64/native/fable-raytracer",
 
     "trace": "dotnet trace collect --format speedscope -- dotnet bin/Release/net6.0/fable-raytracer.dll",
     "preperf": "RUSTFLAGS='-C force-frame-pointers=yes' cargo build --release",
