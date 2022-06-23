@@ -4,6 +4,8 @@
   "scripts": {
     "clean": "git clean -fdX",
 
+    "build-cli": "dotnet run -c Release --project ../Fable/src/Fable.Cli -- fable-raytracer.fsproj --lang rust --outDir . --noCache",
+
     "build-js": "dotnet fable fable-raytracer.fsproj --outDir out",
     "build-rust": "dotnet fable fable-raytracer.fsproj --lang rust --outDir .",
     "build-native": "dotnet publish -c Release -r linux-x64 --self-contained /p:RunNativeAot=True && strip bin/Release/net6.0/linux-x64/native/fable-raytracer",
