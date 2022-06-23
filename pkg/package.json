@@ -1,0 +1,12 @@
+{
+  "name": "fable-raytracer",
+  "version": "0.1.0",
+  "files": [
+    "fable_raytracer_bg.wasm",
+    "fable_raytracer.js",
+    "fable_raytracer.d.ts"
+  ],
+  "module": "fable_raytracer.js",
+  "types": "fable_raytracer.d.ts",
+  "sideEffects": false
+}
