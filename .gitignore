@@ -1,5 +1,4 @@
 *.rs
-!lib.rs
 
 # Logs
 logs
