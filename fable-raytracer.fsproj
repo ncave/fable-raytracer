@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0-*" Condition="$(RunNativeAot) == True" />
-    <PackageReference Include="Fable.Core.Experimental" Version="4.0.0-*" />
+    <PackageReference Include="Fable.Core" Version="4.0.0-*" />
   </ItemGroup>
 
 </Project>

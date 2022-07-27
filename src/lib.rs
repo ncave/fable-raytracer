@@ -1,18 +1,18 @@
 mod RayTracer;
-use RayTracer::RayTracerDemo;
 use wasm_bindgen::prelude::*;
+use RayTracer::RayTracerDemo;
 
-use fable_library_rust::Native_::Rc;
-use fable_library_rust::Native_::MutCell;
 use fable_library_rust::Native_::arrayCreate;
+use fable_library_rust::Native_::MutCell;
+use fable_library_rust::Native_::Lrc;
 
 const WMAX: i32 = 2048;
 const HMAX: i32 = 2048;
 const BUF_LEN: i32 = WMAX * HMAX * 4;
 
-fn get_buffer() -> Rc<MutCell<Vec<u8>>> {
+fn get_buffer() -> Lrc<MutCell<Vec<u8>>> {
     thread_local! {
-        static DATA: Rc<MutCell<Vec<u8>>> = arrayCreate(&BUF_LEN, &0u8);
+        static DATA: Lrc<MutCell<Vec<u8>>> = arrayCreate(&BUF_LEN, &0u8);
     }
     DATA.with(|data| data.clone())
 }
