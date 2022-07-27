@@ -5,7 +5,7 @@ edition = "2021"
 
 [lib]
 name = "fable_raytracer"
-path = "src/lib.rs"
+path = "src/main.rs"
 crate-type = ["cdylib"]
 
 [[bin]]
