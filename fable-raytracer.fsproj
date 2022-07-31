@@ -16,7 +16,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="src/Imports.fs" />
     <Compile Include="src/Platform.fs" />
     <Compile Include="src/RayTracer.fs" />
     <Compile Include="src/lib.fs" />

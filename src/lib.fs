@@ -4,7 +4,6 @@ module RayTracer
 
 open Fable.Core
 open Fable.Core.Rust
-open Imports
 
 import "wasm_bindgen::prelude::*" ""
 
@@ -14,7 +13,7 @@ let bufferLength = maxWidth * maxHeight * 4
 let buffer = Array.zeroCreate<byte> bufferLength
 
 [<Emit("*const u8")>]
-type BufferType = BufferType of byte[]
+type BufferType = interface end
 
 [<Emit("$0.as_ptr()")>]
 let ptrOf x: BufferType = nativeOnly
