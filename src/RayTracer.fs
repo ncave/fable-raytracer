@@ -55,7 +55,6 @@ module RayTracer =
             let newPos = Vector.Rotate(v, e, angle)
             Camera (newPos, lookAt)
 
-    [<Struct>]
     type Ray = {
         Start: Vector
         Dir: Vector
@@ -72,7 +71,6 @@ module RayTracer =
         abstract Intersect: Ray -> float
         abstract Normal: Vector -> Vector
 
-    // [<Struct>] // Note: Making this a struct makes .NET Native run 50% slower
     type Intersection = {
         Thing: SceneObject
         Ray: Ray
