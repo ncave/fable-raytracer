@@ -55,6 +55,7 @@ module RayTracer =
             let newPos = Vector.Rotate(v, e, angle)
             Camera (newPos, lookAt)
 
+    [<Struct>] // Note: Making this a struct makes WebAssembly 30% faster, but .NET Native 10% slower.
     type Ray = {
         Start: Vector
         Dir: Vector
@@ -71,6 +72,7 @@ module RayTracer =
         abstract Intersect: Ray -> float
         abstract Normal: Vector -> Vector
 
+    [<Struct>] // Note: Making this a struct makes WebAssembly run 10% faster, but .NET Native 30% slower.
     type Intersection = {
         Thing: SceneObject
         Ray: Ray
@@ -95,7 +97,8 @@ module RayTracer =
         for x in scene.Things do
             let dist = x.Intersect ray
             if acc.IsNone || dist < acc.Value.Dist then
-                acc <- ValueSome { Thing = x; Ray = ray; Dist = dist }
+                let isect = { Thing = x; Ray = ray; Dist = dist }
+                acc <- ValueSome isect
         acc
 
     let TestRay ray scene =
@@ -126,7 +129,8 @@ module RayTracer =
         naturalcolor + reflectedColor
 
     and GetReflectionColor (thing: SceneObject, pos, normal: Vector, rd: Vector, scene: Scene, depth: int) =
-        Color.Scale (thing.Surface.Reflect (pos), TraceRay { Start = pos; Dir = rd } scene (depth + 1))
+        let ray = { Start = pos; Dir = rd }
+        Color.Scale (thing.Surface.Reflect (pos), TraceRay ray scene (depth + 1))
 
     and GetNaturalColor thing pos normal rd scene =
         let mutable color = Color.DefaultColor
@@ -137,7 +141,8 @@ module RayTracer =
     and AddLight (thing: SceneObject) pos normal rd scene color light =
         let ldis = light.Pos - pos
         let livec = Vector.Norm (ldis)
-        let neatIsect = TestRay { Start = pos; Dir = livec } scene
+        let ray = { Start = pos; Dir = livec }
+        let neatIsect = TestRay ray scene
         let isInShadow =
             match neatIsect with
             | ValueNone -> false
