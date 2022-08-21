@@ -1,4 +1,5 @@
 *.rs
+Cargo.lock
 
 # Logs
 logs
