@@ -13,5 +13,6 @@ https://ncave.github.io/fable-raytracer/
   - `npm run test-web` (F# to Rust to WebAssembly, in Browser, localhost:8080)
   - `npm run test-wasm` (F# to Rust to WebAssembly, running in Node.js)
   - `npm run test-rust` (F# to Rust, running as native binary)
+    - `npm run test-rust-target-cpu` (as above, but allow Rust to target your CPU and use newer instructions)
   - `npm run test-dotnet` (F# running on .NET as managed code)
   - `npm run test-native` (F# running on .NET as native binary)
