@@ -16,6 +16,7 @@
     "test-web": "npm run build-wasm-web && npx http-server",
     "test-wasm": "npm run build-wasm-node && node src/test_wasm.js",
     "test-rust": "npm run build-rust && cargo run --release",
+    "test-rust-target-cpu": "npm run build-rust && cargo run --config build.rustflags='\"-C target-cpu=native\"' --release",
     "test-dotnet": "dotnet run -c Release",
     "test-native": "npm run build-native && bin/Release/net6.0/linux-x64/native/fable-raytracer",
 
