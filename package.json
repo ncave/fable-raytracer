@@ -26,6 +26,9 @@
     "perf-stat": "perf stat -- target/release/fable_raytracer",
     "perf-report": "perf report --hierarchy | rustfilt > perf-report.log",
     "perf-flamegraph": "perf script | rustfilt | ../FlameGraph/stackcollapse-perf.pl | ../FlameGraph/flamegraph.pl > perf.svg",
-    "flamegraph": "cargo flamegraph -c \"record -e cpu-clock -F 997 -g\""
+    "flamegraph": "cargo flamegraph -c \"record -e cpu-clock -F 997 -g\"",
+    "heaptrack": "heaptrack target/release/fable_raytracer",
+    "heaptrack-print": "heaptrack_print heaptrack.*.gz -F heap_alloc.log",
+    "heaptrack-flamegraph": "../FlameGraph/flamegraph.pl --title \"heaptrack: allocations\" --colors mem --countname allocations < heap_alloc.log > heap_alloc.svg"
   }
 }
