@@ -6,7 +6,9 @@ module RayTracer
 open Fable.Core
 open Fable.Core.Rust
 
-import "wasm_bindgen::prelude::*" ""
+let imports() =
+    import "wasm_bindgen::prelude::*" ""
+    ()
 
 let maxWidth = 2048
 let maxHeight = 2048
