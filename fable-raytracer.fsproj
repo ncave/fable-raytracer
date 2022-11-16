@@ -2,15 +2,10 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <!-- <LangVersion>preview</LangVersion> -->
-    <!-- <NoWarn>$(NoWarn);45;55;62;75;1204</NoWarn> -->
-    <!-- <OtherFlags>$(OtherFlags) - -crossoptimize- - -inlinethreshold:0</OtherFlags> -->
-    <!-- <OtherFlags>$(OtherFlags) - -tailcalls+</OtherFlags> -->
-    <RestoreAdditionalProjectSources Condition="$(RunNativeAot) == True">
-      https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-experimental/nuget/v3/index.json;
-      $(RestoreAdditionalProjectSources)
-    </RestoreAdditionalProjectSources>
+    <TargetFramework>net7.0</TargetFramework>
+    <!-- <PublishAot>true</PublishAot> -->
+    <!-- <PublishTrimmed>true</PublishTrimmed> -->
+    <!-- <StripSymbols>true</StripSymbols> -->
     <IlcDisableReflection>true</IlcDisableReflection>
     <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
   </PropertyGroup>
@@ -23,7 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0-*" Condition="$(RunNativeAot) == True" />
     <PackageReference Include="Fable.Core" Version="4.0.0-*" />
   </ItemGroup>
 
