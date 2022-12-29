@@ -11,6 +11,7 @@
     "build-native": "dotnet publish -c Release -r linux-x64 /p:PublishAot=True",
     "build-wasm-web": "npm run build-rust && wasm-pack build --target web",
     "build-wasm-node": "npm run build-rust && wasm-pack build --target nodejs",
+    "build-python": "dotnet fable fable-raytracer.fsproj --lang python --outDir src",
 
     "test-js": "npm run build-js && node out/src/main.js",
     "test-web": "npm run build-wasm-web && npx http-server",
@@ -19,6 +20,7 @@
     "test-rust-target-cpu": "npm run build-rust && cargo run --config build.rustflags='\"-C target-cpu=native\"' --release",
     "test-dotnet": "dotnet run -c Release",
     "test-native": "npm run build-native && bin/Release/net7.0/linux-x64/native/fable-raytracer",
+    "test-python": "npm run build-python && python src/main.py",
 
     "trace": "dotnet trace collect --format speedscope -- dotnet bin/Release/net7.0/fable-raytracer.dll",
     "preperf": "RUSTFLAGS='-C force-frame-pointers=yes' cargo build --release",

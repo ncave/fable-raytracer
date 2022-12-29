@@ -16,3 +16,4 @@ https://ncave.github.io/fable-raytracer/
     - `npm run test-rust-target-cpu` (as above, but allow Rust to target your CPU and use newer instructions)
   - `npm run test-dotnet` (F# running on .NET as managed code)
   - `npm run test-native` (F# running on .NET as native binary)
+  - `npm run test-python` (F# to Python, running as Python)
