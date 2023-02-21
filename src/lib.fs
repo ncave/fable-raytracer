@@ -1,7 +1,9 @@
-[<Fable.Core.Rust.OuterAttr("cfg", [|"target_arch = \"wasm32\""|])>]
+#if !FABLE_COMPILER_RUST
 module RayTracer
 
-#if FABLE_COMPILER_RUST
+#else //FABLE_COMPILER_RUST
+[<Fable.Core.Rust.OuterAttr("cfg", [|"target_arch = \"wasm32\""|])>]
+module RayTracer
 
 open Fable.Core
 open Fable.Core.Rust

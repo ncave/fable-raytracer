@@ -8,7 +8,7 @@ function measureTime(f) {
     return [res, t1 - t0];
 }
 
-async function run() {
+async function render() {
     const [x, y, w, h] = [0, 0, 1024, 1024];
     const angle = 0.0;
     console.log("Raytracer running...");
@@ -17,4 +17,4 @@ async function run() {
     console.log(` - rendered image size: (${w}x${h})\n - elapsed: ${elapsed} ms`);
 }
 
-run();
+render();

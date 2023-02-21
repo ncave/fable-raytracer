@@ -3,11 +3,27 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- <InvariantGlobalization>true</InvariantGlobalization> -->
     <!-- <PublishAot>true</PublishAot> -->
     <!-- <PublishTrimmed>true</PublishTrimmed> -->
     <!-- <StripSymbols>true</StripSymbols> -->
-    <IlcDisableReflection>true</IlcDisableReflection>
+    <!-- <IlcTrimMetadata>true</IlcTrimMetadata> -->
+    <!-- <IlcDisableReflection>true</IlcDisableReflection> -->
     <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+    <!-- <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies> -->
+    <!-- <IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata> -->
+    <!-- <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData> -->
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <WasmMainJSPath>src/main.mjs</WasmMainJSPath>
+    <!-- <RuntimeIdentifier>browser-wasm</RuntimeIdentifier> -->
+    <!-- <RunAOTCompilation>true</RunAOTCompilation> -->
+    <!-- <WasmEnableExceptionHandling>true</WasmEnableExceptionHandling> -->
+    <!-- <WasmEnableSIMD>true</WasmEnableSIMD> -->
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +33,7 @@
     <Compile Include="src/main.fs" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetArchitecture)' != 'wasm'">
     <PackageReference Include="Fable.Core" Version="4.0.0-*" />
   </ItemGroup>
 

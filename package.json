@@ -9,6 +9,7 @@
     "build-js": "dotnet fable fable-raytracer.fsproj --outDir out",
     "build-rust": "dotnet fable fable-raytracer.fsproj --lang rust --outDir .",
     "build-native": "dotnet publish -c Release -r linux-x64 /p:PublishAot=True",
+    "build-dotnet-wasm": "dotnet publish -c Release /p:RunAOTCompilation=true /p:RuntimeIdentifier=browser-wasm",
     "build-wasm-web": "npm run build-rust && wasm-pack build --target web",
     "build-wasm-node": "npm run build-rust && wasm-pack build --target nodejs",
 
@@ -18,6 +19,7 @@
     "test-rust": "npm run build-rust && cargo run --release",
     "test-rust-target-cpu": "npm run build-rust && cargo run --config build.rustflags='\"-C target-cpu=native\"' --release",
     "test-dotnet": "dotnet run -c Release",
+    "test-dotnet-wasm": "npm run build-dotnet-wasm && node bin/Release/net7.0/browser-wasm/AppBundle/main.mjs",
     "test-native": "npm run build-native && bin/Release/net7.0/linux-x64/native/fable-raytracer",
 
     "trace": "dotnet trace collect --format speedscope -- dotnet bin/Release/net7.0/fable-raytracer.dll",
