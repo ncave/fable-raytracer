@@ -28,8 +28,24 @@ let measureTime (f: unit -> 'T): 'T * float =
 
 #endif
 
+#if FABLE_COMPILER_PYTHON
+
+open Fable.Core
+open System.Diagnostics
+
+let measureTime (f: unit -> 'T): 'T * float =
+    let freq = double System.Diagnostics.Stopwatch.Frequency
+    let t0 = Stopwatch.GetTimestamp()
+    let res = f ()
+    let t1 = Stopwatch.GetTimestamp()
+    let elapsed = double (t1 - t0) / freq
+    res, elapsed * 1000.0
+
+#endif
+
+
 // #if FABLE_COMPILER_JAVASCRIPT
-#if FABLE_COMPILER && !FABLE_COMPILER_RUST
+#if FABLE_COMPILER && !FABLE_COMPILER_RUST && !FABLE_COMPILER_PYTHON
 
 open Fable.Core.JsInterop
 
