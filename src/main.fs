@@ -1,4 +1,6 @@
 module TestApp
+
+open Platform
 open type System.Console
 
 let render() =
@@ -6,9 +8,9 @@ let render() =
     let len = w * h * 4
     let angle = 0.0
     let data = Array.create len 0uy
-    WriteLine("{0}", "Raytracer running...")
-    let _, elapsed = Platform.measureTime (fun () -> RayTracerDemo.renderScene (data, x, y, w, h, angle))
-    WriteLine("Ray tracing done:\n - rendered image size: ({0}x{1})\n - elapsed: {2} ms", w, h, elapsed)
+    WriteLine("Raytracer running...")
+    let _, elapsed = measureTime (fun () -> RayTracerDemo.renderScene (data, x, y, w, h, angle))
+    WriteLine($"Ray tracing done:\n - rendered image size: ({w}x{h})\n - elapsed: {elapsed} ms")
 
 [<EntryPoint>]
 let main _args =

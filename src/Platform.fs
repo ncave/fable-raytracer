@@ -1,6 +1,8 @@
 module Platform
 
+///////////////////////////////////////////////////////////
 #if FABLE_COMPILER_RUST
+///////////////////////////////////////////////////////////
 
 open Fable.Core
 
@@ -28,13 +30,36 @@ let measureTime (f: unit -> 'T): 'T * float =
 
 #endif
 
+///////////////////////////////////////////////////////////
+#if FABLE_COMPILER_DART
+///////////////////////////////////////////////////////////
+
+open Fable.Core
+
+module System =
+    [<Emit("print($0)")>]
+    let print (s: string): unit = nativeOnly
+
+    type Console =
+        static member WriteLine(s: string) = print s
+
+let measureTime (f: unit -> 'T): 'T * float =
+    let t0 = System.DateTime.Now
+    let res = f ()
+    let t1 = System.DateTime.Now
+    res, (t1 - t0).TotalMilliseconds
+
+#endif
+
+///////////////////////////////////////////////////////////
 #if FABLE_COMPILER_PYTHON
+///////////////////////////////////////////////////////////
 
 open Fable.Core
 open System.Diagnostics
 
 let measureTime (f: unit -> 'T): 'T * float =
-    let freq = double System.Diagnostics.Stopwatch.Frequency
+    let freq = double Stopwatch.Frequency
     let t0 = Stopwatch.GetTimestamp()
     let res = f ()
     let t1 = Stopwatch.GetTimestamp()
@@ -43,9 +68,9 @@ let measureTime (f: unit -> 'T): 'T * float =
 
 #endif
 
-
-// #if FABLE_COMPILER_JAVASCRIPT
-#if FABLE_COMPILER && !FABLE_COMPILER_RUST && !FABLE_COMPILER_PYTHON
+///////////////////////////////////////////////////////////
+#if FABLE_COMPILER_JAVASCRIPT || FABLE_COMPILER_TYPESCRIPT
+///////////////////////////////////////////////////////////
 
 open Fable.Core.JsInterop
 
@@ -62,10 +87,13 @@ let measureTime (f: unit -> 'T): 'T * float =
 
 #endif
 
+///////////////////////////////////////////////////////////
 #if !FABLE_COMPILER // .NET
+///////////////////////////////////////////////////////////
 
 let measureTime (f: unit -> 'T): 'T * float =
-    let sw = System.Diagnostics.Stopwatch.StartNew()
+    let sw = System.Diagnostics.Stopwatch()
+    sw.Start()
     let res = f ()
     sw.Stop()
     res, sw.Elapsed.TotalMilliseconds

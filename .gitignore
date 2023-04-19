@@ -1,4 +1,8 @@
-*.rs
+src/*.dart
+src/*.py
+src/*.rs
+src/*.ts
+__pycache__
 Cargo.lock
 
 # Logs
