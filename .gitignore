@@ -18,6 +18,7 @@ pids
 # Packages
 node_modules
 jspm_packages
+fable_modules
 
 # Binaries
 bin

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -20,6 +20,10 @@
 
   <PropertyGroup>
     <WasmMainJSPath>src/main.mjs</WasmMainJSPath>
+    <!-- enable reporting to profiler in browser dev tools -->
+    <!-- <WasmProfilers>browser;</WasmProfilers> -->
+    <!-- Put "framework" (dotnet.js, dlls, etc) files directly into the AppBundle -->
+    <!-- <WasmRuntimeAssetsLocation>./</WasmRuntimeAssetsLocation> -->
     <!-- <RuntimeIdentifier>browser-wasm</RuntimeIdentifier> -->
     <!-- <RunAOTCompilation>true</RunAOTCompilation> -->
     <!-- <WasmEnableExceptionHandling>true</WasmEnableExceptionHandling> -->
@@ -34,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetArchitecture)' != 'wasm'">
-    <PackageReference Include="Fable.Core" Version="4.0.0" />
+    <PackageReference Include="Fable.Core" Version="4.1.0" />
   </ItemGroup>
 
 </Project>
