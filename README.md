@@ -9,9 +9,9 @@ https://ncave.github.io/fable-raytracer/
 - install [Rust](https://www.rust-lang.org/tools/install) and [wasm-pack](https://rustwasm.github.io/wasm-pack/installer/)
 - run `dotnet tool restore` to get [Fable](https://github.com/fable-compiler/Fable) installed locally
 - run one of the performance tests:
-  - `npm run test-js` (F# to JavaScript, running in Node.js)
-  - `npm run test-web` (F# to Rust to WebAssembly, in Browser, localhost:8080)
-  - `npm run test-wasm` (F# to Rust to WebAssembly, running in Node.js)
+  - `npm run test-js-node` (F# to JavaScript, running in Node.js)
+  - `npm run test-wasm-web` (F# to Rust to WebAssembly, in Browser, localhost:8080)
+  - `npm run test-wasm-node` (F# to Rust to WebAssembly, running in Node.js)
   - `npm run test-rust` (F# to Rust, running as native binary)
     - `npm run test-rust-target-cpu` (as above, but allow Rust to target your CPU and use newer instructions)
   - `npm run test-python` (F# to Python, running as Python)
