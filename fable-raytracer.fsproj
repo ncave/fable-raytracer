@@ -6,13 +6,13 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <!-- <InvariantGlobalization>true</InvariantGlobalization> -->
+    <InvariantGlobalization>true</InvariantGlobalization>
     <!-- <PublishAot>true</PublishAot> -->
     <!-- <PublishTrimmed>true</PublishTrimmed> -->
     <!-- <StripSymbols>true</StripSymbols> -->
     <!-- <IlcTrimMetadata>true</IlcTrimMetadata> -->
     <!-- <IlcDisableReflection>true</IlcDisableReflection> -->
-    <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+    <!-- <IlcOptimizationPreference>Speed</IlcOptimizationPreference> -->
     <!-- <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies> -->
     <!-- <IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata> -->
     <!-- <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData> -->
@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetArchitecture)' != 'wasm'">
-    <PackageReference Include="Fable.Core" Version="4.1.0" />
+    <PackageReference Include="Fable.Core" Version="4.3.0" />
   </ItemGroup>
 
 </Project>
