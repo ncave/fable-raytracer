@@ -1,5 +1,5 @@
 # fable-raytracer
-Small ray tracer demo of the F# to Rust language transpiler in Fable 4.x
+Small ray tracer demo of the F# to Rust language transpiler in [Fable](https://github.com/fable-compiler/Fable)
 
 ### Online demo:
 https://ncave.github.io/fable-raytracer/
@@ -18,4 +18,4 @@ https://ncave.github.io/fable-raytracer/
   - `npm run test-dotnet` (F# running on .NET as managed code)
   - `npm run test-native` (F# running on .NET as native binary)
   - `npm run test-dotnet-wasm` (F# .NET to WebAssembly AOT, running in Node.js)
-    - (needs `dotnet workload install wasm-tools`, run with admin permissions)
+    - (needs `dotnet workload install wasm-tools`)

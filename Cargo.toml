@@ -1,7 +1,7 @@
 [package]
 name = "fable-raytracer"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 [lib]
 name = "fable_raytracer"
@@ -11,6 +11,10 @@ crate-type = ["cdylib"]
 [[bin]]
 name = "fable_raytracer"
 path = "src/main.rs"
+
+[features]
+no_std = ["fable_library_rust/no_std"]
+# default = ["no_std"] # Uncomment to default to "no_std" mode
 
 [dependencies]
 fable_library_rust = { path = "./fable_modules/fable-library-rust" }

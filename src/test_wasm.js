@@ -9,7 +9,7 @@ function measureTime(f) {
 }
 
 async function render() {
-    const [x, y, w, h] = [0, 0, 1024, 1024];
+    const [x, y, w, h] = [0, 0, 2048, 2048];
     const angle = 0.0;
     console.log("Raytracer running...");
     const [_, elapsed] = measureTime (() => render_scene(x, y, w, h, angle));

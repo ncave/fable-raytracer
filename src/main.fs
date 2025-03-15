@@ -4,7 +4,7 @@ open Platform
 open type System.Console
 
 let render() =
-    let x, y, w, h = (0, 0, 1024, 1024)
+    let x, y, w, h = (0, 0, 2048, 2048)
     let len = w * h * 4
     let angle = 0.0
     let data = Array.create len 0uy
