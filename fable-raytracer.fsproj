@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetArchitecture)' != 'wasm'">
-    <PackageReference Include="Fable.Core" Version="4.3.0" />
+    <PackageReference Include="Fable.Core" Version="4.5.0" />
   </ItemGroup>
 
 </Project>

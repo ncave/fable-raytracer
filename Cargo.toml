@@ -12,10 +12,6 @@ crate-type = ["cdylib"]
 name = "fable_raytracer"
 path = "src/main.rs"
 
-[features]
-no_std = ["fable_library_rust/no_std"]
-# default = ["no_std"] # Uncomment to default to "no_std" mode
-
 [dependencies]
 fable_library_rust = { path = "./fable_modules/fable-library-rust" }
 

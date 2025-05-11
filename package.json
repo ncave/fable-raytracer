@@ -22,13 +22,13 @@
     "test-rust-target-cpu": "npm run build-rust && cargo run --config build.rustflags='\"-C target-cpu=native\"' --release",
     "test-rust": "npm run build-rust && cargo run --release",
     "test-dotnet": "dotnet run -c Release",
-    "test-dotnet-wasm": "npm run build-dotnet-wasm && node bin/Release/net9.0/browser-wasm/AppBundle/main.mjs",
-    "test-dotnet-native": "npm run build-dotnet-native && bin/Release/net9.0/linux-x64/native/fable-raytracer",
+    "test-dotnet-wasm": "npm run build-dotnet-wasm && node bin/Release/net8.0/browser-wasm/AppBundle/main.mjs",
+    "test-dotnet-native": "npm run build-dotnet-native && bin/Release/net8.0/linux-x64/native/fable-raytracer",
     "test-python": "npm run build-python && python src/main.py",
 
     "test": "npm run test-rust && npm run test-dotnet",
 
-    "trace": "dotnet trace collect --format speedscope -- dotnet bin/Release/net9.0/fable-raytracer.dll",
+    "trace": "dotnet trace collect --format speedscope -- dotnet bin/Release/net8.0/fable-raytracer.dll",
     "preperf": "RUSTFLAGS='-C force-frame-pointers=yes' cargo build --release",
     "perf": "perf record -q -e cpu-clock -F 997 -g -- target/release/fable_raytracer",
     "perf-stat": "perf stat -- target/release/fable_raytracer",
