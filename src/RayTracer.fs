@@ -37,8 +37,112 @@ type Color =
     static member Background = Color.Black
     static member DefaultColor = Color.Black
 
+// Note: Declaring this record as struct makes most targets run faster,
+// (including Rust/WebAssembly/.NET Managed), but makes .NET Native slower.
+
+[<Struct>]
+type Ray = {
+    Start: Vector
+    Dir: Vector
+}
+
+module Surfaces =
+
+    type Shiny() =
+        member _.Diffuse (_pos: Vector) = Color.White
+        member _.Specular (_pos: Vector) = Color.Grey
+        member _.Reflect (_pos: Vector) = 0.7
+        member _.Roughness = 250.0
+
+    type Checkerboard() =
+        member _.Diffuse (pos: Vector) =
+            if (int (floor (pos.Z) + floor (pos.X))) % 2 <> 0
+            then Color.White
+            else Color.Black
+        member _.Specular (_pos: Vector) = Color.White
+        member _.Reflect (pos: Vector) =
+            if (int (floor (pos.Z) + floor (pos.X))) % 2 <> 0
+            then 0.1
+            else 0.7
+        member _.Roughness = 150.0
+
+    type Surface =
+        | ShinySurface of shiny: Shiny
+        | CheckerboardSurface of checkerboard: Checkerboard
+        member this.Diffuse(pos: Vector) =
+            match this with
+            | ShinySurface shiny -> shiny.Diffuse(pos)
+            | CheckerboardSurface checkerboard -> checkerboard.Diffuse(pos)
+        member this.Specular(pos: Vector) =
+            match this with
+            | ShinySurface shiny -> shiny.Specular(pos)
+            | CheckerboardSurface checkerboard -> checkerboard.Specular(pos)
+        member this.Reflect(pos: Vector) =
+            match this with
+            | ShinySurface shiny -> shiny.Reflect(pos)
+            | CheckerboardSurface checkerboard -> checkerboard.Reflect(pos)
+        member this.Roughness =
+            match this with
+            | ShinySurface shiny -> shiny.Roughness
+            | CheckerboardSurface checkerboard -> checkerboard.Roughness
+
+    let createShiny () = Surface.ShinySurface (Shiny())
+    let createCheckerboard () = Surface.CheckerboardSurface (Checkerboard())
+
+module SceneObjects =
+
+    type Sphere (center: Vector, radius: float, surface: Surfaces.Surface) =
+        member _.Surface = surface
+        member _.Normal (pos: Vector) = Vector.Norm (pos - center)
+        member _.Intersect (ray: Ray) =
+            let eo = center - ray.Start
+            let v = Vector.Dot (eo, ray.Dir)
+            let dist =
+                if (v < 0.0) then infinity
+                else
+                    let disc = radius * radius - (Vector.Dot (eo,eo) - (v*v))
+                    if disc < 0.0
+                    then infinity
+                    else v - (sqrt (disc))
+            dist
+
+    type Plane (normal: Vector, offset: float, surface: Surfaces.Surface) =
+        member _.Surface = surface
+        member _.Normal (_pos: Vector) = normal
+        member _.Intersect (ray: Ray) =
+            let denom = Vector.Dot (normal, ray.Dir)
+            let dist =
+                if denom > 0.0
+                then infinity
+                else (Vector.Dot (normal, ray.Start) + offset) / (-denom)
+            dist
+
+    type SceneObject =
+        | SphereObject of sphere: Sphere
+        | PlaneObject of plane: Plane
+        member this.Surface =
+            match this with
+            | SphereObject sphere -> sphere.Surface
+            | PlaneObject plane -> plane.Surface
+        member this.Intersect (ray: Ray) =
+            match this with
+            | SphereObject sphere -> sphere.Intersect(ray)
+            | PlaneObject plane -> plane.Intersect(ray)
+        member this.Normal (pos: Vector) =
+            match this with
+            | SphereObject sphere -> sphere.Normal(pos)
+            | PlaneObject plane -> plane.Normal(pos)
+
+    let createSphere (center, radius, surface) =
+        SceneObject.SphereObject (Sphere(center, radius, surface))
+    let createPlane (normal, offset, surface) =
+        SceneObject.PlaneObject (Plane(normal, offset, surface))
+
 // [<AutoOpen>]
 module RayTracer =
+
+    type Surface = Surfaces.Surface
+    type SceneObject = SceneObjects.SceneObject
 
     type Camera (pos: Vector, lookAt: Vector) =
         let forward = Vector.Norm (lookAt - pos)
@@ -55,35 +159,23 @@ module RayTracer =
             let newPos = Vector.Rotate(v, e, angle)
             Camera (newPos, lookAt)
 
-    [<Struct>] // Note: Making this a struct makes WebAssembly 30% faster, but .NET Native 10% slower.
-    type Ray = {
-        Start: Vector
-        Dir: Vector
-    }
+    // Note: Declaring these records as structs makes most targets run faster,
+    // (including Rust/WebAssembly/.NET Managed), but makes .NET Native slower.
 
-    type Surface =
-        abstract Diffuse: Vector -> Color
-        abstract Specular: Vector -> Color
-        abstract Reflect: Vector -> float
-        abstract Roughness: float
-
-    type SceneObject =
-        abstract Surface: Surface
-        abstract Intersect: Ray -> float
-        abstract Normal: Vector -> Vector
-
-    [<Struct>] // Note: Making this a struct makes WebAssembly run 10% faster, but .NET Native 30% slower.
+    [<Struct>]
     type Intersection = {
         Thing: SceneObject
         Ray: Ray
         Dist: float
     }
 
+    [<Struct>]
     type Light = {
         Pos: Vector
         Color: Color
     }
 
+    [<Struct>]
     type Scene = {
         Things: SceneObject[]
         Lights: Light[]
@@ -183,65 +275,13 @@ module RayTracer =
 
     let Rotate (camera: Camera) angle = camera.Rotate(angle)
 
-module SceneObjects =
-
-    type Sphere (center, radius, surface) =
-        interface RayTracer.SceneObject with
-            member this.Surface = surface
-            member this.Normal pos = Vector.Norm (pos - center)
-            member this.Intersect ray =
-                let eo = center - ray.Start
-                let v = Vector.Dot (eo, ray.Dir)
-                let dist =
-                    if (v < 0.0) then infinity
-                    else
-                        let disc = radius * radius - (Vector.Dot (eo,eo) - (v*v))
-                        if disc < 0.0
-                        then infinity
-                        else v - (sqrt (disc))
-                dist
-
-    type Plane (normal, offset, surface) =
-        interface RayTracer.SceneObject with
-            member this.Surface = surface
-            member this.Normal pos = normal
-            member this.Intersect ray =
-                let denom = Vector.Dot (normal, ray.Dir)
-                let dist =
-                    if denom > 0.0
-                    then infinity
-                    else (Vector.Dot (normal, ray.Start) + offset) / (-denom)
-                dist
-
-module Surfaces =
-
-    type Shiny() =
-        interface RayTracer.Surface with
-            member s.Diffuse pos = Color.White
-            member s.Specular pos = Color.Grey
-            member s.Reflect pos = 0.7
-            member s.Roughness = 250.0
-
-    type Checkerboard() =
-        interface RayTracer.Surface with
-            member s.Diffuse pos =
-                if (int (floor (pos.Z) + floor (pos.X))) % 2 <> 0
-                then Color.White
-                else Color.Black
-            member s.Specular pos = Color.White
-            member s.Reflect pos =
-                if (int (floor (pos.Z) + floor (pos.X))) % 2 <> 0
-                then 0.1
-                else 0.7
-            member s.Roughness = 150.0
-
 module Scenes =
 
     let TwoSpheresOnACheckerboard: RayTracer.Scene = {
         Things = [|
-            SceneObjects.Plane ({ X = 0.0; Y = 1.0; Z = 0.0 }, 0.0, Surfaces.Checkerboard())
-            SceneObjects.Sphere ({ X = 0.0; Y = 1.0; Z = -0.25 }, 1.0, Surfaces.Shiny())
-            SceneObjects.Sphere ({ X = -1.0; Y = 0.5; Z = 1.5 }, 0.5, Surfaces.Shiny())
+            SceneObjects.createPlane ({ X = 0.0; Y = 1.0; Z = 0.0 }, 0.0, Surfaces.createCheckerboard())
+            SceneObjects.createSphere ({ X = 0.0; Y = 1.0; Z = -0.25 }, 1.0, Surfaces.createShiny())
+            SceneObjects.createSphere ({ X = -1.0; Y = 0.5; Z = 1.5 }, 0.5, Surfaces.createShiny())
         |];
         Lights = [|
             { Pos = { X = -2.0; Y = 2.5; Z = 0.0 }; Color = { R = 0.49; G = 0.07; B = 0.07 } }

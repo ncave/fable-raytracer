@@ -13,7 +13,8 @@ name = "fable_raytracer"
 path = "src/main.rs"
 
 [dependencies]
-fable_library_rust = { path = "./fable_modules/fable-library-rust" }
+#fable_library_rust = { path = "./fable_modules/fable-library-rust" }
+fable_library_rust = { path = "./fable_modules/fable-library-rust", default-features = false }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 wasm-bindgen = "0.2"

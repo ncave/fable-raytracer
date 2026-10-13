@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/net7.0/fable-raytracer.dll",
+            "program": "${workspaceFolder}/bin/Debug/net10.0/fable-raytracer.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
