@@ -9,7 +9,7 @@
 
 <body>
   <canvas id="scene" width="512" height="512"></canvas>
-  <canvas id="animated" width="128" height="128"></canvas>
+  <canvas id="animated" width="256" height="256"></canvas>
   <pre id="results"></pre>
 
   <script type="module">
@@ -28,27 +28,38 @@
     }
 
     const [x, y, w, h] = [0, 0, 2048, 2048];
-    const [xa, ya, wa, ha] = [0, 0, 128, 128];
-    const len = w * h * 4;
-    const lenAni = wa * ha * 4;
+    const [xa, ya, wa, ha] = [0, 0, 256, 256];
+    const bufLen = w * h * 4;
+    const bufLenAni = wa * ha * 4;
 
     const scene = document.getElementById("scene");
     const animated = document.getElementById("animated");
     const results = document.getElementById("results");
 
-    const offscreen = document.createElement("canvas");
-    offscreen.width = w;
-    offscreen.height = h;
+    const canvas2048 = document.createElement("canvas");
+    canvas2048.width = w;
+    canvas2048.height = h;
 
-    const ctx = scene.getContext("2d");
+    const canvas1024 = document.createElement('canvas');
+    canvas1024.width = w / 2;
+    canvas1024.height = h / 2;
+
+    const ctx512 = scene.getContext("2d");
     const ctxAni = animated.getContext("2d");
-    const ctxOff = offscreen.getContext("2d");
+    const ctx1024 = canvas1024.getContext('2d');
+    const ctx2048 = canvas2048.getContext("2d");
+
+    // Enable high-quality smoothing on downsampled contexts
+    ctx1024.imageSmoothingEnabled = true;
+    ctx1024.imageSmoothingQuality = 'high';
+    ctx512.imageSmoothingEnabled = true;
+    ctx512.imageSmoothingQuality = 'high';
 
     const offset = wasm.get_buffer_offset();
     const maxLen = wasm.get_buffer_length();
-    const data = new Uint8ClampedArray(wasm.memory.buffer, offset, len);
+    const data = new Uint8ClampedArray(wasm.memory.buffer, offset, bufLen);
     const imageData = new ImageData(data, w, h);
-    const dataAni = new Uint8ClampedArray(wasm.memory.buffer, offset, lenAni);
+    const dataAni = new Uint8ClampedArray(wasm.memory.buffer, offset, bufLenAni);
     const imageDataAni = new ImageData(dataAni, wa, ha);
 
     async function bench() {
@@ -56,11 +67,16 @@
       await sleep(10);
       const [_, elapsed] = measureTime(() => wasm.render_scene(x, y, w, h, 0.0));
       results.innerText = "Ray tracing done:\n" +
-      ` - image rendered at 4x for super-sampled anti-aliasing\n` +
-      ` - rendered image size: (${w}x${h})\n - elapsed: ${elapsed} ms`;
+        ` - image rendered at 4x for super-sampled anti-aliasing\n` +
+        ` - rendered image size: (${w}x${h}), downsampled to (512x512)\n` +
+        ` - render time elapsed: ${elapsed} ms`;
 
-      ctxOff.putImageData(imageData, 0, 0);
-      ctx.drawImage(offscreen, 0, 0, 512, 512);
+      // Put the high-resolution image onto the 2048x2048 canvas first
+      ctx2048.putImageData(imageData, 0, 0);
+      // Downsample from 2048x2048 to 1024x1024
+      ctx1024.drawImage(canvas2048, 0, 0, 1024, 1024);
+      // Downsample from 1024x1024 to 512x512
+      ctx512.drawImage(canvas1024, 0, 0, 512, 512);
     }
 
     let degrees = 720;
